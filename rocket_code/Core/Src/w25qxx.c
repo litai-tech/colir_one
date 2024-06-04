@@ -83,7 +83,7 @@ uint32_t w25qxx_read_id(W25QXX_HandleTypeDef *w25qxx) {
     cs_on(w25qxx);
     buf[0] = W25QXX_GET_ID;
     if (w25qxx_transmit(w25qxx, buf, 1) == W25QXX_Ok) {
-        if (w25qxx_receive(w25qxx, buf, 3) == W25QXX_Ok) {
+    	if (w25qxx_receive(w25qxx, buf, 3) == W25QXX_Ok) {
             ret = (uint32_t) ((buf[0] << 16) | (buf[1] << 8) | (buf[2]));
         }
     }
@@ -200,7 +200,6 @@ W25QXX_result_t w25qxx_init(W25QXX_HandleTypeDef *w25qxx, SPI_HandleTypeDef *hsp
         // Zero the handle so it is clear initialization failed!
         memset(w25qxx, 0, sizeof(W25QXX_HandleTypeDef));
     }
-
     return result;
 
 }

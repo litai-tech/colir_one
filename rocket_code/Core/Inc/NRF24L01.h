@@ -23,7 +23,7 @@
 
 
 
-void NRF24_Init (void);
+void NRF24_Init (SPI_HandleTypeDef *spi);
 
 void NRF24_TxRxMode (uint8_t *TxAddress, uint8_t *RxAddress, uint8_t channel);
 void NRF24_RxMode (void);

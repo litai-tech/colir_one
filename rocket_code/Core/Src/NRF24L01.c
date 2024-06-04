@@ -20,8 +20,7 @@
 #include "stm32f4xx_hal.h"
 #include "NRF24L01.h"
 
-extern SPI_HandleTypeDef hspi3;
-#define NRF24_SPI &hspi3
+#define NRF24_SPI hspi
 
 
 // THESE VALUES ARE MANUALLY CONFIGURED FOR SPECIFIC STM32!!!!!!!!
@@ -30,7 +29,7 @@ extern SPI_HandleTypeDef hspi3;
 #define NRF24_CSN_PORT   GPIOB
 #define NRF24_CSN_PIN    GPIO_PIN_7
 
-
+SPI_HandleTypeDef *hspi;
 void CS_Select (void)
 {
 	HAL_GPIO_WritePin(NRF24_CSN_PORT, NRF24_CSN_PIN, GPIO_PIN_RESET);
@@ -179,8 +178,10 @@ void nrf24_reset(uint8_t REG)
 
 
 
-void NRF24_Init (void)
+void NRF24_Init (SPI_HandleTypeDef *spi)
 {
+	NRF24_SPI = spi;
+	HAL_SPI_Abort(NRF24_SPI);
 	// disable the chip before configuring the device
 	CE_Disable();
 
@@ -327,6 +328,7 @@ void NRF24_RxMode (void)
 
 uint8_t NRF24_Transmit (uint8_t *data)
 {
+	HAL_SPI_Abort(NRF24_SPI);
 	uint8_t cmdtosend = 0;
 	// select the device
 	CS_Select();
@@ -408,6 +410,7 @@ void NRF24_Receive_ACK_Payload(uint8_t *data, uint8_t* data_size) {
 
 uint8_t isDataAvailable ()
 {
+	HAL_SPI_Abort(NRF24_SPI);
 	uint8_t fifo = nrf24_ReadReg(FIFO_STATUS);
 	uint8_t status = nrf24_ReadReg(STATUS);
 	uint8_t config = nrf24_ReadReg(CONFIG);
@@ -423,6 +426,7 @@ uint8_t isDataAvailable ()
 
 void NRF24_Receive (uint8_t *data)
 {
+	HAL_SPI_Abort(NRF24_SPI);
 	uint8_t cmdtosend = 0;
 
 	// select the device

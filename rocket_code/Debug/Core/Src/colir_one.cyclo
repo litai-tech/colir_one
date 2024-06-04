@@ -1,0 +1,3 @@
+../Core/Src/colir_one.c:35:6:colir_one_init	1
+../Core/Src/colir_one.c:51:6:log_data	4
+../Core/Src/colir_one.c:88:6:read_logs_to_sd	7

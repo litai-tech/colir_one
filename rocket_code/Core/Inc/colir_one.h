@@ -11,3 +11,7 @@
 
 
 #endif /* INC_COLIR_ONE_H_ */
+
+void colir_one_init(SPI_HandleTypeDef *hspi);
+void log_data(char cmd[]);
+void read_logs_to_sd();

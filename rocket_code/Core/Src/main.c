@@ -25,6 +25,7 @@
 #include "NRF24L01.h"
 #include "bno055_stm32.h"
 #include "pca9685.h"
+#include "colir_one.h"
 
 /* USER CODE END Includes */
 
@@ -50,6 +51,7 @@ SD_HandleTypeDef hsd;
 DMA_HandleTypeDef hdma_sdio_rx;
 DMA_HandleTypeDef hdma_sdio_tx;
 
+SPI_HandleTypeDef hspi1;
 SPI_HandleTypeDef hspi3;
 
 /* USER CODE BEGIN PV */
@@ -63,6 +65,7 @@ static void MX_DMA_Init(void);
 static void MX_I2C2_Init(void);
 static void MX_SPI3_Init(void);
 static void MX_SDIO_SD_Init(void);
+static void MX_SPI1_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -76,12 +79,6 @@ uint8_t RxData[32];
 
 char cmdSymbol;
 char cmdParams[5][6];
-
-FRESULT FR_Status;
-UINT RWC, WWC; // Read/Write Word Counter
-char RW_Buffer[200];
-DWORD FreeClusters;
-uint32_t TotalSize, FreeSpace;
 
 void ParseReceivedCommand(char cmd[], uint8_t payloadSize)
 {
@@ -158,11 +155,14 @@ int main(void)
   MX_SPI3_Init();
   MX_SDIO_SD_Init();
   MX_FATFS_Init();
+  MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
 
-  NRF24_Init();
+  NRF24_Init(&hspi3);
   NRF24_TxRxMode(TxAddress, RxAddress, 76);
   NRF24_RxMode();
+
+  colir_one_init(&hspi1);
 
   bno055_assignI2C(&hi2c2);
   bno055_setup();
@@ -187,16 +187,6 @@ int main(void)
 	bno055_vector_t linearAccel = bno055_getVectorLinearAccel();
 	bno055_vector_t quaternion = bno055_getVectorQuaternion();
 	bno055_vector_t gyro = bno055_getVectorGyroscope();
-
-	FR_Status = f_mount(&SDFatFS, SDPath, 1);
-	f_getfree("", &FreeClusters, &SDFatFS);
-    TotalSize = (uint32_t)((SDFatFS.n_fatent - 2) * SDFatFS.csize * 0.5);
-    FreeSpace = (uint32_t)(FreeClusters * SDFatFS.csize * 0.5);
-
-	FR_Status = f_open(&SDFile, "MyTextFile.txt", FA_WRITE | FA_READ | FA_CREATE_ALWAYS);
-	f_puts("Hello! From STM32 To SD Card Over SDIO, Using f_puts()\n", &SDFile);
-	f_close(&SDFile);
-	FR_Status = f_mount(NULL, "", 0);
 
 	HAL_Delay(10);
 	if(!rxMode){
@@ -349,6 +339,44 @@ static void MX_SDIO_SD_Init(void)
 }
 
 /**
+  * @brief SPI1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_SPI1_Init(void)
+{
+
+  /* USER CODE BEGIN SPI1_Init 0 */
+
+  /* USER CODE END SPI1_Init 0 */
+
+  /* USER CODE BEGIN SPI1_Init 1 */
+
+  /* USER CODE END SPI1_Init 1 */
+  /* SPI1 parameter configuration*/
+  hspi1.Instance = SPI1;
+  hspi1.Init.Mode = SPI_MODE_MASTER;
+  hspi1.Init.Direction = SPI_DIRECTION_2LINES;
+  hspi1.Init.DataSize = SPI_DATASIZE_8BIT;
+  hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
+  hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
+  hspi1.Init.NSS = SPI_NSS_SOFT;
+  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
+  hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
+  hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
+  hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+  hspi1.Init.CRCPolynomial = 10;
+  if (HAL_SPI_Init(&hspi1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN SPI1_Init 2 */
+
+  /* USER CODE END SPI1_Init 2 */
+
+}
+
+/**
   * @brief SPI3 Initialization Function
   * @param None
   * @retval None
@@ -418,10 +446,10 @@ static void MX_GPIO_Init(void)
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOH_CLK_ENABLE();
+  __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOE_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOC_CLK_ENABLE();
-  __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */

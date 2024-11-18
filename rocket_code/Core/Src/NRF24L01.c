@@ -20,7 +20,8 @@
 #include "stm32f4xx_hal.h"
 #include "NRF24L01.h"
 
-#define NRF24_SPI hspi
+extern SPI_HandleTypeDef hspi3;
+#define NRF24_SPI &hspi3
 
 
 // THESE VALUES ARE MANUALLY CONFIGURED FOR SPECIFIC STM32!!!!!!!!
@@ -28,8 +29,10 @@
 #define NRF24_CE_PIN    GPIO_PIN_6
 #define NRF24_CSN_PORT   GPIOB
 #define NRF24_CSN_PIN    GPIO_PIN_7
+#define nRF24_TEST_ADDR  "nRF24"
 
-SPI_HandleTypeDef *hspi;
+
+HAL_StatusTypeDef hal_result;
 void CS_Select (void)
 {
 	HAL_GPIO_WritePin(NRF24_CSN_PORT, NRF24_CSN_PIN, GPIO_PIN_RESET);
@@ -50,8 +53,6 @@ void CE_Disable (void)
 {
 	HAL_GPIO_WritePin(NRF24_CE_PORT, NRF24_CE_PIN, GPIO_PIN_RESET);
 }
-
-
 
 // write a single byte to the particular register
 void nrf24_WriteReg (uint8_t Reg, uint8_t Data)
@@ -94,8 +95,8 @@ uint8_t nrf24_ReadReg (uint8_t Reg)
 	// Pull the CS Pin LOW to select the device
 	CS_Select();
 
-	HAL_SPI_Transmit(NRF24_SPI, &Reg, 1, 100);
-	HAL_SPI_Receive(NRF24_SPI, &data, 1, 100);
+	hal_result = HAL_SPI_Transmit(NRF24_SPI, &Reg, 1, 100);
+	hal_result = HAL_SPI_Receive(NRF24_SPI, &data, 1, 100);
 
 	// Pull the CS HIGH to release the device
 	CS_UnSelect();
@@ -178,10 +179,8 @@ void nrf24_reset(uint8_t REG)
 
 
 
-void NRF24_Init (SPI_HandleTypeDef *spi)
+void NRF24_Init (void)
 {
-	NRF24_SPI = spi;
-	HAL_SPI_Abort(NRF24_SPI);
 	// disable the chip before configuring the device
 	CE_Disable();
 
@@ -325,20 +324,18 @@ void NRF24_RxMode (void)
 }
 
 // transmit the data
-
 uint8_t NRF24_Transmit (uint8_t *data)
 {
-	HAL_SPI_Abort(NRF24_SPI);
 	uint8_t cmdtosend = 0;
 	// select the device
 	CS_Select();
 
 	// payload command
 	cmdtosend = W_TX_PAYLOAD;
-	HAL_SPI_Transmit(NRF24_SPI, &cmdtosend, 1, 100);
+	hal_result = HAL_SPI_Transmit(NRF24_SPI, &cmdtosend, 1, 100);
 
 	// send the payload
-	HAL_SPI_Transmit(NRF24_SPI, data, 32, 1000);
+	hal_result = HAL_SPI_Transmit(NRF24_SPI, data, 32, 1000);
 
 	// Unselect the device
 	CS_UnSelect();
@@ -410,7 +407,6 @@ void NRF24_Receive_ACK_Payload(uint8_t *data, uint8_t* data_size) {
 
 uint8_t isDataAvailable ()
 {
-	HAL_SPI_Abort(NRF24_SPI);
 	uint8_t fifo = nrf24_ReadReg(FIFO_STATUS);
 	uint8_t status = nrf24_ReadReg(STATUS);
 	uint8_t config = nrf24_ReadReg(CONFIG);
@@ -426,7 +422,6 @@ uint8_t isDataAvailable ()
 
 void NRF24_Receive (uint8_t *data)
 {
-	HAL_SPI_Abort(NRF24_SPI);
 	uint8_t cmdtosend = 0;
 
 	// select the device

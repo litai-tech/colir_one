@@ -24,8 +24,10 @@
 /* USER CODE BEGIN Includes */
 #include "NRF24L01.h"
 #include "bno055_stm32.h"
+#include "nmea_parse.h"
 #include "pca9685.h"
 #include "colir_one.h"
+#include "bmp581.h"
 
 /* USER CODE END Includes */
 
@@ -36,7 +38,8 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+#define RxBuffer_SIZE 64  //configure uart receive buffer size
+#define DataBuffer_SIZE 512 //gather a few rxBuffer frames before parsing
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -54,6 +57,10 @@ DMA_HandleTypeDef hdma_sdio_tx;
 SPI_HandleTypeDef hspi1;
 SPI_HandleTypeDef hspi3;
 
+UART_HandleTypeDef huart2;
+DMA_HandleTypeDef hdma_usart2_rx;
+DMA_HandleTypeDef hdma_usart2_tx;
+
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -66,6 +73,7 @@ static void MX_I2C2_Init(void);
 static void MX_SPI3_Init(void);
 static void MX_SDIO_SD_Init(void);
 static void MX_SPI1_Init(void);
+static void MX_USART2_UART_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -79,6 +87,23 @@ uint8_t RxData[32];
 
 char cmdSymbol;
 char cmdParams[5][6];
+
+uint32_t value_adc;
+uint8_t write_logs = 0;
+
+// Functions for UART receiving, based on the DMA receive function, implementations may vary
+uint16_t oldPos = 0;
+uint16_t newPos = 0;
+uint8_t RxBuffer[RxBuffer_SIZE];
+uint8_t DataBuffer[DataBuffer_SIZE];
+//create a GPS data structure
+GPS myData;
+
+float zeroAltitude = 0;
+struct bmp5_sensor_data bmpData = {0,0};
+float apogee = 0;
+
+colir_one_rocket_state rState;
 
 void ParseReceivedCommand(char cmd[], uint8_t payloadSize)
 {
@@ -99,17 +124,54 @@ void ParseReceivedCommand(char cmd[], uint8_t payloadSize)
 		}
 	}
 
-	if(cmdSymbol == 's'){ //format like "s {servoNumber} {servoAngle}"
+	if(cmdSymbol == 's'){ //format like "s {servoNumber} {servoAngle} {servoNumber} {servoAngle}"
 		int servoNumber = atoi(cmdParams[0]);
 		int servoAngle = atoi(cmdParams[1]);
-		PCA9685_Init(&hi2c2);
-		PCA9685_SetPwmFrequency(50);
-		PCA9685_SetServoAngle(servoNumber, servoAngle);
+
+		HAL_I2C_DeInit(&hi2c2);
+		MX_I2C2_Init();
+
+		  PCA9685_Init(&hi2c2);
+		  PCA9685_SetPwmFrequency(50);
+
+		PCA9685_STATUS servoAngleStatus = PCA9685_SetServoAngle(servoNumber - 1, servoAngle);
+
+		/*if(cmdParams[2] != 0){
+			servoNumber = atoi(cmdParams[2]);
+			servoAngle = atoi(cmdParams[3]);
+			PCA9685_SetServoAngle(servoNumber - 1, servoAngle);
+		}*/
 	}
 	else if(cmdSymbol == 'l'){ //format like "s {servoNumber} {servoAngle}"
 		int lighterNumber = atoi(cmdParams[0]);
+		write_logs = 1;
+		rState = COLIRONE_CRUISE;
 		FigherLighter(lighterNumber);
 	}
+	else if(cmdSymbol == 'w' && cmdParams[0][0] == 'e'){
+		write_logs= 1;
+	}
+	else if(cmdSymbol == 'w' && cmdParams[0][0] == 'd'){
+		write_logs= 0;
+	}
+	else if(cmdSymbol == 'w' && cmdParams[0][0] == 's'){
+		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_2, GPIO_PIN_SET);
+		read_logs_to_sd();
+		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_2, GPIO_PIN_RESET);
+	}
+	else if(cmdSymbol == 'r' && cmdParams[0][0] == 'a'){
+		HAL_SPI_Init(&hspi1);
+		int8_t err = getSensorData(&bmpData);
+		zeroAltitude = calcAltitude(bmpData.pressure);
+		apogee = 0;
+		HAL_SPI_DeInit(&hspi1);
+	}
+	else if(cmdSymbol == 'r' && cmdParams[0][0] == 'l'){
+		HAL_SPI_Init(&hspi1);
+		reset_logs();
+		HAL_SPI_DeInit(&hspi1);
+	}
+	LogData(cmd);
 }
 
 void FigherLighter(uint8_t lighterNumber){
@@ -119,7 +181,36 @@ void FigherLighter(uint8_t lighterNumber){
 	HAL_GPIO_WritePin(GPIOE, pinNumber, GPIO_PIN_RESET);
 }
 
+void LogData(char data[]){
+	if(write_logs == 1)
+		log_data(data);
+}
 
+
+/*
+ * UART buffer handler based on the DMA receive function, every implementation is valid,
+ * as long as you pass a sufficiently long receive buffer to the library.
+ * */
+void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
+{
+    oldPos = newPos; //keep track of the last position in the buffer
+    if(oldPos + Size > DataBuffer_SIZE){ //if the buffer is full, parse it, then reset the buffer
+
+        uint16_t datatocopy = DataBuffer_SIZE-oldPos;  // find out how much space is left in the main buffer
+        memcpy ((uint8_t *)DataBuffer+oldPos, RxBuffer, datatocopy);  // copy data in that remaining space
+
+        oldPos = 0;  // point to the start of the buffer
+        memcpy ((uint8_t *)DataBuffer, (uint8_t *)RxBuffer+datatocopy, (Size-datatocopy));  // copy the remaining data
+        newPos = (Size-datatocopy);  // update the position
+    }
+    else{
+        memcpy((uint8_t *)DataBuffer+oldPos, RxBuffer, Size); //copy received data to the buffer
+        newPos = Size+oldPos; //update buffer position
+
+    }
+    HAL_UARTEx_ReceiveToIdle_DMA(&huart2, (uint8_t *)RxBuffer, RxBuffer_SIZE); //re-enable the DMA interrupt
+    __HAL_DMA_DISABLE_IT(&hdma_usart2_rx, DMA_IT_HT); //disable the half transfer interrupt
+}
 /* USER CODE END 0 */
 
 /**
@@ -156,13 +247,24 @@ int main(void)
   MX_SDIO_SD_Init();
   MX_FATFS_Init();
   MX_SPI1_Init();
+  MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
+  HAL_UARTEx_ReceiveToIdle_DMA(&huart2, (uint8_t *)RxBuffer, RxBuffer_SIZE);
+  __HAL_DMA_DISABLE_IT(&hdma_usart2_rx, DMA_IT_HT);
 
-  NRF24_Init(&hspi3);
-  NRF24_TxRxMode(TxAddress, RxAddress, 76);
-  NRF24_RxMode();
+  //HAL_ADC_Start_DMA(&hadc1,(uint32_t*)&value_adc,1);
+
+  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_2, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_SET);
 
   colir_one_init(&hspi1);
+  HAL_Delay(100);
+
+  read_logs_to_sd();
+
+  NRF24_Init();
+  NRF24_TxRxMode(TxAddress, RxAddress, 76);
+  NRF24_RxMode();
 
   bno055_assignI2C(&hi2c2);
   bno055_setup();
@@ -171,8 +273,37 @@ int main(void)
   PCA9685_Init(&hi2c2);
   PCA9685_SetPwmFrequency(50);
 
+  PCA9685_SetServoAngle(0, 90);
+  PCA9685_SetServoAngle(1, 87);
+  PCA9685_SetServoAngle(2, 83);
+  PCA9685_SetServoAngle(3, 84);
+
+  //PCA9685_SetServoAngle(7, 90);
+
+  HAL_SPI_Init(&hspi1);
+  while(beginSPI() != BMP5_OK)
+  {
+    // Wait a bit to see if connection is established
+    HAL_Delay(1000);
+  }
+  HAL_Delay(1000);
+  int8_t err = getSensorData(&bmpData);
+  zeroAltitude = calcAltitude(bmpData.pressure);
+  HAL_SPI_DeInit(&hspi1);
+
+  rState = COLIRONE_READY_TO_LAUNCH;
+  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_2, GPIO_PIN_RESET);
+
   uint32_t lastRxMode = HAL_GetTick();
+  uint32_t lastTimestamp = HAL_GetTick();
   bool rxMode = false;
+  float VBatt;
+  float lastAltitude = 0;
+  float verticalVelocity = 0;
+  float altitude = 0;
+  flash_config* logsConfig = get_logs_config();
+
+  double latitude = 0, longitude = 0;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -182,28 +313,100 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+
 	uint32_t timestamp = HAL_GetTick();
 	bno055_vector_t orientation = bno055_getVectorEuler();
 	bno055_vector_t linearAccel = bno055_getVectorLinearAccel();
 	bno055_vector_t quaternion = bno055_getVectorQuaternion();
 	bno055_vector_t gyro = bno055_getVectorGyroscope();
+	logsConfig = get_logs_config();
 
+	HAL_SPI_Init(&hspi1);
+	int8_t err = getSensorData(&bmpData);
+	HAL_SPI_DeInit(&hspi1);
+	if(bmpData.pressure > 10000){
+		altitude = calcAltitude(bmpData.pressure) - zeroAltitude;
+		if(altitude > apogee)
+			apogee = altitude;
+
+		float deltaT = timestamp - lastTimestamp;
+		if(deltaT != 0)
+			verticalVelocity = (altitude - lastAltitude) / (deltaT / 1000);
+
+		lastAltitude = altitude;
+		lastTimestamp = timestamp;
+
+		if(verticalVelocity < -3 && altitude > 5 && altitude < 150 && (rState == COLIRONE_CRUISE || rState == COLIRONE_SHUTES_DEPLOYED)){
+			rState = COLIRONE_SHUTES_DEPLOYED;
+			ParseReceivedCommand("s 8 90", 32);
+		}
+	}
+
+	VBatt = (value_adc * 2 / 4095) * 7.4;
+
+	nmea_parse(&myData, DataBuffer);
+	latitude = myData.latitude;
+	longitude = myData.longitude;
+	if(longitude > 1000)
+		longitude = longitude / 1000;
+	if(myData.lonSide == 'W')
+		longitude = -longitude;
+	if(myData.latSide == 'S')
+		latitude = -latitude;
+	//ParseReceivedCommand("s 8 90", 32);
 	HAL_Delay(10);
 	if(!rxMode){
 		NRF24_TxMode();
-		sprintf(TxData, "o %d %.2f %.2f %.2f", timestamp, orientation.x, orientation.y, orientation.z);
+		memset(&TxData, 0, sizeof(TxData));
+		sprintf(TxData, "p %d %f %f %d", timestamp, latitude, longitude, myData.satelliteCount);
 		NRF24_Transmit(TxData);
+		LogData(TxData);
 
+		HAL_Delay(15);
+		memset(&TxData, 0, sizeof(TxData));
+		sprintf(TxData, "h %d %.2f", timestamp, altitude);
+		NRF24_Transmit(TxData);
+		LogData(TxData);
+
+		HAL_Delay(15);
+		memset(&TxData, 0, sizeof(TxData));
+		sprintf(TxData, "v %d %.2f", timestamp, verticalVelocity);
+		NRF24_Transmit(TxData);
+		LogData(TxData);
+
+		HAL_Delay(15);
+		memset(&TxData, 0, sizeof(TxData));
+		sprintf(TxData, "o %d %.2f %.2f %.2f", timestamp, -orientation.x, -orientation.y, -orientation.z);
+		NRF24_Transmit(TxData);
+		LogData(TxData);
+
+		HAL_Delay(15);
+		memset(&TxData, 0, sizeof(TxData));
 		sprintf(TxData, "g %d %.2f %.2f %.2f", timestamp, gyro.x, gyro.y, gyro.z);
 		NRF24_Transmit(TxData);
+		LogData(TxData);
 
+		HAL_Delay(15);
+		memset(&TxData, 0, sizeof(TxData));
 		sprintf(TxData, "a %d %.2f %.2f %.2f", timestamp, linearAccel.x, linearAccel.y, linearAccel.z);
 		NRF24_Transmit(TxData);
+		LogData(TxData);
 
+		HAL_Delay(15);
+		memset(&TxData, 0, sizeof(TxData));
 		sprintf(TxData, "q %d %.2f %.2f %.2f %.2f", timestamp, quaternion.x, quaternion.y, quaternion.z, quaternion.w);
 		NRF24_Transmit(TxData);
+		LogData(TxData);
 
+		HAL_Delay(15);
+		memset(&TxData, 0, sizeof(TxData));
+		sprintf(TxData, "s %d %d %d %d", timestamp, write_logs, rState, logsConfig->last_log);
+		NRF24_Transmit(TxData);
+		LogData(TxData);
+
+		HAL_Delay(15);
 		if(timestamp - lastRxMode > 500){
+			memset(&TxData, 0, sizeof(TxData));
 			sprintf(TxData, "c");
 			NRF24_Transmit(TxData);
 			rxMode = true;
@@ -214,6 +417,7 @@ int main(void)
 	else{
 		if (isDataAvailable() == 1)
 		{
+			memset(&RxData, 0, sizeof(RxData));
 			NRF24_Receive(RxData);
 			rxMode = false;
 			lastRxMode = HAL_GetTick();
@@ -225,7 +429,7 @@ int main(void)
 		}
 	}
 
-	HAL_Delay(100);
+	HAL_Delay(70);
   }
   /* USER CODE END 3 */
 }
@@ -331,7 +535,7 @@ static void MX_SDIO_SD_Init(void)
   hsd.Init.ClockPowerSave = SDIO_CLOCK_POWER_SAVE_DISABLE;
   hsd.Init.BusWide = SDIO_BUS_WIDE_1B;
   hsd.Init.HardwareFlowControl = SDIO_HARDWARE_FLOW_CONTROL_DISABLE;
-  hsd.Init.ClockDiv = 1;
+  hsd.Init.ClockDiv = 4;
   /* USER CODE BEGIN SDIO_Init 2 */
 
   /* USER CODE END SDIO_Init 2 */
@@ -415,6 +619,39 @@ static void MX_SPI3_Init(void)
 }
 
 /**
+  * @brief USART2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_USART2_UART_Init(void)
+{
+
+  /* USER CODE BEGIN USART2_Init 0 */
+
+  /* USER CODE END USART2_Init 0 */
+
+  /* USER CODE BEGIN USART2_Init 1 */
+
+  /* USER CODE END USART2_Init 1 */
+  huart2.Instance = USART2;
+  huart2.Init.BaudRate = 9600;
+  huart2.Init.WordLength = UART_WORDLENGTH_8B;
+  huart2.Init.StopBits = UART_STOPBITS_1;
+  huart2.Init.Parity = UART_PARITY_NONE;
+  huart2.Init.Mode = UART_MODE_TX_RX;
+  huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart2.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN USART2_Init 2 */
+
+  /* USER CODE END USART2_Init 2 */
+
+}
+
+/**
   * Enable DMA controller clock
   */
 static void MX_DMA_Init(void)
@@ -422,8 +659,15 @@ static void MX_DMA_Init(void)
 
   /* DMA controller clock enable */
   __HAL_RCC_DMA2_CLK_ENABLE();
+  __HAL_RCC_DMA1_CLK_ENABLE();
 
   /* DMA interrupt init */
+  /* DMA1_Stream5_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Stream5_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Stream5_IRQn);
+  /* DMA1_Stream6_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Stream6_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Stream6_IRQn);
   /* DMA2_Stream3_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA2_Stream3_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA2_Stream3_IRQn);
@@ -445,34 +689,60 @@ static void MX_GPIO_Init(void)
 /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOE_CLK_ENABLE();
   __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
-  __HAL_RCC_GPIOE_CLK_ENABLE();
-  __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOC_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_7|GPIO_PIN_8|GPIO_PIN_9|GPIO_PIN_10
-                          |GPIO_PIN_11|GPIO_PIN_12, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_2|GPIO_PIN_3|GPIO_PIN_7|GPIO_PIN_8
+                          |GPIO_PIN_9|GPIO_PIN_10|GPIO_PIN_11|GPIO_PIN_12, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_4, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_7, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, NRF_CE_Pin|NRF_CSN_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : PE7 PE8 PE9 PE10
-                           PE11 PE12 */
-  GPIO_InitStruct.Pin = GPIO_PIN_7|GPIO_PIN_8|GPIO_PIN_9|GPIO_PIN_10
-                          |GPIO_PIN_11|GPIO_PIN_12;
+  /*Configure GPIO pins : PE2 PE3 PE7 PE8
+                           PE9 PE10 PE11 PE12 */
+  GPIO_InitStruct.Pin = GPIO_PIN_2|GPIO_PIN_3|GPIO_PIN_7|GPIO_PIN_8
+                          |GPIO_PIN_9|GPIO_PIN_10|GPIO_PIN_11|GPIO_PIN_12;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
+  /*Configure GPIO pin : PC4 */
+  GPIO_InitStruct.Pin = GPIO_PIN_4;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PD15 */
+  GPIO_InitStruct.Pin = GPIO_PIN_15;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+
   /*Configure GPIO pin : PC7 */
   GPIO_InitStruct.Pin = GPIO_PIN_7;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PD7 */
+  GPIO_InitStruct.Pin = GPIO_PIN_7;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
   /*Configure GPIO pins : NRF_CE_Pin NRF_CSN_Pin */
   GPIO_InitStruct.Pin = NRF_CE_Pin|NRF_CSN_Pin;

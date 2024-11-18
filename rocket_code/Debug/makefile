@@ -13,6 +13,7 @@ RM := rm -rf
 -include Middlewares/Third_Party/FatFs/src/subdir.mk
 -include FATFS/Target/subdir.mk
 -include FATFS/App/subdir.mk
+-include Drivers/bmp5_api/Src/subdir.mk
 -include Drivers/STM32F4xx_HAL_Driver/Src/subdir.mk
 -include Core/Startup/subdir.mk
 -include Core/Src/subdir.mk
@@ -67,8 +68,8 @@ all: main-build
 main-build: rocket_code.elf secondary-outputs
 
 # Tool invocations
-rocket_code.elf rocket_code.map: $(OBJS) $(USER_OBJS) C:\Litai\colir_one\rocket_code\STM32F407VETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "rocket_code.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Litai\colir_one\rocket_code\STM32F407VETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="rocket_code.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
+rocket_code.elf rocket_code.map: $(OBJS) $(USER_OBJS) C:\Users\Administrator\Downloads\rocket_code\STM32F407VETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "rocket_code.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\Administrator\Downloads\rocket_code\STM32F407VETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="rocket_code.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

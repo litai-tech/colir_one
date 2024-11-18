@@ -1,6 +1,7 @@
 #include "main.h"
 #include "w25qxx.h"
 #include "fatfs.h"
+#include "colir_one.h"
 
 #define LOG_SIZE 32
 #define LOG_BUF_SIZE 32
@@ -8,12 +9,6 @@
 #define CONFIG_SIZE 2048
 #define SPI1_CS_GPIO_Port GPIOD
 #define SPI1_CS_Pin GPIO_PIN_7
-
-typedef struct {
-  uint32_t last_address;
-  uint32_t log_address[32];
-  uint8_t last_log;
-} flash_config;
 
 W25QXX_HandleTypeDef w25qxx;
 uint32_t sectors;
@@ -33,9 +28,12 @@ uint16_t log_buf_counter = 0;
 W25QXX_result_t res;
 
 void colir_one_init(SPI_HandleTypeDef *hspi) {
+	if(hspi->State != HAL_SPI_STATE_READY)
+		HAL_SPI_Init(hspi);
+
 	res = w25qxx_init(&w25qxx, hspi, SPI1_CS_GPIO_Port, SPI1_CS_Pin);
 
-	/*sectors = w25qxx.block_count * w25qxx.sectors_in_block;
+	sectors = w25qxx.block_count * w25qxx.sectors_in_block;
 	flash_size = w25qxx.block_count * w25qxx.block_size;
 	//w25qxx_chip_erase(&w25qxx);
 	w25qxx_read(&w25qxx, 0, (uint8_t*)&config_buf, sizeof(config_buf));
@@ -45,13 +43,18 @@ void colir_one_init(SPI_HandleTypeDef *hspi) {
 		logs_config->last_log = 0;
 		logs_config->last_address = CONFIG_SIZE;
 		memset(&logs_config->log_address, 0, sizeof(logs_config->log_address));
-	}*/
+	}
+
+	HAL_SPI_DeInit(hspi);
 }
 
 void log_data(char cmd[]){
 	memcpy(&log_buf[log_buf_counter], cmd, sizeof(log_buf[log_buf_counter]));
 	log_buf_counter++;
 	if(log_buf_counter >= LOG_BUF_SIZE){
+		if(w25qxx.spiHandle->State != HAL_SPI_STATE_READY)
+			HAL_SPI_Init(w25qxx.spiHandle);
+
 		log_buf_counter = 0;
 
 		current_address = logs_config->last_address;
@@ -75,16 +78,21 @@ void log_data(char cmd[]){
 		logs_config->log_address[current_log - 1] = current_address;
 
 		res = w25qxx_erase(&w25qxx, 0, sizeof(config_buf));
-		HAL_Delay(35);
-		memcpy(&config_buf, (uint8_t*)logs_config, sizeof(config_buf));
-		res = w25qxx_write(&w25qxx, 0, (uint8_t*)&config_buf, sizeof(config_buf));
-		HAL_Delay(35);
-		w25qxx_read(&w25qxx, 0, (uint8_t*)&config_buf, sizeof(config_buf));
+		if(res == W25QXX_Ok){
+
+			memcpy(&config_buf, (uint8_t*)logs_config, sizeof(config_buf));
+			res = w25qxx_write(&w25qxx, 0, (uint8_t*)&config_buf, sizeof(config_buf));
+			HAL_Delay(35);
+			w25qxx_read(&w25qxx, 0, (uint8_t*)&config_buf, sizeof(config_buf));
+		}
+
+		HAL_SPI_DeInit(w25qxx.spiHandle);
 	}
 }
 
 FRESULT FR_Status;
 char end_of_the_line[2] = "\n";
+
 void read_logs_to_sd(){
 	FR_Status = f_mount(&SDFatFS, SDPath, 1);
 	if(FR_Status == FR_OK){
@@ -93,6 +101,9 @@ void read_logs_to_sd(){
 		uint32_t currentReadAdress = CONFIG_SIZE;
 		FR_Status = f_opendir(&dir, SDPath);
 		if(FR_Status == FR_OK) {
+			if(w25qxx.spiHandle->State != HAL_SPI_STATE_READY)
+				HAL_SPI_Init(w25qxx.spiHandle);
+
 			for(uint8_t i = 1; i <= logs_config->last_log; i++){
 				if(i < logs_config->last_log)
 					lastAddress = logs_config->log_address[i];
@@ -113,7 +124,28 @@ void read_logs_to_sd(){
 					f_close(&SDFile);
 				}
 			}
+			HAL_SPI_DeInit(w25qxx.spiHandle);
 		}
 		f_mount(&SDFatFS, (TCHAR const*)NULL, 0);
 	}
+}
+
+void reset_logs(){
+	if(w25qxx.spiHandle->State != HAL_SPI_STATE_READY)
+		HAL_SPI_Init(w25qxx.spiHandle);
+
+	w25qxx_chip_erase(&w25qxx);
+	w25qxx_read(&w25qxx, 0, (uint8_t*)&config_buf, sizeof(config_buf));
+
+	logs_config = (flash_config*)config_buf;
+	if(logs_config->last_log == 0 || logs_config->last_log == 255){
+		logs_config->last_log = 0;
+		logs_config->last_address = CONFIG_SIZE;
+		memset(&logs_config->log_address, 0, sizeof(logs_config->log_address));
+	}
+	HAL_SPI_DeInit(w25qxx.spiHandle);
+}
+
+flash_config* get_logs_config() {
+	return logs_config;
 }

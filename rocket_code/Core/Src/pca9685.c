@@ -114,6 +114,11 @@ PCA9685_STATUS PCA9685_SetPwm(uint8_t Channel, uint16_t OnTime, uint16_t OffTime
 	Message[2] = OffTime & 0xFF;
 	Message[3] = OffTime>>8;
 
+	/*if(pca9685_i2c->State != HAL_I2C_STATE_READY){
+		HAL_I2C_DeInit(pca9685_i2c);
+		HAL_I2C_Init(pca9685_i2c);
+	}*/
+	while(HAL_I2C_IsDeviceReady(pca9685_i2c, PCA9685_ADDRESS, 64, 50)!= HAL_OK);
 	HAL_StatusTypeDef status = HAL_I2C_Mem_Write(pca9685_i2c, PCA9685_ADDRESS, RegisterAddress, 1, Message, 4, 10);
 	if(status != HAL_OK)
 	{

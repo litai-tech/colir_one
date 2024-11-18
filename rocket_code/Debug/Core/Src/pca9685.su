@@ -7,6 +7,6 @@
 ../Core/Src/pca9685.c:69:16:PCA9685_AllCallRespond	16	static
 ../Core/Src/pca9685.c:77:16:PCA9685_SetPwmFrequency	40	static
 ../Core/Src/pca9685.c:106:16:PCA9685_SetPwm	40	static
-../Core/Src/pca9685.c:126:16:PCA9685_SetPin	16	static
-../Core/Src/pca9685.c:159:16:PCA9685_SetServoAngle	24	static
-../Core/Src/pca9685.c:171:16:PCA9685_Init	16	static
+../Core/Src/pca9685.c:131:16:PCA9685_SetPin	16	static
+../Core/Src/pca9685.c:164:16:PCA9685_SetServoAngle	24	static
+../Core/Src/pca9685.c:176:16:PCA9685_Init	16	static

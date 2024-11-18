@@ -795,7 +795,6 @@ HAL_StatusTypeDef HAL_SPI_Transmit(SPI_HandleTypeDef *hspi, uint8_t *pData, uint
   }
 
   /* Set the transaction information */
-
   hspi->State       = HAL_SPI_STATE_BUSY_TX;
   hspi->ErrorCode   = HAL_SPI_ERROR_NONE;
   hspi->pTxBuffPtr  = (uint8_t *)pData;
@@ -838,7 +837,6 @@ HAL_StatusTypeDef HAL_SPI_Transmit(SPI_HandleTypeDef *hspi, uint8_t *pData, uint
     if ((hspi->Init.Mode == SPI_MODE_SLAVE) || (initial_TxXferCount == 0x01U))
     {
       hspi->Instance->DR = *((uint16_t *)hspi->pTxBuffPtr);
-
       hspi->pTxBuffPtr += sizeof(uint16_t);
       hspi->TxXferCount--;
     }
@@ -869,11 +867,7 @@ HAL_StatusTypeDef HAL_SPI_Transmit(SPI_HandleTypeDef *hspi, uint8_t *pData, uint
   {
     if ((hspi->Init.Mode == SPI_MODE_SLAVE) || (initial_TxXferCount == 0x01U))
     {
-      hspi->Instance->DR = *((uint8_t *)hspi->pTxBuffPtr);
-      uint8_t e = *((uint8_t *)hspi->pTxBuffPtr);
-      uint32_t *a = &hspi->Instance->DR;
-      uint32_t b = *a;
-      uint8_t c = hspi->pTxBuffPtr[0];
+      *((__IO uint8_t *)&hspi->Instance->DR) = (*hspi->pTxBuffPtr);
       hspi->pTxBuffPtr += sizeof(uint8_t);
       hspi->TxXferCount--;
     }

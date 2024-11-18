@@ -7,7 +7,7 @@
 ../Core/Src/w25qxx.c:107:17:w25qxx_write_enable	24	static
 ../Core/Src/w25qxx.c:120:17:w25qxx_wait_for_ready	32	static
 ../Core/Src/w25qxx.c:137:17:w25qxx_init	32	static
-../Core/Src/w25qxx.c:208:17:w25qxx_read	32	static
-../Core/Src/w25qxx.c:233:17:w25qxx_write	56	static
-../Core/Src/w25qxx.c:281:17:w25qxx_erase	48	static
-../Core/Src/w25qxx.c:321:17:w25qxx_chip_erase	24	static
+../Core/Src/w25qxx.c:209:17:w25qxx_read	32	static
+../Core/Src/w25qxx.c:234:17:w25qxx_write	56	static
+../Core/Src/w25qxx.c:288:17:w25qxx_erase	48	static
+../Core/Src/w25qxx.c:328:17:w25qxx_chip_erase	24	static

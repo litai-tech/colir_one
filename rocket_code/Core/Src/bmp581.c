@@ -6,6 +6,7 @@
  */
 #include "stm32f4xx_hal.h"
 #include "bmp581.h"
+#include "string.h"
 
 extern SPI_HandleTypeDef hspi1;
 #define BMP5_SPI &hspi1

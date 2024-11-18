@@ -165,7 +165,7 @@ int nmea_GPGLL(GPS *gps_data, char*inputString) {
 
 void nmea_parse(GPS *gps_data, uint8_t *buffer){
     memset(data, 0, sizeof(data));
-    char * token = strtok(buffer, "$");
+    char * token = strtok((char*)buffer, "$");
     int cnt = 0;
     while(token !=NULL){
         data[cnt++] = malloc(strlen(token)+1); //free later!!!!!

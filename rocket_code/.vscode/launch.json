@@ -1,0 +1,105 @@
+{
+  "version": "0.2.0",
+  "projectName": "rocket_code",
+  "configurations": [
+    {
+      "name": "JLink launch",
+      "cwd": "${workspaceRoot}",
+      "executable": "${workspaceRoot}/rocket_code.elf",
+      "request": "launch",
+      "type": "cortex-debug",
+      "servertype": "jlink",
+      "device": "STM32F07VET6",
+      "interface": "swd",
+      "preLaunchTask": "Build debug",
+      "svdFile": "",
+      "swoConfig": {
+        "enabled": true,
+        "cpuFrequency": 160000000,
+        "swoFrequency": 4000000,
+        "source": "probe",
+        "decoders": [
+          {
+            "label": "ITM port 0 output",
+            "type": "console",
+            "port": 0,
+            "showOnStartup": true,
+            "encoding": "ascii"
+          }
+        ]
+      }
+    },
+    {
+      "name": "JLink attach",
+      "cwd": "${workspaceRoot}",
+      "executable": "${workspaceRoot}/rocket_code.elf",
+      "request": "attach",
+      "type": "cortex-debug",
+      "servertype": "jlink",
+      "device": "STM32F07VET6",
+      "interface": "swd",
+      "preLaunchTask": "Build debug",
+      "svdFile": "",
+      "swoConfig": {
+        "enabled": true,
+        "cpuFrequency": 160000000,
+        "swoFrequency": 4000000,
+        "source": "probe",
+        "decoders": [
+          {
+            "label": "ITM port 0 output",
+            "type": "console",
+            "port": 0,
+            "showOnStartup": true,
+            "encoding": "ascii"
+          }
+        ]
+      }
+    },
+    {
+      "name": "STlink launch",
+      "cwd": "${workspaceRoot}",
+      "executable": "${workspaceRoot}/rocket_code.elf",
+      "request": "launch",
+      "type": "cortex-debug",
+      "servertype": "stutil",
+      "device": "STM32F07VET6",
+      "interface": "swd",
+      "preLaunchTask": "Build debug",
+      "svdFile": "",
+      "swoConfig": {}
+    },
+    {
+      "name": "STlink attach",
+      "cwd": "${workspaceRoot}",
+      "executable": "${workspaceRoot}/rocket_code.elf",
+      "request": "attach",
+      "type": "cortex-debug",
+      "servertype": "stutil",
+      "device": "STM32F07VET6",
+      "interface": "swd",
+      "preLaunchTask": "Build debug",
+      "svdFile": "",
+      "swoConfig": {}
+    },
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "cppdbg",
+      "request": "launch",
+      "args": [],
+      "stopAtEntry": false,
+      "externalConsole": false,
+      "cwd": "/home/dat/Documents/stm32l432kc/LL(Low-level_Layer)/custom_bootloader/Core/Src",
+      "program": "/home/dat/Documents/stm32l432kc/LL(Low-level_Layer)/custom_bootloader/Core/Src/build/Debug/outDebug",
+      "MIMode": "gdb",
+      "miDebuggerPath": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
+    }
+  ]
+}

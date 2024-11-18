@@ -2,6 +2,8 @@
 #include "w25qxx.h"
 #include "fatfs.h"
 #include "colir_one.h"
+#include "string.h"
+#include <stdio.h>
 
 #define LOG_SIZE 32
 #define LOG_BUF_SIZE 32

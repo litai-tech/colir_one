@@ -246,6 +246,20 @@ void NRF24_TxMode_with_ACK_Payload (uint8_t *Address, uint8_t channel)
 	CE_Enable();
 }
 
+void flush_tx_fifo() {
+	uint8_t cmdtosend = FLUSH_TX;
+	nrfsendCmd(cmdtosend);
+	// reset FIFO_STATUS
+	nrf24_reset (FIFO_STATUS);
+}
+
+void flush_rx_fifo() {
+	uint8_t cmdtosend = FLUSH_RX;
+	nrfsendCmd(cmdtosend);
+	// reset FIFO_STATUS
+	nrf24_reset (FIFO_STATUS);
+}
+
 void NRF24_TxRxMode (uint8_t *TxAddress, uint8_t *RxAddress, uint8_t channel)
 {
 	// disable the chip before configuring the device
@@ -361,19 +375,6 @@ uint8_t NRF24_Transmit (uint8_t *data)
 	return 0;
 }
 
-void flush_tx_fifo() {
-	uint8_t cmdtosend = FLUSH_TX;
-	nrfsendCmd(cmdtosend);
-	// reset FIFO_STATUS
-	nrf24_reset (FIFO_STATUS);
-}
-
-void flush_rx_fifo() {
-	uint8_t cmdtosend = FLUSH_RX;
-	nrfsendCmd(cmdtosend);
-	// reset FIFO_STATUS
-	nrf24_reset (FIFO_STATUS);
-}
 
 void NRF24_Receive_ACK_Payload(uint8_t *data, uint8_t* data_size) {
 	uint8_t cmdtosend = 0;

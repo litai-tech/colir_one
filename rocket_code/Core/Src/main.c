@@ -105,6 +105,19 @@ float apogee = 0;
 
 colir_one_rocket_state rState;
 
+void FigherLighter(uint8_t lighterNumber){
+	uint16_t pinNumber = 0 | (1<<(6+lighterNumber));
+	HAL_GPIO_WritePin(GPIOE, pinNumber, GPIO_PIN_SET);
+	HAL_Delay(15);
+	HAL_GPIO_WritePin(GPIOE, pinNumber, GPIO_PIN_RESET);
+}
+
+void LogData(char data[]){
+	if(write_logs == 1)
+		log_data(data);
+}
+
+
 void ParseReceivedCommand(char cmd[], uint8_t payloadSize)
 {
 	if(cmd[0] == '\0')
@@ -174,19 +187,6 @@ void ParseReceivedCommand(char cmd[], uint8_t payloadSize)
 	LogData(cmd);
 }
 
-void FigherLighter(uint8_t lighterNumber){
-	uint16_t pinNumber = 0 | (1<<(6+lighterNumber));
-	HAL_GPIO_WritePin(GPIOE, pinNumber, GPIO_PIN_SET);
-	HAL_Delay(15);
-	HAL_GPIO_WritePin(GPIOE, pinNumber, GPIO_PIN_RESET);
-}
-
-void LogData(char data[]){
-	if(write_logs == 1)
-		log_data(data);
-}
-
-
 /*
  * UART buffer handler based on the DMA receive function, every implementation is valid,
  * as long as you pass a sufficiently long receive buffer to the library.
@@ -219,6 +219,7 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
   */
 int main(void)
 {
+
   /* USER CODE BEGIN 1 */
 
   /* USER CODE END 1 */
@@ -273,10 +274,10 @@ int main(void)
   PCA9685_Init(&hi2c2);
   PCA9685_SetPwmFrequency(50);
 
-  PCA9685_SetServoAngle(0, 90);
-  PCA9685_SetServoAngle(1, 87);
-  PCA9685_SetServoAngle(2, 83);
-  PCA9685_SetServoAngle(3, 84);
+  //PCA9685_SetServoAngle(0, 90);
+  //PCA9685_SetServoAngle(1, 87);
+  //PCA9685_SetServoAngle(2, 83);
+  //PCA9685_SetServoAngle(3, 84);
 
   //PCA9685_SetServoAngle(7, 90);
 
@@ -359,56 +360,56 @@ int main(void)
 		NRF24_TxMode();
 		memset(&TxData, 0, sizeof(TxData));
 		sprintf(TxData, "p %d %f %f %d", timestamp, latitude, longitude, myData.satelliteCount);
-		NRF24_Transmit(TxData);
+		NRF24_Transmit((uint8_t*)TxData);
 		LogData(TxData);
 
 		HAL_Delay(15);
 		memset(&TxData, 0, sizeof(TxData));
 		sprintf(TxData, "h %d %.2f", timestamp, altitude);
-		NRF24_Transmit(TxData);
+		NRF24_Transmit((uint8_t*)TxData);
 		LogData(TxData);
 
 		HAL_Delay(15);
 		memset(&TxData, 0, sizeof(TxData));
 		sprintf(TxData, "v %d %.2f", timestamp, verticalVelocity);
-		NRF24_Transmit(TxData);
+		NRF24_Transmit((uint8_t*)TxData);
 		LogData(TxData);
 
 		HAL_Delay(15);
 		memset(&TxData, 0, sizeof(TxData));
 		sprintf(TxData, "o %d %.2f %.2f %.2f", timestamp, -orientation.x, -orientation.y, -orientation.z);
-		NRF24_Transmit(TxData);
+		NRF24_Transmit((uint8_t*)TxData);
 		LogData(TxData);
 
 		HAL_Delay(15);
 		memset(&TxData, 0, sizeof(TxData));
 		sprintf(TxData, "g %d %.2f %.2f %.2f", timestamp, gyro.x, gyro.y, gyro.z);
-		NRF24_Transmit(TxData);
+		NRF24_Transmit((uint8_t*)TxData);
 		LogData(TxData);
 
 		HAL_Delay(15);
 		memset(&TxData, 0, sizeof(TxData));
 		sprintf(TxData, "a %d %.2f %.2f %.2f", timestamp, linearAccel.x, linearAccel.y, linearAccel.z);
-		NRF24_Transmit(TxData);
+		NRF24_Transmit((uint8_t*)TxData);
 		LogData(TxData);
 
 		HAL_Delay(15);
 		memset(&TxData, 0, sizeof(TxData));
 		sprintf(TxData, "q %d %.2f %.2f %.2f %.2f", timestamp, quaternion.x, quaternion.y, quaternion.z, quaternion.w);
-		NRF24_Transmit(TxData);
+		NRF24_Transmit((uint8_t*)TxData);
 		LogData(TxData);
 
 		HAL_Delay(15);
 		memset(&TxData, 0, sizeof(TxData));
 		sprintf(TxData, "s %d %d %d %d", timestamp, write_logs, rState, logsConfig->last_log);
-		NRF24_Transmit(TxData);
+		NRF24_Transmit((uint8_t*)TxData);
 		LogData(TxData);
 
 		HAL_Delay(15);
 		if(timestamp - lastRxMode > 500){
 			memset(&TxData, 0, sizeof(TxData));
 			sprintf(TxData, "c");
-			NRF24_Transmit(TxData);
+			NRF24_Transmit((uint8_t*)TxData);
 			rxMode = true;
 			NRF24_RxMode();
 			lastRxMode = HAL_GetTick();
@@ -421,7 +422,7 @@ int main(void)
 			NRF24_Receive(RxData);
 			rxMode = false;
 			lastRxMode = HAL_GetTick();
-			ParseReceivedCommand(RxData, sizeof(RxData));
+			ParseReceivedCommand((char*)RxData, sizeof(RxData));
 		}
 		else if(timestamp - lastRxMode > 250){
 			rxMode = false;

@@ -1,5 +1,0 @@
-../Core/Src/colir_one.c:30:6:colir_one_init	16	static
-../Core/Src/colir_one.c:51:6:log_data	16	static
-../Core/Src/colir_one.c:96:6:read_logs_to_sd	88	static
-../Core/Src/colir_one.c:133:6:reset_logs	8	static
-../Core/Src/colir_one.c:149:15:get_logs_config	4	static

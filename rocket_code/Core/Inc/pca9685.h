@@ -71,6 +71,10 @@ typedef enum
 	PCA9685_ERROR	= 1
 }PCA9685_STATUS;
 
+// #ifdef __cplusplus
+// extern "C"{
+// #endif
+
 PCA9685_STATUS PCA9685_SoftwareReset(void);
 PCA9685_STATUS PCA9685_SleepMode(uint8_t Enable);
 PCA9685_STATUS PCA9685_RestartMode(uint8_t Enable);
@@ -87,5 +91,9 @@ PCA9685_STATUS PCA9685_SetServoAngle(uint8_t Channel, float Angle);
 #endif
 
 PCA9685_STATUS PCA9685_Init(I2C_HandleTypeDef *hi2c);
+
+// #ifdef __cplusplus
+// }
+// #endif
 
 #endif /* PCA9685_H_ */

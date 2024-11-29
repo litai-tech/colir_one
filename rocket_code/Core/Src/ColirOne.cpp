@@ -1,53 +1,19 @@
-/* USER CODE BEGIN Header */
-/**
-  ******************************************************************************
-  * @file           : main.c
-  * @brief          : Main program body
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2024 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
-/* USER CODE END Header */
-/* Includes ------------------------------------------------------------------*/
+#include "ColirOne.h"
 #include "main.h"
 #include "fatfs.h"
 
-/* Private includes ----------------------------------------------------------*/
-/* USER CODE BEGIN Includes */
-#include "NRF24L01.h"
-#include "bno055_stm32.h"
-#include "nmea_parse.h"
-#include "pca9685.h"
-#include "colir_one.h"
-#include "bmp581.h"
+extern "C" {
+  #include "NRF24L01.h"
+  #include "bno055_stm32.h"
+  #include "nmea_parse.h"
+  #include "pca9685.h"
+  #include "colir_one.h"
+  #include "bmp581.h"
+}
 
-/* USER CODE END Includes */
+#define RxBuffer_SIZE 64                //configure uart receive buffer size
+#define DataBuffer_SIZE 512             //gather a few rxBuffer frames before parsing
 
-/* Private typedef -----------------------------------------------------------*/
-/* USER CODE BEGIN PTD */
-
-/* USER CODE END PTD */
-
-/* Private define ------------------------------------------------------------*/
-/* USER CODE BEGIN PD */
-#define RxBuffer_SIZE 64  //configure uart receive buffer size
-#define DataBuffer_SIZE 512 //gather a few rxBuffer frames before parsing
-/* USER CODE END PD */
-
-/* Private macro -------------------------------------------------------------*/
-/* USER CODE BEGIN PM */
-
-/* USER CODE END PM */
-
-/* Private variables ---------------------------------------------------------*/
 I2C_HandleTypeDef hi2c2;
 
 SD_HandleTypeDef hsd;
@@ -61,25 +27,6 @@ UART_HandleTypeDef huart2;
 DMA_HandleTypeDef hdma_usart2_rx;
 DMA_HandleTypeDef hdma_usart2_tx;
 
-/* USER CODE BEGIN PV */
-
-/* USER CODE END PV */
-
-/* Private function prototypes -----------------------------------------------*/
-void SystemClock_Config(void);
-static void MX_GPIO_Init(void);
-static void MX_DMA_Init(void);
-static void MX_I2C2_Init(void);
-static void MX_SPI3_Init(void);
-static void MX_SDIO_SD_Init(void);
-static void MX_SPI1_Init(void);
-static void MX_USART2_UART_Init(void);
-/* USER CODE BEGIN PFP */
-
-/* USER CODE END PFP */
-
-/* Private user code ---------------------------------------------------------*/
-/* USER CODE BEGIN 0 */
 uint8_t TxAddress[] = {0xEE,0xDD,0xCC,0xBB,0xAA};
 uint8_t RxAddress[] = {0xAA,0xDD,0xCC,0xBB,0xAA};
 char TxData[32]; // Max message length 32 bytes
@@ -105,20 +52,62 @@ float apogee = 0;
 
 colir_one_rocket_state rState;
 
-void FigherLighter(uint8_t lighterNumber){
+bool rxMode = false;
+float VBatt;
+float lastAltitude = 0;
+float verticalVelocity = 0;
+float altitude = 0;
+flash_config* logsConfig;
+
+double latitude = 0, longitude = 0;
+
+uint32_t lastRxMode;
+uint32_t lastTimestamp;
+
+static void SystemClock_Config(void);
+static void MX_GPIO_Init(void);
+static void MX_DMA_Init(void);
+static void MX_I2C2_Init(void);
+static void MX_SPI3_Init(void);
+static void MX_SDIO_SD_Init(void);
+static void MX_SPI1_Init(void);
+static void MX_USART2_UART_Init(void);
+static void stm32_init(void);
+static void FigherLighter(uint8_t lighterNumber);
+static void LogData(char data[]);
+static void ParseReceivedCommand(char cmd[], uint8_t payloadSize);
+void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size);
+
+
+static void stm32_init(void){
+  HAL_Init();
+
+  SystemClock_Config();
+
+  MX_GPIO_Init();
+  MX_DMA_Init();
+  MX_I2C2_Init();
+  MX_SPI3_Init();
+  MX_SDIO_SD_Init();
+  MX_FATFS_Init();
+  MX_SPI1_Init();
+  MX_USART2_UART_Init();
+}
+
+static void FigherLighter(uint8_t lighterNumber){
 	uint16_t pinNumber = 0 | (1<<(6+lighterNumber));
 	HAL_GPIO_WritePin(GPIOE, pinNumber, GPIO_PIN_SET);
 	HAL_Delay(15);
 	HAL_GPIO_WritePin(GPIOE, pinNumber, GPIO_PIN_RESET);
 }
 
-void LogData(char data[]){
+static void LogData(char data[]){
 	if(write_logs == 1)
 		log_data(data);
 }
 
 
-void ParseReceivedCommand(char cmd[], uint8_t payloadSize)
+static void ParseReceivedCommand(char cmd[], uint8_t payloadSize)
 {
 	if(cmd[0] == '\0')
 		return;
@@ -145,7 +134,10 @@ void ParseReceivedCommand(char cmd[], uint8_t payloadSize)
 		MX_I2C2_Init();
 
 		  PCA9685_Init(&hi2c2);
-		  PCA9685_SetPwmFrequency(50);
+      #ifndef PCA9685_SERVO_MODE
+      PCA9685_SetPwmFrequency(50);
+      #endif
+		  // PCA9685_SetPwmFrequency(50);
 
 		PCA9685_STATUS servoAngleStatus = PCA9685_SetServoAngle(servoNumber - 1, servoAngle);
 
@@ -211,235 +203,12 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
     HAL_UARTEx_ReceiveToIdle_DMA(&huart2, (uint8_t *)RxBuffer, RxBuffer_SIZE); //re-enable the DMA interrupt
     __HAL_DMA_DISABLE_IT(&hdma_usart2_rx, DMA_IT_HT); //disable the half transfer interrupt
 }
-/* USER CODE END 0 */
-
-/**
-  * @brief  The application entry point.
-  * @retval int
-  */
-int main(void)
-{
-
-  /* USER CODE BEGIN 1 */
-
-  /* USER CODE END 1 */
-
-  /* MCU Configuration--------------------------------------------------------*/
-
-  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
-
-  /* USER CODE BEGIN Init */
-
-  /* USER CODE END Init */
-
-  /* Configure the system clock */
-  SystemClock_Config();
-
-  /* USER CODE BEGIN SysInit */
-
-  /* USER CODE END SysInit */
-
-  /* Initialize all configured peripherals */
-  MX_GPIO_Init();
-  MX_DMA_Init();
-  MX_I2C2_Init();
-  MX_SPI3_Init();
-  MX_SDIO_SD_Init();
-  MX_FATFS_Init();
-  MX_SPI1_Init();
-  MX_USART2_UART_Init();
-  /* USER CODE BEGIN 2 */
-  HAL_UARTEx_ReceiveToIdle_DMA(&huart2, (uint8_t *)RxBuffer, RxBuffer_SIZE);
-  __HAL_DMA_DISABLE_IT(&hdma_usart2_rx, DMA_IT_HT);
-
-  //HAL_ADC_Start_DMA(&hadc1,(uint32_t*)&value_adc,1);
-
-  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_2, GPIO_PIN_SET);
-  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_SET);
-
-  colir_one_init(&hspi1);
-  HAL_Delay(100);
-
-  read_logs_to_sd();
-
-  NRF24_Init();
-  NRF24_TxRxMode(TxAddress, RxAddress, 76);
-  NRF24_RxMode();
-
-  bno055_assignI2C(&hi2c2);
-  bno055_setup();
-  bno055_setOperationModeNDOF();
-
-  PCA9685_Init(&hi2c2);
-  PCA9685_SetPwmFrequency(50);
-
-  //PCA9685_SetServoAngle(0, 90);
-  //PCA9685_SetServoAngle(1, 87);
-  //PCA9685_SetServoAngle(2, 83);
-  //PCA9685_SetServoAngle(3, 84);
-
-  //PCA9685_SetServoAngle(7, 90);
-
-  HAL_SPI_Init(&hspi1);
-  while(beginSPI() != BMP5_OK)
-  {
-    // Wait a bit to see if connection is established
-    HAL_Delay(1000);
-  }
-  HAL_Delay(1000);
-  int8_t err = getSensorData(&bmpData);
-  zeroAltitude = calcAltitude(bmpData.pressure);
-  HAL_SPI_DeInit(&hspi1);
-
-  rState = COLIRONE_READY_TO_LAUNCH;
-  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_2, GPIO_PIN_RESET);
-
-  uint32_t lastRxMode = HAL_GetTick();
-  uint32_t lastTimestamp = HAL_GetTick();
-  bool rxMode = false;
-  float VBatt;
-  float lastAltitude = 0;
-  float verticalVelocity = 0;
-  float altitude = 0;
-  flash_config* logsConfig = get_logs_config();
-
-  double latitude = 0, longitude = 0;
-  /* USER CODE END 2 */
-
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
-  while (1)
-  {
-    /* USER CODE END WHILE */
-
-    /* USER CODE BEGIN 3 */
-
-	uint32_t timestamp = HAL_GetTick();
-	bno055_vector_t orientation = bno055_getVectorEuler();
-	bno055_vector_t linearAccel = bno055_getVectorLinearAccel();
-	bno055_vector_t quaternion = bno055_getVectorQuaternion();
-	bno055_vector_t gyro = bno055_getVectorGyroscope();
-	logsConfig = get_logs_config();
-
-	HAL_SPI_Init(&hspi1);
-	int8_t err = getSensorData(&bmpData);
-	HAL_SPI_DeInit(&hspi1);
-	if(bmpData.pressure > 10000){
-		altitude = calcAltitude(bmpData.pressure) - zeroAltitude;
-		if(altitude > apogee)
-			apogee = altitude;
-
-		float deltaT = timestamp - lastTimestamp;
-		if(deltaT != 0)
-			verticalVelocity = (altitude - lastAltitude) / (deltaT / 1000);
-
-		lastAltitude = altitude;
-		lastTimestamp = timestamp;
-
-		if(verticalVelocity < -3 && altitude > 5 && altitude < 150 && (rState == COLIRONE_CRUISE || rState == COLIRONE_SHUTES_DEPLOYED)){
-			rState = COLIRONE_SHUTES_DEPLOYED;
-			ParseReceivedCommand("s 8 90", 32);
-		}
-	}
-
-	VBatt = (value_adc * 2 / 4095) * 7.4;
-
-	nmea_parse(&myData, DataBuffer);
-	latitude = myData.latitude;
-	longitude = myData.longitude;
-	if(longitude > 1000)
-		longitude = longitude / 1000;
-	if(myData.lonSide == 'W')
-		longitude = -longitude;
-	if(myData.latSide == 'S')
-		latitude = -latitude;
-	//ParseReceivedCommand("s 8 90", 32);
-	HAL_Delay(10);
-	if(!rxMode){
-		NRF24_TxMode();
-		memset(&TxData, 0, sizeof(TxData));
-		sprintf(TxData, "p %d %f %f %d", timestamp, latitude, longitude, myData.satelliteCount);
-		NRF24_Transmit((uint8_t*)TxData);
-		LogData(TxData);
-
-		HAL_Delay(15);
-		memset(&TxData, 0, sizeof(TxData));
-		sprintf(TxData, "h %d %.2f", timestamp, altitude);
-		NRF24_Transmit((uint8_t*)TxData);
-		LogData(TxData);
-
-		HAL_Delay(15);
-		memset(&TxData, 0, sizeof(TxData));
-		sprintf(TxData, "v %d %.2f", timestamp, verticalVelocity);
-		NRF24_Transmit((uint8_t*)TxData);
-		LogData(TxData);
-
-		HAL_Delay(15);
-		memset(&TxData, 0, sizeof(TxData));
-		sprintf(TxData, "o %d %.2f %.2f %.2f", timestamp, -orientation.x, -orientation.y, -orientation.z);
-		NRF24_Transmit((uint8_t*)TxData);
-		LogData(TxData);
-
-		HAL_Delay(15);
-		memset(&TxData, 0, sizeof(TxData));
-		sprintf(TxData, "g %d %.2f %.2f %.2f", timestamp, gyro.x, gyro.y, gyro.z);
-		NRF24_Transmit((uint8_t*)TxData);
-		LogData(TxData);
-
-		HAL_Delay(15);
-		memset(&TxData, 0, sizeof(TxData));
-		sprintf(TxData, "a %d %.2f %.2f %.2f", timestamp, linearAccel.x, linearAccel.y, linearAccel.z);
-		NRF24_Transmit((uint8_t*)TxData);
-		LogData(TxData);
-
-		HAL_Delay(15);
-		memset(&TxData, 0, sizeof(TxData));
-		sprintf(TxData, "q %d %.2f %.2f %.2f %.2f", timestamp, quaternion.x, quaternion.y, quaternion.z, quaternion.w);
-		NRF24_Transmit((uint8_t*)TxData);
-		LogData(TxData);
-
-		HAL_Delay(15);
-		memset(&TxData, 0, sizeof(TxData));
-		sprintf(TxData, "s %d %d %d %d", timestamp, write_logs, rState, logsConfig->last_log);
-		NRF24_Transmit((uint8_t*)TxData);
-		LogData(TxData);
-
-		HAL_Delay(15);
-		if(timestamp - lastRxMode > 500){
-			memset(&TxData, 0, sizeof(TxData));
-			sprintf(TxData, "c");
-			NRF24_Transmit((uint8_t*)TxData);
-			rxMode = true;
-			NRF24_RxMode();
-			lastRxMode = HAL_GetTick();
-		}
-	}
-	else{
-		if (isDataAvailable() == 1)
-		{
-			memset(&RxData, 0, sizeof(RxData));
-			NRF24_Receive(RxData);
-			rxMode = false;
-			lastRxMode = HAL_GetTick();
-			ParseReceivedCommand((char*)RxData, sizeof(RxData));
-		}
-		else if(timestamp - lastRxMode > 250){
-			rxMode = false;
-			lastRxMode = HAL_GetTick();
-		}
-	}
-
-	HAL_Delay(70);
-  }
-  /* USER CODE END 3 */
-}
 
 /**
   * @brief System Clock Configuration
   * @retval None
   */
-void SystemClock_Config(void)
+static void SystemClock_Config(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
@@ -756,10 +525,6 @@ static void MX_GPIO_Init(void)
 /* USER CODE END MX_GPIO_Init_2 */
 }
 
-/* USER CODE BEGIN 4 */
-
-/* USER CODE END 4 */
-
 /**
   * @brief  This function is executed in case of error occurrence.
   * @retval None
@@ -775,19 +540,181 @@ void Error_Handler(void)
   /* USER CODE END Error_Handler_Debug */
 }
 
-#ifdef  USE_FULL_ASSERT
-/**
-  * @brief  Reports the name of the source file and the source line number
-  *         where the assert_param error has occurred.
-  * @param  file: pointer to the source file name
-  * @param  line: assert_param error line source number
-  * @retval None
-  */
-void assert_failed(uint8_t *file, uint32_t line)
-{
-  /* USER CODE BEGIN 6 */
-  /* User can add his own implementation to report the file name and line number,
-     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-  /* USER CODE END 6 */
+ColirOne::ColirOne(){
+    
 }
-#endif /* USE_FULL_ASSERT */
+
+void ColirOne::init(void){
+    stm32_init();
+
+    HAL_UARTEx_ReceiveToIdle_DMA(&huart2, (uint8_t *)RxBuffer, RxBuffer_SIZE);
+    __HAL_DMA_DISABLE_IT(&hdma_usart2_rx, DMA_IT_HT);
+
+    //HAL_ADC_Start_DMA(&hadc1,(uint32_t*)&value_adc,1);
+
+    HAL_GPIO_WritePin(GPIOE, GPIO_PIN_2, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_SET);
+
+    colir_one_init(&hspi1);
+    HAL_Delay(100);
+
+    read_logs_to_sd();
+
+    NRF24_Init();
+    NRF24_TxRxMode(TxAddress, RxAddress, 76);
+    NRF24_RxMode();
+
+    bno055_assignI2C(&hi2c2);
+    bno055_setup();
+    bno055_setOperationModeNDOF();
+
+    PCA9685_Init(&hi2c2);
+    #ifndef PCA9685_SERVO_MODE
+    PCA9685_SetPwmFrequency(50);
+    #endif
+
+    //PCA9685_SetServoAngle(0, 90);
+    //PCA9685_SetServoAngle(1, 87);
+    //PCA9685_SetServoAngle(2, 83);
+    //PCA9685_SetServoAngle(3, 84);
+
+    //PCA9685_SetServoAngle(7, 90);
+
+    HAL_SPI_Init(&hspi1);
+    while(beginSPI() != BMP5_OK)
+    {
+        // Wait a bit to see if connection is established
+        HAL_Delay(1000);
+    }
+    HAL_Delay(1000);
+    int8_t err = getSensorData(&bmpData);
+    zeroAltitude = calcAltitude(bmpData.pressure);
+    HAL_SPI_DeInit(&hspi1);
+
+    rState = COLIRONE_READY_TO_LAUNCH;
+    HAL_GPIO_WritePin(GPIOE, GPIO_PIN_2, GPIO_PIN_RESET);
+
+    lastRxMode = HAL_GetTick();
+    lastTimestamp = HAL_GetTick();
+
+    logsConfig = get_logs_config();
+}
+
+void ColirOne::base(void){
+	uint32_t timestamp = HAL_GetTick();
+	bno055_vector_t orientation = bno055_getVectorEuler();
+	bno055_vector_t linearAccel = bno055_getVectorLinearAccel();
+	bno055_vector_t quaternion = bno055_getVectorQuaternion();
+	bno055_vector_t gyro = bno055_getVectorGyroscope();
+	logsConfig = get_logs_config();
+
+	HAL_SPI_Init(&hspi1);
+	int8_t err = getSensorData(&bmpData);
+	HAL_SPI_DeInit(&hspi1);
+	if(bmpData.pressure > 10000){
+		altitude = calcAltitude(bmpData.pressure) - zeroAltitude;
+		if(altitude > apogee)
+			apogee = altitude;
+
+		float deltaT = timestamp - lastTimestamp;
+		if(deltaT != 0)
+			verticalVelocity = (altitude - lastAltitude) / (deltaT / 1000);
+
+		lastAltitude = altitude;
+		lastTimestamp = timestamp;
+
+		if(verticalVelocity < -3 && altitude > 5 && altitude < 150 && (rState == COLIRONE_CRUISE || rState == COLIRONE_SHUTES_DEPLOYED)){
+			rState = COLIRONE_SHUTES_DEPLOYED;
+			ParseReceivedCommand("s 8 90", 32);
+		}
+	}
+
+	VBatt = (value_adc * 2 / 4095) * 7.4;
+
+	nmea_parse(&myData, DataBuffer);
+	latitude = myData.latitude;
+	longitude = myData.longitude;
+	if(longitude > 1000)
+		longitude = longitude / 1000;
+	if(myData.lonSide == 'W')
+		longitude = -longitude;
+	if(myData.latSide == 'S')
+		latitude = -latitude;
+	//ParseReceivedCommand("s 8 90", 32);
+	HAL_Delay(10);
+	if(!rxMode){
+		NRF24_TxMode();
+		memset(&TxData, 0, sizeof(TxData));
+		sprintf(TxData, "p %d %f %f %d", timestamp, latitude, longitude, myData.satelliteCount);
+		NRF24_Transmit((uint8_t*)TxData);
+		LogData(TxData);
+
+		HAL_Delay(15);
+		memset(&TxData, 0, sizeof(TxData));
+		sprintf(TxData, "h %d %.2f", timestamp, altitude);
+		NRF24_Transmit((uint8_t*)TxData);
+		LogData(TxData);
+
+		HAL_Delay(15);
+		memset(&TxData, 0, sizeof(TxData));
+		sprintf(TxData, "v %d %.2f", timestamp, verticalVelocity);
+		NRF24_Transmit((uint8_t*)TxData);
+		LogData(TxData);
+
+		HAL_Delay(15);
+		memset(&TxData, 0, sizeof(TxData));
+		sprintf(TxData, "o %d %.2f %.2f %.2f", timestamp, -orientation.x, -orientation.y, -orientation.z);
+		NRF24_Transmit((uint8_t*)TxData);
+		LogData(TxData);
+
+		HAL_Delay(15);
+		memset(&TxData, 0, sizeof(TxData));
+		sprintf(TxData, "g %d %.2f %.2f %.2f", timestamp, gyro.x, gyro.y, gyro.z);
+		NRF24_Transmit((uint8_t*)TxData);
+		LogData(TxData);
+
+		HAL_Delay(15);
+		memset(&TxData, 0, sizeof(TxData));
+		sprintf(TxData, "a %d %.2f %.2f %.2f", timestamp, linearAccel.x, linearAccel.y, linearAccel.z);
+		NRF24_Transmit((uint8_t*)TxData);
+		LogData(TxData);
+
+		HAL_Delay(15);
+		memset(&TxData, 0, sizeof(TxData));
+		sprintf(TxData, "q %d %.2f %.2f %.2f %.2f", timestamp, quaternion.x, quaternion.y, quaternion.z, quaternion.w);
+		NRF24_Transmit((uint8_t*)TxData);
+		LogData(TxData);
+
+		HAL_Delay(15);
+		memset(&TxData, 0, sizeof(TxData));
+		sprintf(TxData, "s %d %d %d %d", timestamp, write_logs, rState, logsConfig->last_log);
+		NRF24_Transmit((uint8_t*)TxData);
+		LogData(TxData);
+
+		HAL_Delay(15);
+		if(timestamp - lastRxMode > 500){
+			memset(&TxData, 0, sizeof(TxData));
+			sprintf(TxData, "c");
+			NRF24_Transmit((uint8_t*)TxData);
+			rxMode = true;
+			NRF24_RxMode();
+			lastRxMode = HAL_GetTick();
+		}
+	}
+	else{
+		if (isDataAvailable() == 1)
+		{
+			memset(&RxData, 0, sizeof(RxData));
+			NRF24_Receive(RxData);
+			rxMode = false;
+			lastRxMode = HAL_GetTick();
+			ParseReceivedCommand((char*)RxData, sizeof(RxData));
+		}
+		else if(timestamp - lastRxMode > 250){
+			rxMode = false;
+			lastRxMode = HAL_GetTick();
+		}
+	}
+
+	HAL_Delay(70);
+}

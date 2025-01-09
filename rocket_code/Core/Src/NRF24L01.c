@@ -200,7 +200,7 @@ void NRF24_Init (void)
 
 	nrf24_WriteReg (RF_CH, 0);  // will be setup during Tx or RX
 
-	nrf24_WriteReg (RF_SETUP, 0x0C);   // Power= 0db, data rate = 2Mbps
+	nrf24_WriteReg (RF_SETUP, 0x27);   // Power= 0db, data rate = 250kbps
 
 	// Enable the chip after configuring the device
 	CE_Enable();

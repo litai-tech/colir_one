@@ -188,7 +188,7 @@ void setup() {
   //delay(1000);
 
   radio.setAutoAck(false);
-  radio.setDataRate(RF24_2MBPS);
+  radio.setDataRate(RF24_250KBPS);
   radio.openReadingPipe(1, RxAddress);
   radio.openWritingPipe(TxAddress);
   radio.setPALevel(RF24_PA_MAX);

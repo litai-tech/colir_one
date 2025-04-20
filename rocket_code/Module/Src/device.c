@@ -1,7 +1,18 @@
+#include <sys/time.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <string.h>
+#include <unistd.h>
+#include <signal.h>
+#include <fcntl.h>
+
+#include "device.h"
+
 #include "main.h"
 #include "w25qxx.h"
 #include "fatfs.h"
-#include "colir_one.h"
 #include "string.h"
 #include <stdio.h>
 

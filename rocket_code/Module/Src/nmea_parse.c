@@ -30,7 +30,7 @@ int gps_checksum(char *nmea_data)
     }
 }
 
-int nmea_GPGGA(GPS *gps_data, char*inputString){
+int nmea_GPGGA(GPS_t *gps_data, char*inputString){
     char *values[25];
     int counter = 0;
     memset(values, 0, sizeof(values));
@@ -90,7 +90,7 @@ int nmea_GPGGA(GPS *gps_data, char*inputString){
 }
 
 
-int nmea_GPGSA(GPS *gps_data, char*inputString){
+int nmea_GPGSA(GPS_t *gps_data, char*inputString){
     char *values[25];
     int counter = 0;
     memset(values, 0, sizeof(values));
@@ -115,7 +115,7 @@ int nmea_GPGSA(GPS *gps_data, char*inputString){
 
 
 
-int nmea_GPGLL(GPS *gps_data, char*inputString) {
+int nmea_GPGLL(GPS_t *gps_data, char*inputString) {
 
     char *values[25];
     int counter = 0;
@@ -163,7 +163,7 @@ int nmea_GPGLL(GPS *gps_data, char*inputString) {
     else return 0;
 }
 
-void nmea_parse(GPS *gps_data, uint8_t *buffer){
+void nmea_parse(GPS_t *gps_data, uint8_t *buffer){
     memset(data, 0, sizeof(data));
     char * token = strtok((char*)buffer, "$");
     int cnt = 0;

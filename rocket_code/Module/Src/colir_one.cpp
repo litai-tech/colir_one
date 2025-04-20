@@ -1,4 +1,4 @@
-#include "ColirOne.h"
+#include "colir_one.h"
 #include "main.h"
 #include "fatfs.h"
 
@@ -7,7 +7,7 @@ extern "C" {
   #include "bno055_stm32.h"
   #include "nmea_parse.h"
   #include "pca9685.h"
-  #include "colir_one.h"
+  #include "device.h"
   #include "bmp581.h"
 }
 
@@ -23,6 +23,7 @@ DMA_HandleTypeDef hdma_sdio_tx;
 SPI_HandleTypeDef hspi1;
 SPI_HandleTypeDef hspi3;
 
+UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
 DMA_HandleTypeDef hdma_usart2_rx;
 DMA_HandleTypeDef hdma_usart2_tx;
@@ -71,6 +72,7 @@ static void MX_I2C2_Init(void);
 static void MX_SPI3_Init(void);
 static void MX_SDIO_SD_Init(void);
 static void MX_SPI1_Init(void);
+// static void MX_USART1_UART_INIT(void);
 static void MX_USART2_UART_Init(void);
 static void stm32_init(void);
 static void FigherLighter(uint8_t lighterNumber);
@@ -91,6 +93,7 @@ static void stm32_init(void){
   MX_SDIO_SD_Init();
   MX_FATFS_Init();
   MX_SPI1_Init();
+  // MX_USART1_UART_INIT();
   MX_USART2_UART_Init();
 }
 
@@ -421,6 +424,21 @@ static void MX_USART2_UART_Init(void)
 
 }
 
+// static void MX_USART1_UART_INIT(void){
+//   huart1.Instance = USART1;
+//   huart1.Init.BaudRate = 9600;
+//   huart1.Init.WordLength = UART_WORDLENGTH_8B;
+//   huart1.Init.StopBits = UART_STOPBITS_1;
+//   huart1.Init.Parity = UART_PARITY_NONE;
+//   huart1.Init.Mode = UART_MODE_TX_RX;
+//   huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+//   huart1.Init.OverSampling = UART_OVERSAMPLING_16;
+//   if (HAL_UART_Init(&huart1) != HAL_OK)
+//   {
+//     Error_Handler();
+//   }
+// }
+
 /**
   * Enable DMA controller clock
   */
@@ -717,4 +735,13 @@ void ColirOne::base(void){
 	}
 
 	HAL_Delay(70);
+}
+
+XYZ IMU::getOrientation(){
+    XYZ orientation;
+    bno055_vector_t orientationVector = bno055_getVectorEuler();
+    orientation.x = orientationVector.x;
+    orientation.y = orientationVector.y;
+    orientation.z = orientationVector.z;
+    return orientation;
 }

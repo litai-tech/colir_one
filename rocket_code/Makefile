@@ -31,58 +31,78 @@ OPT = -Og
 # Build path
 BUILD_DIR = build
 
+OPENOCD_PATH = /home/dat/.config/Code/User/globalStorage/litaitech.stm32-colir-one/@xpack-dev-tools/openocd/0.12.0-4.1/.content/bin/openocd
+
+
 ######################################
 # source
 ######################################
 # C sources
 C_SOURCES =  \
+Core/Src/NRF24L01.c \
 Core/Src/bmp581.c \
 Core/Src/bno055.c \
-Core/Src/colir_one.c \
+Core/Src/device.c \
+Core/Src/fifo.c \
+Core/Src/log.c \
 Core/Src/nmea_parse.c \
-Core/Src/NRF24L01.c \
 Core/Src/pca9685.c \
-Core/Src/w25qxx.c \
-Core/Src/stm32f4xx_it.c \
+Core/Src/redirect.c \
 Core/Src/stm32f4xx_hal_msp.c \
-FATFS/App/fatfs.c \
-FATFS/Target/bsp_driver_sd.c \
-FATFS/Target/sd_diskio.c \
-FATFS/Target/fatfs_platform.c \
-Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c \
-Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c \
+Core/Src/stm32f4xx_it.c \
+Core/Src/syscalls.c \
+Core/Src/sysmem.c \
+Core/Src/system_stm32f4xx.c \
+Core/Src/uart.c \
+Core/Src/usb_com.c \
+Core/Src/util.c \
+Core/Src/w25qxx.c \
+Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c \
+Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c \
+Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c \
+Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c \
+Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c \
-Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c \
-Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c \
-Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c \
-Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c \
-Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c \
-Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c \
-Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c_ex.c \
-Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_sdmmc.c \
+Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd.c \
+Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd_ex.c \
+Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c \
+Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c \
+Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c \
+Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sd.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c \
+Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_sdmmc.c \
+Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_usb.c \
 Drivers/bmp5_api/Src/bmp5.c \
-Core/Src/system_stm32f4xx.c \
+FATFS/App/fatfs.c \
+FATFS/Target/bsp_driver_sd.c \
+FATFS/Target/fatfs_platform.c \
+FATFS/Target/sd_diskio.c \
+Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c \
+Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c \
+Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c \
+Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c \
 Middlewares/Third_Party/FatFs/src/diskio.c \
 Middlewares/Third_Party/FatFs/src/ff.c \
 Middlewares/Third_Party/FatFs/src/ff_gen_drv.c \
-Middlewares/Third_Party/FatFs/src/option/syscall.c \
 Middlewares/Third_Party/FatFs/src/option/ccsbcs.c \
-Core/Src/sysmem.c \
-Core/Src/syscalls.c 
+Middlewares/Third_Party/FatFs/src/option/syscall.c \
+USB_DEVICE/App/usb_device.c \
+USB_DEVICE/App/usbd_cdc_if.c \
+USB_DEVICE/App/usbd_desc.c \
+USB_DEVICE/Target/usbd_conf.c
 
 CXXSOURCES = \
 Core/Src/main.cpp \
-Core/Src/ColirOne.cpp \
+Core/Src/colir_one.cpp \
 
 # ASM sources
 ASM_SOURCES =  \
@@ -152,8 +172,11 @@ C_INCLUDES =  \
 -IMiddlewares/Third_Party/FatFs/src \
 -IDrivers/CMSIS/Device/ST/STM32F4xx/Include \
 -IDrivers/CMSIS/Include \
--IDrivers/bmp5_api/Inc
-
+-IDrivers/bmp5_api/Inc \
+-IUSB_DEVICE/App \
+-IUSB_DEVICE/Target \
+-IMiddlewares/ST/STM32_USB_Device_Library/Core/Inc \
+-IMiddlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc
 
 # compile gcc flags
 ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
@@ -228,9 +251,8 @@ $(BUILD_DIR):
 clean:
 	-rm -fR $(BUILD_DIR)
 
-flash:
-	STM32_Programmer_CLI -c port=SWD -halt -e all --readunprotect
-	STM32_Programmer_CLI -c port=SWD -halt  -d $(BUILD_DIR)/$(TARGET).hex -rst
+flash: $(BUILD_DIR)/$(TARGET).elf
+	$(OPENOCD_PATH) -f ./openocd.cfg -c "program $(BUILD_DIR)/$(TARGET).elf verify reset exit"
   
 #######################################
 # dependencies

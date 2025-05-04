@@ -1,7 +1,12 @@
 #ifndef _DEVICE_H_
 #define _DEVICE_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
+#include "stm32f4xx_hal.h"
 /** Return a millisecond timestamp.  Does not need to be synchronized to anything.
  *  *Optional* to compile, but will not calculate delays correctly without a correct implementation.
 */
@@ -26,6 +31,9 @@ void log_data(char cmd[]);
 void read_logs_to_sd();
 void reset_logs();
 flash_config* get_logs_config();
-  
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

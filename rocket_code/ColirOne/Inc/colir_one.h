@@ -14,6 +14,12 @@
 
 #ifdef __cplusplus
 
+#endif
+
+#ifdef __cplusplus
+extern "C"{
+#endif
+
 class LoggerState {
     public: 
         bool WritingToLogsEnabled;
@@ -62,12 +68,6 @@ class ColirOne{
     private:
         void setState(void);
 };
-
-#endif
-
-#ifdef __cplusplus
-extern "C"{
-#endif
 
 
 #ifdef __cplusplus

@@ -9,7 +9,7 @@ Barometer::Barometer() {
     bmpData = {0};
 }
 
-uint8_t Barometer::init(void) {
+colirone_err_t Barometer::init(void) {
     HAL_SPI_Init(&hspi1);
     
     uint32_t startTime = HAL_GetTick();
@@ -21,7 +21,10 @@ uint8_t Barometer::init(void) {
         }
         HAL_Delay(5000);
     }
-    COLIRONE_CHECK_ERROR(getSensorData(&bmpData));
+    int8_t err = getSensorData(&bmpData);
+    if(err != BMP5_OK) {
+        return COLIRONE_ERROR;
+    }
     zeroAltitude = calcAltitude(bmpData.pressure);
     
     HAL_SPI_DeInit(&hspi1);
@@ -30,14 +33,20 @@ uint8_t Barometer::init(void) {
 
 float Barometer::getPressure(void) {
     HAL_SPI_Init(&hspi1);
-    COLIRONE_CHECK_ERROR(getSensorData(&bmpData));
+    int8_t err = getSensorData(&bmpData);
+    if(err != BMP5_OK) {
+        printf("Error getting pressure: %d\n", err);
+    }
     HAL_SPI_DeInit(&hspi1);
     return bmpData.pressure;
 }
 
 float Barometer::getTemperature(void) {
     HAL_SPI_Init(&hspi1);
-    COLIRONE_CHECK_ERROR(getSensorData(&bmpData));
+    int8_t err = getSensorData(&bmpData);
+    if(err != BMP5_OK) {
+        printf("Error getting pressure: %d\n", err);
+    }
     HAL_SPI_DeInit(&hspi1);
     return bmpData.temperature;
 }

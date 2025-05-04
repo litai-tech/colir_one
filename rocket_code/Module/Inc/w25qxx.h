@@ -61,6 +61,10 @@ typedef enum {
     W25QXX_Timeout // 2
 } W25QXX_result_t;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef W25QXX_QSPI
 W25QXX_result_t w25qxx_init(W25QXX_HandleTypeDef *w25qxx, QSPI_HandleTypeDef *qhspi);
 #else
@@ -70,6 +74,10 @@ W25QXX_result_t w25qxx_read(W25QXX_HandleTypeDef *w25qxx, uint32_t address, uint
 W25QXX_result_t w25qxx_write(W25QXX_HandleTypeDef *w25qxx, uint32_t address, uint8_t *buf, uint32_t len);
 W25QXX_result_t w25qxx_erase(W25QXX_HandleTypeDef *w25qxx, uint32_t address, uint32_t len);
 W25QXX_result_t w25qxx_chip_erase(W25QXX_HandleTypeDef *w25qxx);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* W25QXX_H_ */
 

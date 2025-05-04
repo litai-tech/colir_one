@@ -1,6 +1,6 @@
 #include "usbd_cdc_if.h"
 
-#include "app.h"
+#include APP_CONFIG
 #include "fifo.h"
 #include "usb_com.h"
 #include "uart.h"

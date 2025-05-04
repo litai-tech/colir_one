@@ -1,7 +1,10 @@
 #ifndef __LOG_H__
 #define __LOG_H__
 
-#include "app.h"
+#ifdef __cplusplus
+extern "C" {
+#endif
+#include APP_CONFIG
 #include "stdint.h"
 
 #define ENABLE_FILE_LOGGING
@@ -44,4 +47,7 @@ uint32_t timestamp();
 
 #endif
 
+#ifdef __cplusplus
+}
+#endif
 #endif

@@ -14,10 +14,10 @@ class GPS{
         double getLongitude();
         double getLatitude();
         int getVisibleSatellites();
-        void gpsRun();
+        void run();
+        void init(void);
     private:
         GPS_t myGPS;
-        uint8_t DataBuffer[512];
 };
 #ifdef __cplusplus
 }

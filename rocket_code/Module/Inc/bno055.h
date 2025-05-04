@@ -9,6 +9,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
+#include "stm32f4xx_hal.h"
 
 #define START_BYTE 0xAA
 #define RESPONSE_BYTE 0xBB
@@ -270,38 +271,36 @@ enum bno055_axis_map_sign_t {
   BNO055_AXIS_SIGN_NEGATIVE = 0x01
 };
 
-void bno055_writeData(uint8_t reg, uint8_t data);
-void bno055_readData(uint8_t reg, uint8_t *data, uint8_t len);
-void bno055_delay(int time);
+HAL_StatusTypeDef bno055_reset(void);
+HAL_StatusTypeDef bno055_getOperationMode(bno055_opmode_t *mode);
+HAL_StatusTypeDef bno055_setOperationMode(bno055_opmode_t mode);
+HAL_StatusTypeDef bno055_setOperationModeConfig(void);
+HAL_StatusTypeDef bno055_setOperationModeNDOF(void);
+HAL_StatusTypeDef bno055_enableExternalCrystal(void);
+HAL_StatusTypeDef bno055_disableExternalCrystal(void);
+HAL_StatusTypeDef bno055_setup(void);
 
-void bno055_reset();
-bno055_opmode_t bno055_getOperationMode();
-void bno055_setOperationMode(bno055_opmode_t mode);
-void bno055_setOperationModeConfig();
-void bno055_setOperationModeNDOF();
-void bno055_enableExternalCrystal();
-void bno055_disableExternalCrystal();
-void bno055_setup();
+HAL_StatusTypeDef bno055_getTemp(uint8_t *temp);
 
-int8_t bno055_getTemp();
+HAL_StatusTypeDef bno055_getBootloaderRevision(uint8_t* blRev);
+HAL_StatusTypeDef bno055_getSystemStatus(uint8_t *sysStatus);
+HAL_StatusTypeDef bno055_getSystemError(uint8_t* sysError);
+HAL_StatusTypeDef bno055_getSWRevision(int16_t* swRev);
 
-uint8_t bno055_getBootloaderRevision();
-uint8_t bno055_getSystemStatus();
-uint8_t bno055_getSystemError();
-int16_t bno055_getSWRevision();
+HAL_StatusTypeDef bno055_getSelfTestResult(bno055_self_test_result_t *result);
+HAL_StatusTypeDef bno055_getCalibrationState(bno055_calibration_state_t* calState);
+HAL_StatusTypeDef bno055_getCalibrationData(bno055_calibration_data_t *calData);
+HAL_StatusTypeDef bno055_setCalibrationData(bno055_calibration_data_t calData);
+HAL_StatusTypeDef bno055_getVectorAccelerometer(bno055_vector_t* xyz);
+HAL_StatusTypeDef bno055_getVectorMagnetometer(bno055_vector_t* xyz);
+HAL_StatusTypeDef bno055_getVectorGyroscope(bno055_vector_t* xyz);
+HAL_StatusTypeDef bno055_getVectorEuler(bno055_vector_t* xyz);
+HAL_StatusTypeDef bno055_getVectorLinearAccel(bno055_vector_t* xyz);
+HAL_StatusTypeDef bno055_getVectorGravity(bno055_vector_t* xyz);
+HAL_StatusTypeDef bno055_getVectorQuaternion(bno055_vector_t* xyz);
+HAL_StatusTypeDef bno055_setAxisMap(bno055_axis_map_t axis);
 
-bno055_self_test_result_t bno055_getSelfTestResult();
-bno055_calibration_state_t bno055_getCalibrationState();
-bno055_calibration_data_t bno055_getCalibrationData();
-void bno055_setCalibrationData(bno055_calibration_data_t calData);
-bno055_vector_t bno055_getVectorAccelerometer();
-bno055_vector_t bno055_getVectorMagnetometer();
-bno055_vector_t bno055_getVectorGyroscope();
-bno055_vector_t bno055_getVectorEuler();
-bno055_vector_t bno055_getVectorLinearAccel();
-bno055_vector_t bno055_getVectorGravity();
-bno055_vector_t bno055_getVectorQuaternion();
-void bno055_setAxisMap(bno055_axis_map_t axis);
+void bno055_assignI2C(I2C_HandleTypeDef* hi2c);
 
 #ifdef __cplusplus
   }

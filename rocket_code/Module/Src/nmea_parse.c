@@ -7,7 +7,7 @@
 
 char *data[15];
 
-int gps_checksum(char *nmea_data)
+static int gps_checksum(char *nmea_data)
 {
     //if you point a string with less than 5 characters the function will read outside of scope and crash the mcu.
     if(strlen(nmea_data) < 5) return 0;
@@ -30,7 +30,7 @@ int gps_checksum(char *nmea_data)
     }
 }
 
-int nmea_GPGGA(GPS_t *gps_data, char*inputString){
+static int nmea_GPGGA(GPS_t *gps_data, char*inputString){
     char *values[25];
     int counter = 0;
     memset(values, 0, sizeof(values));
@@ -90,7 +90,7 @@ int nmea_GPGGA(GPS_t *gps_data, char*inputString){
 }
 
 
-int nmea_GPGSA(GPS_t *gps_data, char*inputString){
+static int nmea_GPGSA(GPS_t *gps_data, char*inputString){
     char *values[25];
     int counter = 0;
     memset(values, 0, sizeof(values));
@@ -115,7 +115,7 @@ int nmea_GPGSA(GPS_t *gps_data, char*inputString){
 
 
 
-int nmea_GPGLL(GPS_t *gps_data, char*inputString) {
+static int nmea_GPGLL(GPS_t *gps_data, char*inputString) {
 
     char *values[25];
     int counter = 0;

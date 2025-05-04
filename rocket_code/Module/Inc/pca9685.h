@@ -12,6 +12,14 @@
 #ifndef PCA9685_H_
 #define PCA9685_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include "stdio.h"
+#include "stdint.h"
+#include "stm32f4xx_hal.h"
+
 //
 //	Enable Servo control mode
 //
@@ -92,8 +100,8 @@ PCA9685_STATUS PCA9685_SetServoAngle(uint8_t Channel, float Angle);
 
 PCA9685_STATUS PCA9685_Init(I2C_HandleTypeDef *hi2c);
 
-// #ifdef __cplusplus
-// }
-// #endif
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* PCA9685_H_ */

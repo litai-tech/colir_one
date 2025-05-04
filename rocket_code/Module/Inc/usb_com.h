@@ -15,7 +15,13 @@ typedef struct
 	unsigned char tx_buffer[MAX_TRANSMIT_BUFFER_LENGTH];
 }usb_com_t;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 void usb_transmit(uint8_t *tx_buffer, uint16_t tx_len);
 void usb_receive(uint8_t *rx_buffer, uint32_t rx_len);
+#ifdef __cplusplus
+}
+#endif
 
 #endif

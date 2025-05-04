@@ -1,0 +1,563 @@
+ARM GAS  /tmp/ccD20WtG.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"fifo.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "/home/dat/Documents/colir_one/rocket_code/Module/Src/fifo.c"
+  20              		.section	.text.fifo_debug_add,"ax",%progbits
+  21              		.align	1
+  22              		.global	fifo_debug_add
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	fifo_debug_add:
+  28              	.LVL0:
+  29              	.LFB3:
+   1:/home/dat/Documents/colir_one/rocket_code/Module/Src/fifo.c **** #include <string.h>
+   2:/home/dat/Documents/colir_one/rocket_code/Module/Src/fifo.c **** #include <stdint.h>
+   3:/home/dat/Documents/colir_one/rocket_code/Module/Src/fifo.c **** #include <stdio.h>
+   4:/home/dat/Documents/colir_one/rocket_code/Module/Src/fifo.c **** #include "fifo.h"
+   5:/home/dat/Documents/colir_one/rocket_code/Module/Src/fifo.c **** #include "log.h"
+   6:/home/dat/Documents/colir_one/rocket_code/Module/Src/fifo.c **** 
+   7:/home/dat/Documents/colir_one/rocket_code/Module/Src/fifo.c **** 
+   8:/home/dat/Documents/colir_one/rocket_code/Module/Src/fifo.c **** FIFO_CREATE(debug,4096,1)
+  30              		.loc 1 8 1 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		@ link register save eliminated.
+  35              		.loc 1 8 1 view .LVU1
+  36 0000 0D4B     		ldr	r3, .L5
+  37 0002 1B68     		ldr	r3, [r3]
+  38 0004 B3F5805F 		cmp	r3, #4096
+  39 0008 12DA     		bge	.L4
+  40              		.loc 1 8 1 discriminator 1 view .LVU2
+  41 000a 0C4A     		ldr	r2, .L5+4
+  42 000c 1368     		ldr	r3, [r2]
+  43 000e 0078     		ldrb	r0, [r0]	@ zero_extendqisi2
+  44              	.LVL1:
+  45              		.loc 1 8 1 is_stmt 0 discriminator 1 view .LVU3
+  46 0010 0B49     		ldr	r1, .L5+8
+  47 0012 C854     		strb	r0, [r1, r3]
+  48              		.loc 1 8 1 is_stmt 1 discriminator 1 view .LVU4
+  49 0014 0133     		adds	r3, r3, #1
+  50 0016 1360     		str	r3, [r2]
+ARM GAS  /tmp/ccD20WtG.s 			page 2
+
+
+  51              		.loc 1 8 1 discriminator 1 view .LVU5
+  52 0018 B3F5805F 		cmp	r3, #4096
+  53 001c 02DB     		blt	.L3
+  54              		.loc 1 8 1 discriminator 3 view .LVU6
+  55 001e 1346     		mov	r3, r2
+  56 0020 0022     		movs	r2, #0
+  57 0022 1A60     		str	r2, [r3]
+  58              	.L3:
+  59              		.loc 1 8 1 discriminator 5 view .LVU7
+  60 0024 044A     		ldr	r2, .L5
+  61 0026 1368     		ldr	r3, [r2]
+  62 0028 0133     		adds	r3, r3, #1
+  63 002a 1360     		str	r3, [r2]
+  64              		.loc 1 8 1 discriminator 5 view .LVU8
+  65 002c 0020     		movs	r0, #0
+  66              		.loc 1 8 1 is_stmt 0 view .LVU9
+  67 002e 7047     		bx	lr
+  68              	.LVL2:
+  69              	.L4:
+  70              		.loc 1 8 1 discriminator 2 view .LVU10
+  71 0030 4FF0FF30 		mov	r0, #-1
+  72              	.LVL3:
+  73              		.loc 1 8 1 view .LVU11
+  74 0034 7047     		bx	lr
+  75              	.L6:
+  76 0036 00BF     		.align	2
+  77              	.L5:
+  78 0038 00000000 		.word	__debug_SIZE
+  79 003c 00000000 		.word	__debug_WRITE_PTR
+  80 0040 00000000 		.word	__debug_WRITE_BUF
+  81              		.cfi_endproc
+  82              	.LFE3:
+  84              		.section	.text.fifo_debug_take,"ax",%progbits
+  85              		.align	1
+  86              		.global	fifo_debug_take
+  87              		.syntax unified
+  88              		.thumb
+  89              		.thumb_func
+  91              	fifo_debug_take:
+  92              	.LVL4:
+  93              	.LFB4:
+  94              		.loc 1 8 1 is_stmt 1 view -0
+  95              		.cfi_startproc
+  96              		@ args = 0, pretend = 0, frame = 0
+  97              		@ frame_needed = 0, uses_anonymous_args = 0
+  98              		@ link register save eliminated.
+  99              		.loc 1 8 1 view .LVU13
+ 100 0000 0D4B     		ldr	r3, .L11
+ 101 0002 1B68     		ldr	r3, [r3]
+ 102 0004 0D4A     		ldr	r2, .L11+4
+ 103 0006 D35C     		ldrb	r3, [r2, r3]	@ zero_extendqisi2
+ 104 0008 0370     		strb	r3, [r0]
+ 105              		.loc 1 8 1 view .LVU14
+ 106 000a 0D4B     		ldr	r3, .L11+8
+ 107 000c 1B68     		ldr	r3, [r3]
+ 108 000e 002B     		cmp	r3, #0
+ 109 0010 0EDD     		ble	.L10
+ARM GAS  /tmp/ccD20WtG.s 			page 3
+
+
+ 110              		.loc 1 8 1 discriminator 1 view .LVU15
+ 111 0012 0949     		ldr	r1, .L11
+ 112 0014 0A68     		ldr	r2, [r1]
+ 113 0016 0132     		adds	r2, r2, #1
+ 114 0018 0A60     		str	r2, [r1]
+ 115              		.loc 1 8 1 discriminator 1 view .LVU16
+ 116 001a B2F5805F 		cmp	r2, #4096
+ 117 001e 02DB     		blt	.L9
+ 118              		.loc 1 8 1 discriminator 3 view .LVU17
+ 119 0020 0A46     		mov	r2, r1
+ 120 0022 0021     		movs	r1, #0
+ 121 0024 1160     		str	r1, [r2]
+ 122              	.L9:
+ 123              		.loc 1 8 1 discriminator 5 view .LVU18
+ 124 0026 013B     		subs	r3, r3, #1
+ 125 0028 054A     		ldr	r2, .L11+8
+ 126 002a 1360     		str	r3, [r2]
+ 127              		.loc 1 8 1 discriminator 5 view .LVU19
+ 128 002c 0020     		movs	r0, #0
+ 129              	.LVL5:
+ 130              		.loc 1 8 1 is_stmt 0 view .LVU20
+ 131 002e 7047     		bx	lr
+ 132              	.LVL6:
+ 133              	.L10:
+ 134              		.loc 1 8 1 discriminator 2 view .LVU21
+ 135 0030 4FF0FF30 		mov	r0, #-1
+ 136              	.LVL7:
+ 137              		.loc 1 8 1 view .LVU22
+ 138 0034 7047     		bx	lr
+ 139              	.L12:
+ 140 0036 00BF     		.align	2
+ 141              	.L11:
+ 142 0038 00000000 		.word	__debug_READ_PTR
+ 143 003c 00000000 		.word	__debug_WRITE_BUF
+ 144 0040 00000000 		.word	__debug_SIZE
+ 145              		.cfi_endproc
+ 146              	.LFE4:
+ 148              		.section	.text.fifo_debug_size,"ax",%progbits
+ 149              		.align	1
+ 150              		.global	fifo_debug_size
+ 151              		.syntax unified
+ 152              		.thumb
+ 153              		.thumb_func
+ 155              	fifo_debug_size:
+ 156              	.LFB5:
+ 157              		.loc 1 8 1 is_stmt 1 view -0
+ 158              		.cfi_startproc
+ 159              		@ args = 0, pretend = 0, frame = 0
+ 160              		@ frame_needed = 0, uses_anonymous_args = 0
+ 161              		@ link register save eliminated.
+ 162              		.loc 1 8 1 view .LVU24
+ 163 0000 014B     		ldr	r3, .L14
+ 164 0002 1868     		ldr	r0, [r3]
+ 165 0004 7047     		bx	lr
+ 166              	.L15:
+ 167 0006 00BF     		.align	2
+ 168              	.L14:
+ARM GAS  /tmp/ccD20WtG.s 			page 4
+
+
+ 169 0008 00000000 		.word	__debug_SIZE
+ 170              		.cfi_endproc
+ 171              	.LFE5:
+ 173              		.section	.text.fifo_debug_rhead,"ax",%progbits
+ 174              		.align	1
+ 175              		.global	fifo_debug_rhead
+ 176              		.syntax unified
+ 177              		.thumb
+ 178              		.thumb_func
+ 180              	fifo_debug_rhead:
+ 181              	.LFB6:
+ 182              		.loc 1 8 1 view -0
+ 183              		.cfi_startproc
+ 184              		@ args = 0, pretend = 0, frame = 0
+ 185              		@ frame_needed = 0, uses_anonymous_args = 0
+ 186              		@ link register save eliminated.
+ 187              		.loc 1 8 1 view .LVU26
+ 188 0000 014B     		ldr	r3, .L17
+ 189 0002 1868     		ldr	r0, [r3]
+ 190 0004 7047     		bx	lr
+ 191              	.L18:
+ 192 0006 00BF     		.align	2
+ 193              	.L17:
+ 194 0008 00000000 		.word	__debug_READ_PTR
+ 195              		.cfi_endproc
+ 196              	.LFE6:
+ 198              		.section	.text.fifo_debug_whead,"ax",%progbits
+ 199              		.align	1
+ 200              		.global	fifo_debug_whead
+ 201              		.syntax unified
+ 202              		.thumb
+ 203              		.thumb_func
+ 205              	fifo_debug_whead:
+ 206              	.LFB7:
+ 207              		.loc 1 8 1 view -0
+ 208              		.cfi_startproc
+ 209              		@ args = 0, pretend = 0, frame = 0
+ 210              		@ frame_needed = 0, uses_anonymous_args = 0
+ 211              		@ link register save eliminated.
+ 212              		.loc 1 8 1 view .LVU28
+ 213 0000 014B     		ldr	r3, .L20
+ 214 0002 1868     		ldr	r0, [r3]
+ 215 0004 7047     		bx	lr
+ 216              	.L21:
+ 217 0006 00BF     		.align	2
+ 218              	.L20:
+ 219 0008 00000000 		.word	__debug_WRITE_PTR
+ 220              		.cfi_endproc
+ 221              	.LFE7:
+ 223              		.section	.text.fifo_hidmsg_add,"ax",%progbits
+ 224              		.align	1
+ 225              		.global	fifo_hidmsg_add
+ 226              		.syntax unified
+ 227              		.thumb
+ 228              		.thumb_func
+ 230              	fifo_hidmsg_add:
+ 231              	.LVL8:
+ARM GAS  /tmp/ccD20WtG.s 			page 5
+
+
+ 232              	.LFB8:
+   9:/home/dat/Documents/colir_one/rocket_code/Module/Src/fifo.c **** 
+  10:/home/dat/Documents/colir_one/rocket_code/Module/Src/fifo.c **** FIFO_CREATE(hidmsg,100,64)
+ 233              		.loc 1 10 1 view -0
+ 234              		.cfi_startproc
+ 235              		@ args = 0, pretend = 0, frame = 0
+ 236              		@ frame_needed = 0, uses_anonymous_args = 0
+ 237              		.loc 1 10 1 view .LVU30
+ 238 0000 0E4B     		ldr	r3, .L30
+ 239 0002 1B68     		ldr	r3, [r3]
+ 240 0004 632B     		cmp	r3, #99
+ 241 0006 16DC     		bgt	.L25
+ 242 0008 10B5     		push	{r4, lr}
+ 243              	.LCFI0:
+ 244              		.cfi_def_cfa_offset 8
+ 245              		.cfi_offset 4, -8
+ 246              		.cfi_offset 14, -4
+ 247 000a 0146     		mov	r1, r0
+ 248              		.loc 1 10 1 discriminator 1 view .LVU31
+ 249 000c 0C4C     		ldr	r4, .L30+4
+ 250 000e 2068     		ldr	r0, [r4]
+ 251              	.LVL9:
+ 252              		.loc 1 10 1 is_stmt 0 discriminator 1 view .LVU32
+ 253 0010 4022     		movs	r2, #64
+ 254 0012 0C4B     		ldr	r3, .L30+8
+ 255 0014 03EB8010 		add	r0, r3, r0, lsl #6
+ 256 0018 FFF7FEFF 		bl	memmove
+ 257              	.LVL10:
+ 258              		.loc 1 10 1 is_stmt 1 discriminator 1 view .LVU33
+ 259 001c 2368     		ldr	r3, [r4]
+ 260 001e 0133     		adds	r3, r3, #1
+ 261 0020 2360     		str	r3, [r4]
+ 262              		.loc 1 10 1 discriminator 1 view .LVU34
+ 263 0022 632B     		cmp	r3, #99
+ 264 0024 01DD     		ble	.L24
+ 265              		.loc 1 10 1 discriminator 3 view .LVU35
+ 266 0026 0022     		movs	r2, #0
+ 267 0028 2260     		str	r2, [r4]
+ 268              	.L24:
+ 269              		.loc 1 10 1 discriminator 5 view .LVU36
+ 270 002a 044A     		ldr	r2, .L30
+ 271 002c 1368     		ldr	r3, [r2]
+ 272 002e 0133     		adds	r3, r3, #1
+ 273 0030 1360     		str	r3, [r2]
+ 274              		.loc 1 10 1 discriminator 5 view .LVU37
+ 275 0032 0020     		movs	r0, #0
+ 276              		.loc 1 10 1 is_stmt 0 view .LVU38
+ 277 0034 10BD     		pop	{r4, pc}
+ 278              	.LVL11:
+ 279              	.L25:
+ 280              	.LCFI1:
+ 281              		.cfi_def_cfa_offset 0
+ 282              		.cfi_restore 4
+ 283              		.cfi_restore 14
+ 284              		.loc 1 10 1 discriminator 2 view .LVU39
+ 285 0036 4FF0FF30 		mov	r0, #-1
+ 286              	.LVL12:
+ARM GAS  /tmp/ccD20WtG.s 			page 6
+
+
+ 287              		.loc 1 10 1 view .LVU40
+ 288 003a 7047     		bx	lr
+ 289              	.L31:
+ 290              		.align	2
+ 291              	.L30:
+ 292 003c 00000000 		.word	__hidmsg_SIZE
+ 293 0040 00000000 		.word	__hidmsg_WRITE_PTR
+ 294 0044 00000000 		.word	__hidmsg_WRITE_BUF
+ 295              		.cfi_endproc
+ 296              	.LFE8:
+ 298              		.section	.text.fifo_hidmsg_take,"ax",%progbits
+ 299              		.align	1
+ 300              		.global	fifo_hidmsg_take
+ 301              		.syntax unified
+ 302              		.thumb
+ 303              		.thumb_func
+ 305              	fifo_hidmsg_take:
+ 306              	.LVL13:
+ 307              	.LFB9:
+ 308              		.loc 1 10 1 is_stmt 1 view -0
+ 309              		.cfi_startproc
+ 310              		@ args = 0, pretend = 0, frame = 0
+ 311              		@ frame_needed = 0, uses_anonymous_args = 0
+ 312              		.loc 1 10 1 is_stmt 0 view .LVU42
+ 313 0000 08B5     		push	{r3, lr}
+ 314              	.LCFI2:
+ 315              		.cfi_def_cfa_offset 8
+ 316              		.cfi_offset 3, -8
+ 317              		.cfi_offset 14, -4
+ 318              		.loc 1 10 1 is_stmt 1 view .LVU43
+ 319 0002 0E4B     		ldr	r3, .L37
+ 320 0004 1968     		ldr	r1, [r3]
+ 321 0006 4022     		movs	r2, #64
+ 322 0008 0D4B     		ldr	r3, .L37+4
+ 323 000a 03EB8111 		add	r1, r3, r1, lsl #6
+ 324 000e FFF7FEFF 		bl	memmove
+ 325              	.LVL14:
+ 326              		.loc 1 10 1 discriminator 1 view .LVU44
+ 327 0012 0C4B     		ldr	r3, .L37+8
+ 328 0014 1B68     		ldr	r3, [r3]
+ 329 0016 002B     		cmp	r3, #0
+ 330 0018 0DDD     		ble	.L35
+ 331              		.loc 1 10 1 discriminator 1 view .LVU45
+ 332 001a 0849     		ldr	r1, .L37
+ 333 001c 0A68     		ldr	r2, [r1]
+ 334 001e 0132     		adds	r2, r2, #1
+ 335 0020 0A60     		str	r2, [r1]
+ 336              		.loc 1 10 1 discriminator 1 view .LVU46
+ 337 0022 632A     		cmp	r2, #99
+ 338 0024 02DD     		ble	.L34
+ 339              		.loc 1 10 1 discriminator 3 view .LVU47
+ 340 0026 0A46     		mov	r2, r1
+ 341 0028 0021     		movs	r1, #0
+ 342 002a 1160     		str	r1, [r2]
+ 343              	.L34:
+ 344              		.loc 1 10 1 discriminator 5 view .LVU48
+ 345 002c 013B     		subs	r3, r3, #1
+ARM GAS  /tmp/ccD20WtG.s 			page 7
+
+
+ 346 002e 054A     		ldr	r2, .L37+8
+ 347 0030 1360     		str	r3, [r2]
+ 348              		.loc 1 10 1 discriminator 5 view .LVU49
+ 349 0032 0020     		movs	r0, #0
+ 350              	.L32:
+ 351              		.loc 1 10 1 is_stmt 0 view .LVU50
+ 352 0034 08BD     		pop	{r3, pc}
+ 353              	.L35:
+ 354              		.loc 1 10 1 discriminator 2 view .LVU51
+ 355 0036 4FF0FF30 		mov	r0, #-1
+ 356 003a FBE7     		b	.L32
+ 357              	.L38:
+ 358              		.align	2
+ 359              	.L37:
+ 360 003c 00000000 		.word	__hidmsg_READ_PTR
+ 361 0040 00000000 		.word	__hidmsg_WRITE_BUF
+ 362 0044 00000000 		.word	__hidmsg_SIZE
+ 363              		.cfi_endproc
+ 364              	.LFE9:
+ 366              		.section	.text.fifo_hidmsg_size,"ax",%progbits
+ 367              		.align	1
+ 368              		.global	fifo_hidmsg_size
+ 369              		.syntax unified
+ 370              		.thumb
+ 371              		.thumb_func
+ 373              	fifo_hidmsg_size:
+ 374              	.LFB10:
+ 375              		.loc 1 10 1 is_stmt 1 view -0
+ 376              		.cfi_startproc
+ 377              		@ args = 0, pretend = 0, frame = 0
+ 378              		@ frame_needed = 0, uses_anonymous_args = 0
+ 379              		@ link register save eliminated.
+ 380              		.loc 1 10 1 view .LVU53
+ 381 0000 014B     		ldr	r3, .L40
+ 382 0002 1868     		ldr	r0, [r3]
+ 383 0004 7047     		bx	lr
+ 384              	.L41:
+ 385 0006 00BF     		.align	2
+ 386              	.L40:
+ 387 0008 00000000 		.word	__hidmsg_SIZE
+ 388              		.cfi_endproc
+ 389              	.LFE10:
+ 391              		.section	.text.fifo_hidmsg_rhead,"ax",%progbits
+ 392              		.align	1
+ 393              		.global	fifo_hidmsg_rhead
+ 394              		.syntax unified
+ 395              		.thumb
+ 396              		.thumb_func
+ 398              	fifo_hidmsg_rhead:
+ 399              	.LFB11:
+ 400              		.loc 1 10 1 view -0
+ 401              		.cfi_startproc
+ 402              		@ args = 0, pretend = 0, frame = 0
+ 403              		@ frame_needed = 0, uses_anonymous_args = 0
+ 404              		@ link register save eliminated.
+ 405              		.loc 1 10 1 view .LVU55
+ 406 0000 014B     		ldr	r3, .L43
+ARM GAS  /tmp/ccD20WtG.s 			page 8
+
+
+ 407 0002 1868     		ldr	r0, [r3]
+ 408 0004 7047     		bx	lr
+ 409              	.L44:
+ 410 0006 00BF     		.align	2
+ 411              	.L43:
+ 412 0008 00000000 		.word	__hidmsg_READ_PTR
+ 413              		.cfi_endproc
+ 414              	.LFE11:
+ 416              		.section	.text.fifo_hidmsg_whead,"ax",%progbits
+ 417              		.align	1
+ 418              		.global	fifo_hidmsg_whead
+ 419              		.syntax unified
+ 420              		.thumb
+ 421              		.thumb_func
+ 423              	fifo_hidmsg_whead:
+ 424              	.LFB12:
+ 425              		.loc 1 10 1 view -0
+ 426              		.cfi_startproc
+ 427              		@ args = 0, pretend = 0, frame = 0
+ 428              		@ frame_needed = 0, uses_anonymous_args = 0
+ 429              		@ link register save eliminated.
+ 430              		.loc 1 10 1 view .LVU57
+ 431 0000 014B     		ldr	r3, .L46
+ 432 0002 1868     		ldr	r0, [r3]
+ 433 0004 7047     		bx	lr
+ 434              	.L47:
+ 435 0006 00BF     		.align	2
+ 436              	.L46:
+ 437 0008 00000000 		.word	__hidmsg_WRITE_PTR
+ 438              		.cfi_endproc
+ 439              	.LFE12:
+ 441              		.section	.bss.__hidmsg_WRITE_BUF,"aw",%nobits
+ 442              		.align	2
+ 445              	__hidmsg_WRITE_BUF:
+ 446 0000 00000000 		.space	6400
+ 446      00000000 
+ 446      00000000 
+ 446      00000000 
+ 446      00000000 
+ 447              		.global	__hidmsg_SIZE
+ 448              		.section	.bss.__hidmsg_SIZE,"aw",%nobits
+ 449              		.align	2
+ 452              	__hidmsg_SIZE:
+ 453 0000 00000000 		.space	4
+ 454              		.global	__hidmsg_READ_PTR
+ 455              		.section	.bss.__hidmsg_READ_PTR,"aw",%nobits
+ 456              		.align	2
+ 459              	__hidmsg_READ_PTR:
+ 460 0000 00000000 		.space	4
+ 461              		.global	__hidmsg_WRITE_PTR
+ 462              		.section	.bss.__hidmsg_WRITE_PTR,"aw",%nobits
+ 463              		.align	2
+ 466              	__hidmsg_WRITE_PTR:
+ 467 0000 00000000 		.space	4
+ 468              		.section	.bss.__debug_WRITE_BUF,"aw",%nobits
+ 469              		.align	2
+ 472              	__debug_WRITE_BUF:
+ARM GAS  /tmp/ccD20WtG.s 			page 9
+
+
+ 473 0000 00000000 		.space	4096
+ 473      00000000 
+ 473      00000000 
+ 473      00000000 
+ 473      00000000 
+ 474              		.global	__debug_SIZE
+ 475              		.section	.bss.__debug_SIZE,"aw",%nobits
+ 476              		.align	2
+ 479              	__debug_SIZE:
+ 480 0000 00000000 		.space	4
+ 481              		.global	__debug_READ_PTR
+ 482              		.section	.bss.__debug_READ_PTR,"aw",%nobits
+ 483              		.align	2
+ 486              	__debug_READ_PTR:
+ 487 0000 00000000 		.space	4
+ 488              		.global	__debug_WRITE_PTR
+ 489              		.section	.bss.__debug_WRITE_PTR,"aw",%nobits
+ 490              		.align	2
+ 493              	__debug_WRITE_PTR:
+ 494 0000 00000000 		.space	4
+ 495              		.text
+ 496              	.Letext0:
+ 497              		.file 2 "/home/dat/.config/Code/User/globalStorage/litaitech.stm32-colir-one/@xpack-dev-tools/arm-
+ 498              		.file 3 "/home/dat/.config/Code/User/globalStorage/litaitech.stm32-colir-one/@xpack-dev-tools/arm-
+ 499              		.file 4 "/home/dat/.config/Code/User/globalStorage/litaitech.stm32-colir-one/@xpack-dev-tools/arm-
+ 500              		.file 5 "/home/dat/.config/Code/User/globalStorage/litaitech.stm32-colir-one/@xpack-dev-tools/arm-
+ARM GAS  /tmp/ccD20WtG.s 			page 10
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 fifo.c
+     /tmp/ccD20WtG.s:21     .text.fifo_debug_add:00000000 $t
+     /tmp/ccD20WtG.s:27     .text.fifo_debug_add:00000000 fifo_debug_add
+     /tmp/ccD20WtG.s:78     .text.fifo_debug_add:00000038 $d
+     /tmp/ccD20WtG.s:479    .bss.__debug_SIZE:00000000 __debug_SIZE
+     /tmp/ccD20WtG.s:493    .bss.__debug_WRITE_PTR:00000000 __debug_WRITE_PTR
+     /tmp/ccD20WtG.s:472    .bss.__debug_WRITE_BUF:00000000 __debug_WRITE_BUF
+     /tmp/ccD20WtG.s:85     .text.fifo_debug_take:00000000 $t
+     /tmp/ccD20WtG.s:91     .text.fifo_debug_take:00000000 fifo_debug_take
+     /tmp/ccD20WtG.s:142    .text.fifo_debug_take:00000038 $d
+     /tmp/ccD20WtG.s:486    .bss.__debug_READ_PTR:00000000 __debug_READ_PTR
+     /tmp/ccD20WtG.s:149    .text.fifo_debug_size:00000000 $t
+     /tmp/ccD20WtG.s:155    .text.fifo_debug_size:00000000 fifo_debug_size
+     /tmp/ccD20WtG.s:169    .text.fifo_debug_size:00000008 $d
+     /tmp/ccD20WtG.s:174    .text.fifo_debug_rhead:00000000 $t
+     /tmp/ccD20WtG.s:180    .text.fifo_debug_rhead:00000000 fifo_debug_rhead
+     /tmp/ccD20WtG.s:194    .text.fifo_debug_rhead:00000008 $d
+     /tmp/ccD20WtG.s:199    .text.fifo_debug_whead:00000000 $t
+     /tmp/ccD20WtG.s:205    .text.fifo_debug_whead:00000000 fifo_debug_whead
+     /tmp/ccD20WtG.s:219    .text.fifo_debug_whead:00000008 $d
+     /tmp/ccD20WtG.s:224    .text.fifo_hidmsg_add:00000000 $t
+     /tmp/ccD20WtG.s:230    .text.fifo_hidmsg_add:00000000 fifo_hidmsg_add
+     /tmp/ccD20WtG.s:292    .text.fifo_hidmsg_add:0000003c $d
+     /tmp/ccD20WtG.s:452    .bss.__hidmsg_SIZE:00000000 __hidmsg_SIZE
+     /tmp/ccD20WtG.s:466    .bss.__hidmsg_WRITE_PTR:00000000 __hidmsg_WRITE_PTR
+     /tmp/ccD20WtG.s:445    .bss.__hidmsg_WRITE_BUF:00000000 __hidmsg_WRITE_BUF
+     /tmp/ccD20WtG.s:299    .text.fifo_hidmsg_take:00000000 $t
+     /tmp/ccD20WtG.s:305    .text.fifo_hidmsg_take:00000000 fifo_hidmsg_take
+     /tmp/ccD20WtG.s:360    .text.fifo_hidmsg_take:0000003c $d
+     /tmp/ccD20WtG.s:459    .bss.__hidmsg_READ_PTR:00000000 __hidmsg_READ_PTR
+     /tmp/ccD20WtG.s:367    .text.fifo_hidmsg_size:00000000 $t
+     /tmp/ccD20WtG.s:373    .text.fifo_hidmsg_size:00000000 fifo_hidmsg_size
+     /tmp/ccD20WtG.s:387    .text.fifo_hidmsg_size:00000008 $d
+     /tmp/ccD20WtG.s:392    .text.fifo_hidmsg_rhead:00000000 $t
+     /tmp/ccD20WtG.s:398    .text.fifo_hidmsg_rhead:00000000 fifo_hidmsg_rhead
+     /tmp/ccD20WtG.s:412    .text.fifo_hidmsg_rhead:00000008 $d
+     /tmp/ccD20WtG.s:417    .text.fifo_hidmsg_whead:00000000 $t
+     /tmp/ccD20WtG.s:423    .text.fifo_hidmsg_whead:00000000 fifo_hidmsg_whead
+     /tmp/ccD20WtG.s:437    .text.fifo_hidmsg_whead:00000008 $d
+     /tmp/ccD20WtG.s:442    .bss.__hidmsg_WRITE_BUF:00000000 $d
+     /tmp/ccD20WtG.s:449    .bss.__hidmsg_SIZE:00000000 $d
+     /tmp/ccD20WtG.s:456    .bss.__hidmsg_READ_PTR:00000000 $d
+     /tmp/ccD20WtG.s:463    .bss.__hidmsg_WRITE_PTR:00000000 $d
+     /tmp/ccD20WtG.s:469    .bss.__debug_WRITE_BUF:00000000 $d
+     /tmp/ccD20WtG.s:476    .bss.__debug_SIZE:00000000 $d
+     /tmp/ccD20WtG.s:483    .bss.__debug_READ_PTR:00000000 $d
+     /tmp/ccD20WtG.s:490    .bss.__debug_WRITE_PTR:00000000 $d
+
+UNDEFINED SYMBOLS
+memmove

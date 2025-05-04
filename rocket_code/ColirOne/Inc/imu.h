@@ -1,6 +1,7 @@
 #ifndef __IMU_H__
 #define __IMU_H__
 #ifdef __cplusplus
+#include "app.h"
 extern "C"{
 #endif
 typedef struct {
@@ -19,7 +20,7 @@ typedef struct {
 class IMU {
     public: 
         IMU();
-        void init(void);
+        colirone_err_t init(void);
         XYZ_t getOrientation();
         XYZ_t getAcceleration();
         XYZ_t getGyroscope();

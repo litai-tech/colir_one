@@ -21,20 +21,24 @@
 #ifndef INC_NRF24L01_H_
 #define INC_NRF24L01_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+#include "stm32f4xx_hal.h"
 
+HAL_StatusTypeDef nrf24_init(void);
 
-void NRF24_Init (void);
+HAL_StatusTypeDef nrf24_TxRxMode(uint8_t *TxAddress, uint8_t *RxAddress, uint8_t channel);
+HAL_StatusTypeDef nrf24_RxMode(void);
+HAL_StatusTypeDef nrf24_TxMode(void);
+HAL_StatusTypeDef nrf24_TxMode_with_ACK_payload(uint8_t *address, uint8_t channel);
+HAL_StatusTypeDef nrf24_receive_ACK_payload(uint8_t *data, uint8_t* data_size);
+HAL_StatusTypeDef nrf24_transmit(uint8_t *data);
+HAL_StatusTypeDef nrf24_receive (uint8_t *data);
 
-void NRF24_TxRxMode (uint8_t *TxAddress, uint8_t *RxAddress, uint8_t channel);
-void NRF24_RxMode (void);
-void NRF24_TxMode (void);
-void NRF24_TxMode_with_ACK_Payload (uint8_t *Address, uint8_t channel);
-void NRF24_Receive_ACK_Payload (uint8_t *data, uint8_t* data_size);
-uint8_t NRF24_Transmit (uint8_t *data);
-void NRF24_Receive (uint8_t *data);
-
-uint8_t isDataAvailable ();
-void flush_tx_fifo();
+HAL_StatusTypeDef nrf24_check_data_available(void);
+HAL_StatusTypeDef flush_tx_fifo(void);
+HAL_StatusTypeDef flush_rx_fifo(void);
 
 /* Memory Map */
 #define CONFIG      0x00
@@ -78,5 +82,8 @@ void flush_tx_fifo();
 #define REUSE_TX_PL   0xE3
 #define NOP           0xFF
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* INC_NRF24L01_H_ */

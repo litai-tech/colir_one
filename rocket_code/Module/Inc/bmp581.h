@@ -10,14 +10,14 @@
 #ifndef INC_BMP581_H_
 #define INC_BMP581_H_
 
-
-
-#endif /* INC_BMP581_H_ */
-
 #define BMP5_E_INVALID_SETTING (BMP5_E_NVM_NOT_READY-1)
 
 #define BMP581_CSN_PORT   GPIOC
 #define BMP581_CSN_PIN    GPIO_PIN_4
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 int8_t beginSPI();
 int8_t init();
@@ -56,3 +56,9 @@ int8_t flushFIFO();
 // NVM control
 int8_t readNVM(uint8_t addr, uint16_t* data);
 int8_t writeNVM(uint8_t addr, uint16_t data);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* INC_BMP581_H_ */

@@ -4,29 +4,30 @@
 #include "stdint.h"
 #include "stdio.h"
 #include "../../Module/Inc/bmp581.h"
+#include "app.h"
 
 #ifdef __cplusplus
 extern "C"{
 #endif
-
-#ifdef __cplusplus
-}
-#endif
-
-#ifdef __cplusplus
 class Barometer {
     public:
         Barometer();
+        colirone_err_t init(void);
         float getPressure(void);
         float getTemperature(void);
         float calculateAltitude(float pressure);;
         float calculateSeaLevelAltitude(float pressure);
         void resetZeroAltitude(void);
-        uint8_t init(void);
     private :
         float zeroAltitude;
         bmp5_sensor_data bmpData;
 };
+#ifdef __cplusplus
+}
+#endif
+
+#ifdef __cplusplus
+
 #endif
 
 #endif

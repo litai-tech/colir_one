@@ -17,7 +17,6 @@
 
   ***************************************************************************************************************
 */
-#include "stm32f4xx_hal.h"
 #include "NRF24L01.h"
 
 extern SPI_HandleTypeDef hspi3;
@@ -32,31 +31,31 @@ extern SPI_HandleTypeDef hspi3;
 #define nRF24_TEST_ADDR  "nRF24"
 
 
-HAL_StatusTypeDef hal_result;
-void CS_Select (void)
+// HAL_StatusTypeDef hal_result;
+static void CS_Select(void)
 {
 	HAL_GPIO_WritePin(NRF24_CSN_PORT, NRF24_CSN_PIN, GPIO_PIN_RESET);
 }
 
-void CS_UnSelect (void)
+static void CS_UnSelect(void)
 {
 	HAL_GPIO_WritePin(NRF24_CSN_PORT, NRF24_CSN_PIN, GPIO_PIN_SET);
 }
 
-
-void CE_Enable (void)
+static void CE_Enable(void)
 {
 	HAL_GPIO_WritePin(NRF24_CE_PORT, NRF24_CE_PIN, GPIO_PIN_SET);
 }
 
-void CE_Disable (void)
+static void CE_Disable(void)
 {
 	HAL_GPIO_WritePin(NRF24_CE_PORT, NRF24_CE_PIN, GPIO_PIN_RESET);
 }
 
 // write a single byte to the particular register
-void nrf24_WriteReg (uint8_t Reg, uint8_t Data)
+static HAL_StatusTypeDef nrf24_write(uint8_t Reg, uint8_t Data)
 {
+	HAL_StatusTypeDef status = HAL_OK;
 	uint8_t buf[2];
 	buf[0] = Reg|1<<5;
 	buf[1] = Data;
@@ -64,15 +63,18 @@ void nrf24_WriteReg (uint8_t Reg, uint8_t Data)
 	// Pull the CS Pin LOW to select the device
 	CS_Select();
 
-	HAL_SPI_Transmit(NRF24_SPI, buf, 2, 1000);
+	status |= HAL_SPI_Transmit(NRF24_SPI, buf, 2, 1000);
 
 	// Pull the CS HIGH to release the device
 	CS_UnSelect();
+
+	return status;
 }
 
 //write multiple bytes starting from a particular register
-void nrf24_WriteRegMulti (uint8_t Reg, uint8_t *data, int size)
+static HAL_StatusTypeDef nrf24_writeMulti(uint8_t Reg, uint8_t *data, int size)
 {
+	HAL_StatusTypeDef status = HAL_OK;
 	uint8_t buf[2];
 	buf[0] = Reg|1<<5;
 //	buf[1] = Data;
@@ -80,203 +82,220 @@ void nrf24_WriteRegMulti (uint8_t Reg, uint8_t *data, int size)
 	// Pull the CS Pin LOW to select the device
 	CS_Select();
 
-	HAL_SPI_Transmit(NRF24_SPI, buf, 1, 100);
-	HAL_SPI_Transmit(NRF24_SPI, data, size, 1000);
+	status |= HAL_SPI_Transmit(NRF24_SPI, buf, 1, 100);
+	status |= HAL_SPI_Transmit(NRF24_SPI, data, size, 1000);
 
 	// Pull the CS HIGH to release the device
 	CS_UnSelect();
+	return status;
 }
 
 
-uint8_t nrf24_ReadReg (uint8_t Reg)
+static HAL_StatusTypeDef nrf24_read(uint8_t reg, uint8_t* data)
 {
-	uint8_t data=0;
+	// uint8_t data=0;
 
 	// Pull the CS Pin LOW to select the device
+	HAL_StatusTypeDef status = HAL_OK;
 	CS_Select();
 
-	hal_result = HAL_SPI_Transmit(NRF24_SPI, &Reg, 1, 100);
-	hal_result = HAL_SPI_Receive(NRF24_SPI, &data, 1, 100);
+	status |= HAL_SPI_Transmit(NRF24_SPI, &reg, 1, 100);
+	status |= HAL_SPI_Receive(NRF24_SPI, data, 1, 100);
 
 	// Pull the CS HIGH to release the device
 	CS_UnSelect();
 
-	return data;
+	return status;
 }
 
 
 /* Read multiple bytes from the register */
-void nrf24_ReadReg_Multi (uint8_t Reg, uint8_t *data, int size)
+static HAL_StatusTypeDef nrf24_readMulti(uint8_t Reg, uint8_t *data, int size)
 {
+	HAL_StatusTypeDef status = HAL_OK;
 	// Pull the CS Pin LOW to select the device
 	CS_Select();
 
-	HAL_SPI_Transmit(NRF24_SPI, &Reg, 1, 100);
-	HAL_SPI_Receive(NRF24_SPI, data, size, 1000);
+	status |= HAL_SPI_Transmit(NRF24_SPI, &Reg, 1, 100);
+	status |= HAL_SPI_Receive(NRF24_SPI, data, size, 1000);
 
 	// Pull the CS HIGH to release the device
 	CS_UnSelect();
+	return status;
 }
 
 
 // send the command to the NRF
-void nrfsendCmd (uint8_t cmd)
+static HAL_StatusTypeDef nrf24_send_cmd(uint8_t cmd)
 {
+	HAL_StatusTypeDef status = HAL_OK;
 	// Pull the CS Pin LOW to select the device
 	CS_Select();
 
-	HAL_SPI_Transmit(NRF24_SPI, &cmd, 1, 100);
+	status |= HAL_SPI_Transmit(NRF24_SPI, &cmd, 1, 100);
 
 	// Pull the CS HIGH to release the device
 	CS_UnSelect();
+	return status;
 }
 
-void nrf24_reset(uint8_t REG)
+static HAL_StatusTypeDef nrf24_reset(uint8_t reg)
 {
-	if (REG == STATUS)
+	HAL_StatusTypeDef status = HAL_OK;
+	if (reg == STATUS)
 	{
-		nrf24_WriteReg(STATUS, 0x00);
+		status |= nrf24_write(STATUS, 0x00);
 	}
 
-	else if (REG == FIFO_STATUS)
+	else if (reg == FIFO_STATUS)
 	{
-		nrf24_WriteReg(FIFO_STATUS, 0x11);
+		status |= nrf24_write(FIFO_STATUS, 0x11);
 	}
 
 	else {
-	nrf24_WriteReg(CONFIG, 0x08);
-	nrf24_WriteReg(EN_AA, 0x3F);
-	nrf24_WriteReg(EN_RXADDR, 0x03);
-	nrf24_WriteReg(SETUP_AW, 0x03);
-	nrf24_WriteReg(SETUP_RETR, 0x00);
-	nrf24_WriteReg(RF_CH, 0x02);
-	nrf24_WriteReg(RF_SETUP, 0x0E);
-	nrf24_WriteReg(STATUS, 0x00);
-	nrf24_WriteReg(OBSERVE_TX, 0x00);
-	nrf24_WriteReg(CD, 0x00);
+	status |= nrf24_write(CONFIG, 0x08);
+	status |= nrf24_write(EN_AA, 0x3F);
+	status |= nrf24_write(EN_RXADDR, 0x03);
+	status |= nrf24_write(SETUP_AW, 0x03);
+	status |= nrf24_write(SETUP_RETR, 0x00);
+	status |= nrf24_write(RF_CH, 0x02);
+	status |= nrf24_write(RF_SETUP, 0x0E);
+	status |= nrf24_write(STATUS, 0x00);
+	status |= nrf24_write(OBSERVE_TX, 0x00);
+	status |= nrf24_write(CD, 0x00);
 	uint8_t rx_addr_p0_def[5] = {0xE7, 0xE7, 0xE7, 0xE7, 0xE7};
-	nrf24_WriteRegMulti(RX_ADDR_P0, rx_addr_p0_def, 5);
+	status |= nrf24_writeMulti(RX_ADDR_P0, rx_addr_p0_def, 5);
 	uint8_t rx_addr_p1_def[5] = {0xC2, 0xC2, 0xC2, 0xC2, 0xC2};
-	nrf24_WriteRegMulti(RX_ADDR_P1, rx_addr_p1_def, 5);
-	nrf24_WriteReg(RX_ADDR_P2, 0xC3);
-	nrf24_WriteReg(RX_ADDR_P3, 0xC4);
-	nrf24_WriteReg(RX_ADDR_P4, 0xC5);
-	nrf24_WriteReg(RX_ADDR_P5, 0xC6);
+	status |= nrf24_writeMulti(RX_ADDR_P1, rx_addr_p1_def, 5);
+	status |= nrf24_write(RX_ADDR_P2, 0xC3);
+	status |= nrf24_write(RX_ADDR_P3, 0xC4);
+	status |= nrf24_write(RX_ADDR_P4, 0xC5);
+	status |= nrf24_write(RX_ADDR_P5, 0xC6);
 	uint8_t tx_addr_def[5] = {0xE7, 0xE7, 0xE7, 0xE7, 0xE7};
-	nrf24_WriteRegMulti(TX_ADDR, tx_addr_def, 5);
-	nrf24_WriteReg(RX_PW_P0, 0);
-	nrf24_WriteReg(RX_PW_P1, 0);
-	nrf24_WriteReg(RX_PW_P2, 0);
-	nrf24_WriteReg(RX_PW_P3, 0);
-	nrf24_WriteReg(RX_PW_P4, 0);
-	nrf24_WriteReg(RX_PW_P5, 0);
-	nrf24_WriteReg(FIFO_STATUS, 0x11);
-	nrf24_WriteReg(DYNPD, 0);
-	nrf24_WriteReg(FEATURE, 0);
+	status |= nrf24_writeMulti(TX_ADDR, tx_addr_def, 5);
+	status |= nrf24_write(RX_PW_P0, 0);
+	status |= nrf24_write(RX_PW_P1, 0);
+	status |= nrf24_write(RX_PW_P2, 0);
+	status |= nrf24_write(RX_PW_P3, 0);
+	status |= nrf24_write(RX_PW_P4, 0);
+	status |= nrf24_write(RX_PW_P5, 0);
+	status |= nrf24_write(FIFO_STATUS, 0x11);
+	status |= nrf24_write(DYNPD, 0);
+	status |= nrf24_write(FEATURE, 0);
 	}
+	return status;
 }
 
 
-
-
-void NRF24_Init (void)
+HAL_StatusTypeDef nrf24_init(void)
 {
+	HAL_StatusTypeDef status = HAL_OK;
 	// disable the chip before configuring the device
 	CE_Disable();
 
 
 	// reset everything
-	nrf24_reset (0);
+	status |= nrf24_reset (0);
 
-	nrf24_WriteReg(CONFIG, 0);  // will be configured later
+	status |= nrf24_write(CONFIG, 0);  // will be configured later
 
-	nrf24_WriteReg(EN_AA, 0);  // No Auto ACK
+	status |= nrf24_write(EN_AA, 0);  // No Auto ACK
 
-	nrf24_WriteReg (EN_RXADDR, 0);  // Not Enabling any data pipe right now
+	status |= nrf24_write (EN_RXADDR, 0);  // Not Enabling any data pipe right now
 
-	nrf24_WriteReg (SETUP_AW, 0x03);  // 5 Bytes for the TX/RX address
+	status |= nrf24_write (SETUP_AW, 0x03);  // 5 Bytes for the TX/RX address
 
-	nrf24_WriteReg (SETUP_RETR, 0);   // No retransmission
+	status |= nrf24_write (SETUP_RETR, 0);   // No retransmission
 
-	nrf24_WriteReg (RF_CH, 0);  // will be setup during Tx or RX
+	status |= nrf24_write (RF_CH, 0);  // will be setup during Tx or RX
 
-	// nrf24_WriteReg (RF_SETUP, 0x0C);   // Power= 0db, data rate = 2Mbps
-	nrf24_WriteReg (RF_SETUP, 0x27);   // Power= 0db,data rate = 250kbps
+	// nrf24_write (RF_SETUP, 0x0C);   // Power= 0db, data rate = 2Mbps
+	status |= nrf24_write (RF_SETUP, 0x27);   // Power= 0db,data rate = 250kbps
 
 	// Enable the chip after configuring the device
 	CE_Enable();
-
+	return status;
 }
 
 
 // set up the Tx mode
 
-void NRF24_TxMode_with_ACK_Payload (uint8_t *Address, uint8_t channel)
+HAL_StatusTypeDef nrf24_TxMode_with_ACK_payload(uint8_t *address, uint8_t channel)
 {
+	HAL_StatusTypeDef status = HAL_OK;
 	// disable the chip before configuring the device
 	CE_Disable();
 
-	nrf24_WriteReg (RF_CH, channel);  // select the channel
+	status |= nrf24_write (RF_CH, channel);  // select the channel
 
-	nrf24_WriteRegMulti(TX_ADDR, Address, 5);  // Write the TX address
+	status |=  nrf24_writeMulti(TX_ADDR, address, 5);  // Write the TX address
 
 	// Configure ACK recieve address for 0 pipe
-	uint8_t en_rxaddr = nrf24_ReadReg(EN_RXADDR);
+	uint8_t en_rxaddr;
+	status |= nrf24_read(EN_RXADDR, &en_rxaddr);
 	en_rxaddr = en_rxaddr | 1;
-	nrf24_WriteReg (EN_RXADDR, en_rxaddr);
-	nrf24_WriteRegMulti(RX_ADDR_P0, Address, 5);
+	status |= nrf24_write (EN_RXADDR, en_rxaddr);
+	status |= nrf24_writeMulti(RX_ADDR_P0, address, 5);
 
 	// power up the device
-	uint8_t config = nrf24_ReadReg(CONFIG);
+	uint8_t config;
+	status |= nrf24_read(CONFIG, &config);
 	config = config | (1<<1);   // write 1 in the PWR_UP bit
 	config = config | (1<<3);   // write 1 in EN_CRC to enable CRC
 	config = config | (1<<2);   // write 1 in CRCO to set encoding scheme CRC to 2 bytes
-	nrf24_WriteReg (CONFIG, config);
+	status |= nrf24_write (CONFIG, config);
 
-	nrf24_WriteReg (EN_AA,  0x3f); // Activate auto ack for all pipes
-	nrf24_WriteReg (SETUP_RETR, 0xFF); // 0 retransmission attempts with 1000us delay
-	nrf24_WriteReg(FEATURE, (1<<1)|(1<<2)); // Enable dynamic payload length and payload with ACK
+	status |= nrf24_write (EN_AA,  0x3f); // Activate auto ack for all pipes
+	status |= nrf24_write (SETUP_RETR, 0xFF); // 0 retransmission attempts with 1000us delay
+	status |=  nrf24_write(FEATURE, (1<<1)|(1<<2)); // Enable dynamic payload length and payload with ACK
 
-	nrf24_WriteReg(DYNPD, (1<<1)|1); // Enable dynamic payload length for 1&2 pipes
+	status |= nrf24_write(DYNPD, (1<<1)|1); // Enable dynamic payload length for 1&2 pipes
 
 	// Activate R_RX_PL_WID register feature
-	uint8_t cmdtosend[] = {ACTIVATE, 0x73};
-	HAL_SPI_Transmit(NRF24_SPI, cmdtosend, 2, 100);
+	uint8_t cmd[] = {ACTIVATE, 0x73};
+	status |= HAL_SPI_Transmit(NRF24_SPI, cmd, 2, 100);
 
 	// Enable the chip after configuring the device
 	CE_Enable();
+	return status;
 }
 
-void flush_tx_fifo() {
-	uint8_t cmdtosend = FLUSH_TX;
-	nrfsendCmd(cmdtosend);
+HAL_StatusTypeDef flush_tx_fifo(void) {
+	HAL_StatusTypeDef status = HAL_OK;
+	uint8_t cmd = FLUSH_TX;
+	status |= nrf24_send_cmd(cmd);
 	// reset FIFO_STATUS
-	nrf24_reset (FIFO_STATUS);
+	status |= nrf24_reset (FIFO_STATUS);
+	return status;
 }
 
-void flush_rx_fifo() {
-	uint8_t cmdtosend = FLUSH_RX;
-	nrfsendCmd(cmdtosend);
+HAL_StatusTypeDef flush_rx_fifo(void) {
+	HAL_StatusTypeDef status = HAL_OK;
+	uint8_t cmd = FLUSH_RX;
+	status |= nrf24_send_cmd(cmd);
 	// reset FIFO_STATUS
-	nrf24_reset (FIFO_STATUS);
+	status |= nrf24_reset (FIFO_STATUS);
+	return status;
 }
 
-void NRF24_TxRxMode (uint8_t *TxAddress, uint8_t *RxAddress, uint8_t channel)
+HAL_StatusTypeDef nrf24_TxRxMode(uint8_t *TxAddress, uint8_t *RxAddress, uint8_t channel)
 {
+	HAL_StatusTypeDef status = HAL_OK;
+
 	// disable the chip before configuring the device
 	CE_Disable();
 
-	nrf24_WriteReg (RF_CH, channel);  // select the channel
+	status |= nrf24_write (RF_CH, channel);  // select the channel
 
 	//TX Setup
-	nrf24_WriteRegMulti(TX_ADDR, TxAddress, 5);  // Write the TX address
+	status |= nrf24_writeMulti(TX_ADDR, TxAddress, 5);  // Write the TX address
 
-	nrf24_WriteReg (SETUP_RETR, 0x33);
+	status |= nrf24_write (SETUP_RETR, 0x33);
 
 	//RX Setup
 	uint8_t en_rxaddr = 0x3F;
 		//en_rxaddr = en_rxaddr | (1<<1);
-		nrf24_WriteReg (EN_RXADDR, en_rxaddr);
+		status |= nrf24_write (EN_RXADDR, en_rxaddr);
 
 		/* We must write the address for Data Pipe 1, if we want to use any pipe from 2 to 5
 		 * The Address from DATA Pipe 2 to Data Pipe 5 differs only in the LSB
@@ -288,23 +307,25 @@ void NRF24_TxRxMode (uint8_t *TxAddress, uint8_t *RxAddress, uint8_t channel)
 		 * Pipe 3 ADDR = 0xAABBCCDD33
 		 *
 		 */
-		nrf24_WriteRegMulti(RX_ADDR_P1, RxAddress, 5);  // Write the Pipe1 address
-		//nrf24_WriteReg(RX_ADDR_P2, 0xEE);  // Write the Pipe2 LSB address
+		status |= nrf24_writeMulti(RX_ADDR_P1, RxAddress, 5);  // Write the Pipe1 address
+		//nrf24_write(RX_ADDR_P2, 0xEE);  // Write the Pipe2 LSB address
 
-		nrf24_WriteReg (RX_PW_P0, 32);   // 32 bit payload size for pipe 2
-		nrf24_WriteReg (RX_PW_P1, 32);
-		nrf24_WriteReg (RX_PW_P2, 32);
-		nrf24_WriteReg (RX_PW_P3, 32);
-		nrf24_WriteReg (RX_PW_P4, 32);
-		nrf24_WriteReg (RX_PW_P5, 32);
+		status |= nrf24_write (RX_PW_P0, 32);   // 32 bit payload size for pipe 2
+		status |= nrf24_write (RX_PW_P1, 32);
+		status |= nrf24_write (RX_PW_P2, 32);
+		status |= nrf24_write (RX_PW_P3, 32);
+		status |= nrf24_write (RX_PW_P4, 32);
+		status |= nrf24_write (RX_PW_P5, 32);
 
 	// Enable the chip after configuring the device
 	CE_Enable();
-	flush_tx_fifo();
+	status |= flush_tx_fifo();
+	return status;
 }
 
-void NRF24_TxMode (void)
+HAL_StatusTypeDef nrf24_TxMode(void)
 {
+	HAL_StatusTypeDef status = HAL_OK;
 	// disable the chip before configuring the device
 	CE_Disable();
 
@@ -314,15 +335,17 @@ void NRF24_TxMode (void)
 	config = config | (1<<3);   // write 1 in EN_CRC to enable CRC
 	config = config | (1<<2);   // write 1 in CRCO to set encoding scheme CRC to 2 bytes
 	//config = config & (0xF2);    // write 0 in the PRIM_RX, and 1 in the PWR_UP, and all other bits are masked
-	nrf24_WriteReg (CONFIG, config);
+	status |= nrf24_write (CONFIG, config);
 
 	// Enable the chip after configuring the device
 	CE_Enable();
-	flush_tx_fifo();
+	status |= flush_tx_fifo();
+	return status;
 }
 
-void NRF24_RxMode (void)
+HAL_StatusTypeDef nrf24_RxMode(void)
 {
+	HAL_StatusTypeDef status = HAL_OK;
 	// disable the chip before configuring the device
 	CE_Disable();
 
@@ -331,117 +354,128 @@ void NRF24_RxMode (void)
 	config = config | (1<<1) | (1<<0);
 	config = config | (1<<3);   // write 1 in EN_CRC to enable CRC
 	config = config | (1<<2);   // write 1 in CRCO to set encoding scheme CRC to 2 bytes
-	nrf24_WriteReg (CONFIG, config);
+	status |= nrf24_write (CONFIG, config);
 
 	// Enable the chip after configuring the device
 	CE_Enable();
-	flush_rx_fifo();
+	status |= flush_rx_fifo();
+	return status;
 }
 
 // transmit the data
-uint8_t NRF24_Transmit (uint8_t *data)
+HAL_StatusTypeDef nrf24_transmit(uint8_t *data)
 {
-	uint8_t cmdtosend = 0;
+	HAL_StatusTypeDef status = HAL_OK;
+	uint8_t cmd = 0;
 	// select the device
 	CS_Select();
 
 	// payload command
-	cmdtosend = W_TX_PAYLOAD;
-	hal_result = HAL_SPI_Transmit(NRF24_SPI, &cmdtosend, 1, 100);
+	cmd = W_TX_PAYLOAD;
+	status |= HAL_SPI_Transmit(NRF24_SPI, &cmd, 1, 100);
 
 	// send the payload
-	hal_result = HAL_SPI_Transmit(NRF24_SPI, data, 32, 1000);
+	status |= HAL_SPI_Transmit(NRF24_SPI, data, 32, 1000);
 
 	// Unselect the device
 	CS_UnSelect();
 
 	HAL_Delay(1);
-
-	uint8_t status = nrf24_ReadReg(STATUS);
-		if (status & (1 << 4)) {
-			status = (status | (1 << 4)); // Actually not needed because this bit is already set, but reset is done by writing 1
-			nrf24_WriteReg(STATUS, status);
-			flush_tx_fifo();
+	uint8_t nrf24_status;
+	status |= nrf24_read(STATUS, &nrf24_status);
+		if (nrf24_status & (1 << 4)) {
+			nrf24_status = (nrf24_status | (1 << 4)); // Actually not needed because this bit is already set, but reset is done by writing 1
+			status |= nrf24_write(STATUS, nrf24_status);
+			status |= flush_tx_fifo();
 		}
 
-	uint8_t fifostatus = nrf24_ReadReg(FIFO_STATUS);
+	uint8_t fifo_status;
+	status |= nrf24_read(FIFO_STATUS, &fifo_status);
 
 	// check the fourth bit of FIFO_STATUS to know if the TX fifo is empty
-	if ((fifostatus&(1<<4)) && (!(fifostatus&(1<<3))))
+	if ((fifo_status&(1<<4)) && (!(fifo_status&(1<<3))))
 	{
-		flush_tx_fifo();
-		return 1;
+		status |= flush_tx_fifo();
+		// return 1;
 	}
 
-	return 0;
+	return status;
 }
 
 
-void NRF24_Receive_ACK_Payload(uint8_t *data, uint8_t* data_size) {
-	uint8_t cmdtosend = 0;
+HAL_StatusTypeDef nrf24_receive_ACK_payload(uint8_t *data, uint8_t* data_size) {
+	HAL_StatusTypeDef status = HAL_OK;
+	uint8_t cmd = 0;
 
 	// select the device
 	CS_Select();
 
 //	 Receive the payload size
-	cmdtosend = R_RX_PL_WID;
-	HAL_SPI_Transmit(NRF24_SPI, &cmdtosend, 1, 100);
-	HAL_SPI_Receive(NRF24_SPI, data_size, 1, 1000);
+	cmd = R_RX_PL_WID;
+	status |= HAL_SPI_Transmit(NRF24_SPI, &cmd, 1, 100);
+	status |= HAL_SPI_Receive(NRF24_SPI, data_size, 1, 1000);
 //	 Receive payload
 	if ( *data_size > 0) {
 		// Required CSN transition between different commands
 		CS_UnSelect();
 		CS_Select();
 
-		cmdtosend = R_RX_PAYLOAD;
-		HAL_SPI_Transmit(NRF24_SPI, &cmdtosend, 1, 100);
-		HAL_SPI_Receive(NRF24_SPI, data, 32, 1000);
+		cmd = R_RX_PAYLOAD;
+		status |= HAL_SPI_Transmit(NRF24_SPI, &cmd, 1, 100);
+		status |= HAL_SPI_Receive(NRF24_SPI, data, 32, 1000);
 	}
 
 
 	// Unselect the device
 	CS_UnSelect();
 	HAL_Delay(1);
-	cmdtosend = FLUSH_RX;
-	nrfsendCmd(cmdtosend);
+	cmd = FLUSH_RX;
+	status |= nrf24_send_cmd(cmd);
+	return status;
 }
 
 
-uint8_t isDataAvailable ()
+HAL_StatusTypeDef nrf24_check_data_available(void)
 {
-	uint8_t fifo = nrf24_ReadReg(FIFO_STATUS);
-	uint8_t status = nrf24_ReadReg(STATUS);
-	uint8_t config = nrf24_ReadReg(CONFIG);
+	HAL_StatusTypeDef status = HAL_OK;
+	uint8_t fifo_status;
+	status |= nrf24_read(FIFO_STATUS, &fifo_status);
+	uint8_t nrf24_status;
+	status |= nrf24_read(STATUS, &nrf24_status);
+	uint8_t config;
+	status |= nrf24_read(CONFIG, &config);
 
-	if ((status&(1<<6)))
+	if ((nrf24_status&(1<<6)))
 	{
-		nrf24_WriteReg(STATUS, (1<<6)); // Clear receive fifo bit
-		return 1;
+		status |= nrf24_write(STATUS, (1<<6)); // Clear receive fifo bit
+		// return 1;
 	}
-
-	return 0;
+	return status;
+	// return 0;
 }
 
-void NRF24_Receive (uint8_t *data)
+HAL_StatusTypeDef nrf24_receive(uint8_t *data)
 {
-	uint8_t cmdtosend = 0;
+	HAL_StatusTypeDef status = HAL_OK;
+	uint8_t cmd = 0;
 
 	// select the device
 	CS_Select();
 
 	// payload command
-	cmdtosend = R_RX_PAYLOAD;
-	HAL_SPI_Transmit(NRF24_SPI, &cmdtosend, 1, 100);
+	cmd = R_RX_PAYLOAD;
+	status |= HAL_SPI_Transmit(NRF24_SPI, &cmd, 1, 100);
 
 	// Receive the payload
-	HAL_SPI_Receive(NRF24_SPI, data, 32, 1000);
+	status |= HAL_SPI_Receive(NRF24_SPI, data, 32, 1000);
 
 	// Unselect the device
 	CS_UnSelect();
 
 	HAL_Delay(1);
 
-	cmdtosend = FLUSH_RX;
-	nrfsendCmd(cmdtosend);
+	cmd = FLUSH_RX;
+	status |= nrf24_send_cmd(cmd);
+	return status;
 }
 

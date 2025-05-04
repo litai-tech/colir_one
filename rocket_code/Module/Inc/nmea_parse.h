@@ -5,7 +5,9 @@
 #ifndef STM32_SERIAL_DMA_NEO6M_PARSE_H
 #define STM32_SERIAL_DMA_NEO6M_PARSE_H
 
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 #include <stm32f4xx.h>
 #include <string.h>
 #include <stdlib.h>
@@ -29,6 +31,10 @@ typedef struct NMEA_DATA {
  * @param buffer Pointer to buffer string with NMEA data
  ******************************************************************************/
 void nmea_parse(GPS_t *gps_data, uint8_t *buffer);
+
+#ifdef __cplusplus
+}
+#endif
 #endif //STM32_SERIAL_DMA_NEO6M_PARSE_H
 
 

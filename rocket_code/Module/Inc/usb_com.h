@@ -1,3 +1,9 @@
+/*
+ * usb_com.h
+ *
+ *  Created on: April 28, 2025
+ *      Author: Dat Hoang
+ */
 #ifndef __USB_COM_H__
 #define __USB_COM_H__
 

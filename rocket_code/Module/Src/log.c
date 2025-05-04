@@ -1,3 +1,9 @@
+/*
+ * log.c
+ *
+ *  Created on: April 28, 2025
+ *      Author: Dat Hoang
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>

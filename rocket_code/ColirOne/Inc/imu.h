@@ -1,3 +1,10 @@
+/*
+ * imu.h
+ *
+ *  Created on: April 21, 2025
+ *      Author: Dat Hoang
+ */
+
 #ifndef __IMU_H__
 #define __IMU_H__
 #ifdef __cplusplus

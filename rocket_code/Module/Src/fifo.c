@@ -1,3 +1,9 @@
+/*
+ * fifo.c
+ *
+ *  Created on: April 28, 2025
+ *      Author: Dat Hoang
+ */
 #include <string.h>
 #include <stdint.h>
 #include <stdio.h>

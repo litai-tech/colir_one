@@ -1,3 +1,10 @@
+/*
+ * log.h
+ *
+ *  Created on: April 28, 2025
+ *      Author: Dat Hoang
+ */
+
 #ifndef __LOG_H__
 #define __LOG_H__
 

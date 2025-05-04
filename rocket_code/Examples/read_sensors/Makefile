@@ -30,6 +30,7 @@ OPT = -Og
 #######################################
 # Build path
 BUILD_DIR = build
+
 DRIVER_PATH = /home/dat/Documents/colir_one/rocket_code
 OPENOCD_PATH = /home/dat/.config/Code/User/globalStorage/litaitech.stm32-colir-one/@xpack-dev-tools/openocd/0.12.0-4.1/.content/bin/openocd
 GCC_PATH = /home/dat/.config/Code/User/globalStorage/litaitech.stm32-colir-one/@xpack-dev-tools/arm-none-eabi-gcc/13.3.1-1.1.1/.content/bin

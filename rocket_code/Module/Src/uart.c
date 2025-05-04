@@ -1,3 +1,10 @@
+/*
+ * uart.c
+ *
+ *  Created on: April 28, 2025
+ *      Author: Dat Hoang
+ */
+
 #include "uart.h"
 #include "stm32f4xx_hal_uart.h"
 

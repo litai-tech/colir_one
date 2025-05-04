@@ -1,3 +1,9 @@
+/*
+ * init.c
+ *
+ *  Created on: May 5, 2025
+ *      Author: Dat Hoang
+ */
 #include "init.h"
 #include "fatfs.h"
 #include "usb_device.h"

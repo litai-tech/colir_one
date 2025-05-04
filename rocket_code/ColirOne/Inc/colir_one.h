@@ -1,6 +1,9 @@
-// Filename: Core/Inc/ColirOne.h
-//   Author: Dat Hoang
-//  Created: 11/28/2024 22:30:00 +07:00
+/*
+ * colir_one.h
+ *
+ *  Created on: April 21, 2025
+ *      Author: Dat Hoang
+ */
 #ifndef __ColirOne__
 #define __ColirOne__
 

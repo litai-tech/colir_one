@@ -1,3 +1,9 @@
+/*
+ * device.c
+ *
+ *  Created on: April 28, 2025
+ *      Author: Dat Hoang
+ */
 #include <sys/time.h>
 #include <stdint.h>
 #include <stdio.h>

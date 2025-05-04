@@ -1,3 +1,9 @@
+/*
+ * util.h
+ *
+ *  Created on: April 28, 2025
+ *      Author: Dat Hoang
+ */
 #ifndef __UTIL_H__
 #define __UTIL_H__
 

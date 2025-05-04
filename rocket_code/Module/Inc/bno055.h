@@ -1,3 +1,9 @@
+/*
+ * bmo055.h
+ *
+ *  Created on: April 28, 2025
+ *      Author: Dat Hoang
+ */
 #ifndef BNO055_H_
 #define BNO055_H_
 

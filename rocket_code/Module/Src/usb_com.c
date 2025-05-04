@@ -1,3 +1,9 @@
+/*
+ * usb_com.c
+ *
+ *  Created on: April 28, 2025
+ *      Author: Dat Hoang
+ */
 #include "usb_com.h"
 #include "stdlib.h"
 #include "usbd_cdc_if.h"

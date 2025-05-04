@@ -1,3 +1,9 @@
+/*
+ * fifo.h
+ *
+ *  Created on: April 28, 2025
+ *      Author: Dat Hoang
+ */
 #ifndef _FIFO_H_
 #define _FIFO_H_
 

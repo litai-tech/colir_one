@@ -1,3 +1,9 @@
+/*
+ * device.h
+ *
+ *  Created on: April 28, 2025
+ *      Author: Dat Hoang
+ */
 #ifndef _DEVICE_H_
 #define _DEVICE_H_
 

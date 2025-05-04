@@ -1,3 +1,10 @@
+/*
+ * lighter.h
+ *
+ *  Created on: April 21, 2025
+ *      Author: Dat Hoang
+ */
+
 #ifndef __LIGHTER_H__
 #define __LIGHTER_H__
 

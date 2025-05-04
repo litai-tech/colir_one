@@ -1,3 +1,9 @@
+/*
+ * uart.h
+ *
+ *  Created on: April 28, 2025
+ *      Author: Dat Hoang
+ */
 #ifndef __UART_H__
 #define __UART_H__
 

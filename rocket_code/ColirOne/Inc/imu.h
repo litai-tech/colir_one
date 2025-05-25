@@ -12,16 +12,16 @@
 extern "C"{
 #endif
 typedef struct {
-    double x;
-    double y;
-    double z;
+    float x;
+    float y;
+    float z;
 } XYZ_t;
 
 typedef struct {
-    double w;
-    double x;
-    double y;
-    double z;
+    float w;
+    float x;
+    float y;
+    float z;
 } Quaternion_t;
 
 class IMU {

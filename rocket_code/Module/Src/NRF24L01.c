@@ -284,29 +284,37 @@ HAL_StatusTypeDef nrf24_TxRxMode(uint8_t *TxAddress, uint8_t *RxAddress, uint8_t
 
 	// disable the chip before configuring the device
 	CE_Disable();
+	if(channel == 0){
+		channel = DEFAULT_CHANNEL;
+	}
 
 	status |= nrf24_write (RF_CH, channel);  // select the channel
 
 	//TX Setup
-	status |= nrf24_writeMulti(TX_ADDR, TxAddress, 5);  // Write the TX address
-
-	status |= nrf24_write (SETUP_RETR, 0x33);
+	if(TxAddress != NULL)
+	{
+		status |= nrf24_writeMulti(TX_ADDR, TxAddress, 5);  // Write the TX address
+	
+		status |= nrf24_write (SETUP_RETR, 0x33);
+	}
 
 	//RX Setup
-	uint8_t en_rxaddr = 0x3F;
-		//en_rxaddr = en_rxaddr | (1<<1);
+	if(RxAddress != NULL)
+	{
+		uint8_t en_rxaddr = 0x3F;
+			//en_rxaddr = en_rxaddr | (1<<1);
 		status |= nrf24_write (EN_RXADDR, en_rxaddr);
 
 		/* We must write the address for Data Pipe 1, if we want to use any pipe from 2 to 5
-		 * The Address from DATA Pipe 2 to Data Pipe 5 differs only in the LSB
-		 * Their 4 MSB Bytes will still be same as Data Pipe 1
-		 *
-		 * For Eg->
-		 * Pipe 1 ADDR = 0xAABBCCDD11
-		 * Pipe 2 ADDR = 0xAABBCCDD22
-		 * Pipe 3 ADDR = 0xAABBCCDD33
-		 *
-		 */
+			* The Address from DATA Pipe 2 to Data Pipe 5 differs only in the LSB
+			* Their 4 MSB Bytes will still be same as Data Pipe 1
+			*
+			* For Eg->
+			* Pipe 1 ADDR = 0xAABBCCDD11
+			* Pipe 2 ADDR = 0xAABBCCDD22
+			* Pipe 3 ADDR = 0xAABBCCDD33
+			*
+			*/
 		status |= nrf24_writeMulti(RX_ADDR_P1, RxAddress, 5);  // Write the Pipe1 address
 		//nrf24_write(RX_ADDR_P2, 0xEE);  // Write the Pipe2 LSB address
 
@@ -316,6 +324,7 @@ HAL_StatusTypeDef nrf24_TxRxMode(uint8_t *TxAddress, uint8_t *RxAddress, uint8_t
 		status |= nrf24_write (RX_PW_P3, 32);
 		status |= nrf24_write (RX_PW_P4, 32);
 		status |= nrf24_write (RX_PW_P5, 32);
+	}
 
 	// Enable the chip after configuring the device
 	CE_Enable();
@@ -435,7 +444,7 @@ HAL_StatusTypeDef nrf24_receive_ACK_payload(uint8_t *data, uint8_t* data_size) {
 }
 
 
-HAL_StatusTypeDef nrf24_check_data_available(void)
+bool nrf24_check_data_available(void)
 {
 	HAL_StatusTypeDef status = HAL_OK;
 	uint8_t fifo_status;
@@ -448,9 +457,9 @@ HAL_StatusTypeDef nrf24_check_data_available(void)
 	if ((nrf24_status&(1<<6)))
 	{
 		status |= nrf24_write(STATUS, (1<<6)); // Clear receive fifo bit
-		// return 1;
+		return 1;
 	}
-	return status;
+	return 0;
 	// return 0;
 }
 

@@ -25,6 +25,7 @@
 extern "C" {
 #endif
 #include "stm32f4xx_hal.h"
+#include "stdbool.h"
 
 HAL_StatusTypeDef nrf24_init(void);
 
@@ -36,7 +37,7 @@ HAL_StatusTypeDef nrf24_receive_ACK_payload(uint8_t *data, uint8_t* data_size);
 HAL_StatusTypeDef nrf24_transmit(uint8_t *data);
 HAL_StatusTypeDef nrf24_receive (uint8_t *data);
 
-HAL_StatusTypeDef nrf24_check_data_available(void);
+bool nrf24_check_data_available(void);
 HAL_StatusTypeDef flush_tx_fifo(void);
 HAL_StatusTypeDef flush_rx_fifo(void);
 
@@ -81,6 +82,8 @@ HAL_StatusTypeDef flush_rx_fifo(void);
 #define FLUSH_RX      0xE2
 #define REUSE_TX_PL   0xE3
 #define NOP           0xFF
+
+#define DEFAULT_CHANNEL 76
 
 #ifdef __cplusplus
 }

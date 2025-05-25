@@ -12,10 +12,17 @@ ColirOne::ColirOne() {
     // Constructor implementation
 }
 
-void ColirOne::init(void) {
+colirone_err_t ColirOne::init(void) {
     // Initialize all components
     stm32_init();
-    imu.init();
-    barometer.init();
+    colirone_err_t err = COLIRONE_OK;
+    err |= imu.init();
+    err |= barometer.init();
     gps.init();
+    err |= rf.init();
+    return err;
+}
+
+uint32_t ColirOne::getTimeStamp(void) {
+    return HAL_GetTick();
 }

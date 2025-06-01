@@ -15,7 +15,7 @@ int main(void){
 	while(1){
         if(colirOne.rf.hasReceivedData()){
             uint8_t* data = colirOne.rf.getReceivedData();
-                // printf("Received data: %s\n", data);
+            // printf("Received data: %s\n", data);
         }
 	}
 	return 0;

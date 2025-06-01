@@ -1,0 +1,2046 @@
+ARM GAS  /tmp/ccfreBmq.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"w25qxx.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c"
+  20              		.section	.text.w25qxx_transmit,"ax",%progbits
+  21              		.align	1
+  22              		.global	w25qxx_transmit
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	w25qxx_transmit:
+  28              	.LVL0:
+  29              	.LFB136:
+   1:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** /**
+   2:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****  ******************************************************************************
+   3:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****  * @file           : w25qxx.h
+   4:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****  * @brief          : Minimal W25Qxx Library Source
+   5:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****  ******************************************************************************
+   6:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****  * @attention
+   7:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****  *
+   8:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****  * Copyright (c) 2022, 2023 Lars Boegild Thomsen <lbthomsen@gmail.com>
+   9:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****  * All rights reserved.
+  10:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****  *
+  11:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****  * This software is licensed under terms that can be found in the LICENSE file
+  12:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****  * in the root directory of this software component.
+  13:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****  * If no LICENSE file comes with this software, it is provided AS-IS.
+  14:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****  *
+  15:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****  * Notice!  The library does _not_ bother to check that sectors have been erased
+  16:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****  * before writing.
+  17:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****  *
+  18:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****  ******************************************************************************
+  19:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****  */
+  20:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+  21:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** #include "main.h"
+  22:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** #include "w25qxx.h"
+  23:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** #include <string.h>
+  24:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+  25:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** #ifdef DEBUG
+  26:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** #include <stdio.h>
+  27:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** #endif
+  28:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+  29:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** /*
+ARM GAS  /tmp/ccfreBmq.s 			page 2
+
+
+  30:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****  * Internal functions
+  31:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****  */
+  32:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+  33:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** /**
+  34:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****  * @brief  Enables CS (driving it low) of the W25Qxx
+  35:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****  *
+  36:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****  * @param  W25Qxx handle
+  37:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****  * @retval None
+  38:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****  */
+  39:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** static inline void cs_on(W25QXX_HandleTypeDef *w25qxx) {
+  40:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     HAL_GPIO_WritePin(w25qxx->cs_port, w25qxx->cs_pin, GPIO_PIN_RESET);
+  41:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+  42:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+  43:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** /**
+  44:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****  * @brief  Disables CS (driving it high) of the W25Qxx
+  45:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****  *
+  46:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****  * @param  W25Qxx handle
+  47:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****  * @retval None
+  48:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****  */
+  49:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** static inline void cs_off(W25QXX_HandleTypeDef *w25qxx) {
+  50:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     HAL_GPIO_WritePin(w25qxx->cs_port, w25qxx->cs_pin, GPIO_PIN_SET);
+  51:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+  52:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+  53:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** /**
+  54:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****  * @brief  Transmit data to w25qxx - ignore returned data
+  55:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****  *
+  56:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****  * @param  W25Qxx handle
+  57:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****  * @param  Pointer to buffer with data to transmit
+  58:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****  * @param  Length (in bytes) of data to be transmitted
+  59:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****  * @retval None
+  60:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****  */
+  61:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** W25QXX_result_t w25qxx_transmit(W25QXX_HandleTypeDef *w25qxx, uint8_t *buf, uint32_t len) {
+  30              		.loc 1 61 91 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		.loc 1 61 91 is_stmt 0 view .LVU1
+  35 0000 08B5     		push	{r3, lr}
+  36              	.LCFI0:
+  37              		.cfi_def_cfa_offset 8
+  38              		.cfi_offset 3, -8
+  39              		.cfi_offset 14, -4
+  62:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     W25QXX_result_t ret = W25QXX_Err;
+  40              		.loc 1 62 5 is_stmt 1 view .LVU2
+  41              	.LVL1:
+  63:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     if (HAL_SPI_Transmit(w25qxx->spiHandle, buf, len, HAL_MAX_DELAY) == HAL_OK) {
+  42              		.loc 1 63 5 view .LVU3
+  43              		.loc 1 63 9 is_stmt 0 view .LVU4
+  44 0002 4FF0FF33 		mov	r3, #-1
+  45 0006 92B2     		uxth	r2, r2
+  46              	.LVL2:
+  47              		.loc 1 63 9 view .LVU5
+  48 0008 0068     		ldr	r0, [r0]
+  49              	.LVL3:
+  50              		.loc 1 63 9 view .LVU6
+  51 000a FFF7FEFF 		bl	HAL_SPI_Transmit
+  52              	.LVL4:
+ARM GAS  /tmp/ccfreBmq.s 			page 3
+
+
+  53              		.loc 1 63 8 discriminator 1 view .LVU7
+  54 000e 00B1     		cbz	r0, .L2
+  62:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     W25QXX_result_t ret = W25QXX_Err;
+  55              		.loc 1 62 21 view .LVU8
+  56 0010 0120     		movs	r0, #1
+  57              	.L2:
+  58              	.LVL5:
+  64:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         ret = W25QXX_Ok;
+  65:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     }
+  66:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     return ret;
+  59              		.loc 1 66 5 is_stmt 1 view .LVU9
+  67:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+  60              		.loc 1 67 1 is_stmt 0 view .LVU10
+  61 0012 08BD     		pop	{r3, pc}
+  62              		.cfi_endproc
+  63              	.LFE136:
+  65              		.section	.text.w25qxx_receive,"ax",%progbits
+  66              		.align	1
+  67              		.global	w25qxx_receive
+  68              		.syntax unified
+  69              		.thumb
+  70              		.thumb_func
+  72              	w25qxx_receive:
+  73              	.LVL6:
+  74              	.LFB137:
+  68:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+  69:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** /*
+  70:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****  * Receive data from w25qxx
+  71:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****  */
+  72:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** W25QXX_result_t w25qxx_receive(W25QXX_HandleTypeDef *w25qxx, uint8_t *buf, uint32_t len) {
+  75              		.loc 1 72 90 is_stmt 1 view -0
+  76              		.cfi_startproc
+  77              		@ args = 0, pretend = 0, frame = 0
+  78              		@ frame_needed = 0, uses_anonymous_args = 0
+  79              		.loc 1 72 90 is_stmt 0 view .LVU12
+  80 0000 08B5     		push	{r3, lr}
+  81              	.LCFI1:
+  82              		.cfi_def_cfa_offset 8
+  83              		.cfi_offset 3, -8
+  84              		.cfi_offset 14, -4
+  73:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     W25QXX_result_t ret = W25QXX_Err;
+  85              		.loc 1 73 5 is_stmt 1 view .LVU13
+  86              	.LVL7:
+  74:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     if (HAL_SPI_Receive(w25qxx->spiHandle, buf, len, HAL_MAX_DELAY) == HAL_OK) {
+  87              		.loc 1 74 5 view .LVU14
+  88              		.loc 1 74 9 is_stmt 0 view .LVU15
+  89 0002 4FF0FF33 		mov	r3, #-1
+  90 0006 92B2     		uxth	r2, r2
+  91              	.LVL8:
+  92              		.loc 1 74 9 view .LVU16
+  93 0008 0068     		ldr	r0, [r0]
+  94              	.LVL9:
+  95              		.loc 1 74 9 view .LVU17
+  96 000a FFF7FEFF 		bl	HAL_SPI_Receive
+  97              	.LVL10:
+  98              		.loc 1 74 8 discriminator 1 view .LVU18
+  99 000e 00B1     		cbz	r0, .L5
+ARM GAS  /tmp/ccfreBmq.s 			page 4
+
+
+  73:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     W25QXX_result_t ret = W25QXX_Err;
+ 100              		.loc 1 73 21 view .LVU19
+ 101 0010 0120     		movs	r0, #1
+ 102              	.L5:
+ 103              	.LVL11:
+  75:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         ret = W25QXX_Ok;
+  76:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     }
+  77:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     return ret;
+ 104              		.loc 1 77 5 is_stmt 1 view .LVU20
+  78:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 105              		.loc 1 78 1 is_stmt 0 view .LVU21
+ 106 0012 08BD     		pop	{r3, pc}
+ 107              		.cfi_endproc
+ 108              	.LFE137:
+ 110              		.section	.text.w25qxx_read_id,"ax",%progbits
+ 111              		.align	1
+ 112              		.global	w25qxx_read_id
+ 113              		.syntax unified
+ 114              		.thumb
+ 115              		.thumb_func
+ 117              	w25qxx_read_id:
+ 118              	.LVL12:
+ 119              	.LFB138:
+  79:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+  80:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** uint32_t w25qxx_read_id(W25QXX_HandleTypeDef *w25qxx) {
+ 120              		.loc 1 80 55 is_stmt 1 view -0
+ 121              		.cfi_startproc
+ 122              		@ args = 0, pretend = 0, frame = 8
+ 123              		@ frame_needed = 0, uses_anonymous_args = 0
+ 124              		.loc 1 80 55 is_stmt 0 view .LVU23
+ 125 0000 30B5     		push	{r4, r5, lr}
+ 126              	.LCFI2:
+ 127              		.cfi_def_cfa_offset 12
+ 128              		.cfi_offset 4, -12
+ 129              		.cfi_offset 5, -8
+ 130              		.cfi_offset 14, -4
+ 131 0002 83B0     		sub	sp, sp, #12
+ 132              	.LCFI3:
+ 133              		.cfi_def_cfa_offset 24
+ 134 0004 0446     		mov	r4, r0
+  81:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     uint32_t ret = 0;
+ 135              		.loc 1 81 5 is_stmt 1 view .LVU24
+ 136              	.LVL13:
+  82:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     uint8_t buf[3];
+ 137              		.loc 1 82 5 view .LVU25
+  83:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     cs_on(w25qxx);
+ 138              		.loc 1 83 5 view .LVU26
+ 139              	.LBB42:
+ 140              	.LBI42:
+  39:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     HAL_GPIO_WritePin(w25qxx->cs_port, w25qxx->cs_pin, GPIO_PIN_RESET);
+ 141              		.loc 1 39 20 view .LVU27
+ 142              	.LBB43:
+  40:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 143              		.loc 1 40 5 view .LVU28
+ 144 0006 0022     		movs	r2, #0
+ 145 0008 0189     		ldrh	r1, [r0, #8]
+ 146 000a 4068     		ldr	r0, [r0, #4]
+ARM GAS  /tmp/ccfreBmq.s 			page 5
+
+
+ 147              	.LVL14:
+  40:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 148              		.loc 1 40 5 is_stmt 0 view .LVU29
+ 149 000c FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 150              	.LVL15:
+  40:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 151              		.loc 1 40 5 view .LVU30
+ 152              	.LBE43:
+ 153              	.LBE42:
+  84:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     buf[0] = W25QXX_GET_ID;
+ 154              		.loc 1 84 5 is_stmt 1 view .LVU31
+ 155              		.loc 1 84 12 is_stmt 0 view .LVU32
+ 156 0010 9F23     		movs	r3, #159
+ 157 0012 8DF80430 		strb	r3, [sp, #4]
+  85:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     if (w25qxx_transmit(w25qxx, buf, 1) == W25QXX_Ok) {
+ 158              		.loc 1 85 5 is_stmt 1 view .LVU33
+ 159              		.loc 1 85 9 is_stmt 0 view .LVU34
+ 160 0016 0122     		movs	r2, #1
+ 161 0018 01A9     		add	r1, sp, #4
+ 162 001a 2046     		mov	r0, r4
+ 163 001c FFF7FEFF 		bl	w25qxx_transmit
+ 164              	.LVL16:
+ 165              		.loc 1 85 8 discriminator 1 view .LVU35
+ 166 0020 40B1     		cbz	r0, .L12
+  81:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     uint8_t buf[3];
+ 167              		.loc 1 81 14 view .LVU36
+ 168 0022 0025     		movs	r5, #0
+ 169              	.LVL17:
+ 170              	.L8:
+  86:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         if (w25qxx_receive(w25qxx, buf, 3) == W25QXX_Ok) {
+  87:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             ret = (uint32_t) ((buf[0] << 16) | (buf[1] << 8) | (buf[2]));
+  88:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         }
+  89:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     }
+  90:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     cs_off(w25qxx);
+ 171              		.loc 1 90 5 is_stmt 1 view .LVU37
+ 172              	.LBB44:
+ 173              	.LBI44:
+  49:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     HAL_GPIO_WritePin(w25qxx->cs_port, w25qxx->cs_pin, GPIO_PIN_SET);
+ 174              		.loc 1 49 20 view .LVU38
+ 175              	.LBB45:
+  50:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 176              		.loc 1 50 5 view .LVU39
+ 177 0024 0122     		movs	r2, #1
+ 178 0026 2189     		ldrh	r1, [r4, #8]
+ 179 0028 6068     		ldr	r0, [r4, #4]
+ 180 002a FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 181              	.LVL18:
+  50:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 182              		.loc 1 50 5 is_stmt 0 view .LVU40
+ 183              	.LBE45:
+ 184              	.LBE44:
+  91:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     return ret;
+ 185              		.loc 1 91 5 is_stmt 1 view .LVU41
+  92:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 186              		.loc 1 92 1 is_stmt 0 view .LVU42
+ 187 002e 2846     		mov	r0, r5
+ 188 0030 03B0     		add	sp, sp, #12
+ARM GAS  /tmp/ccfreBmq.s 			page 6
+
+
+ 189              	.LCFI4:
+ 190              		.cfi_remember_state
+ 191              		.cfi_def_cfa_offset 12
+ 192              		@ sp needed
+ 193 0032 30BD     		pop	{r4, r5, pc}
+ 194              	.LVL19:
+ 195              	.L12:
+ 196              	.LCFI5:
+ 197              		.cfi_restore_state
+  86:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             ret = (uint32_t) ((buf[0] << 16) | (buf[1] << 8) | (buf[2]));
+ 198              		.loc 1 86 9 is_stmt 1 view .LVU43
+  86:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             ret = (uint32_t) ((buf[0] << 16) | (buf[1] << 8) | (buf[2]));
+ 199              		.loc 1 86 13 is_stmt 0 view .LVU44
+ 200 0034 0322     		movs	r2, #3
+ 201 0036 01A9     		add	r1, sp, #4
+ 202 0038 2046     		mov	r0, r4
+ 203 003a FFF7FEFF 		bl	w25qxx_receive
+ 204              	.LVL20:
+  86:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             ret = (uint32_t) ((buf[0] << 16) | (buf[1] << 8) | (buf[2]));
+ 205              		.loc 1 86 12 discriminator 1 view .LVU45
+ 206 003e 50B9     		cbnz	r0, .L10
+  87:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         }
+ 207              		.loc 1 87 13 is_stmt 1 view .LVU46
+  87:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         }
+ 208              		.loc 1 87 35 is_stmt 0 view .LVU47
+ 209 0040 9DF80430 		ldrb	r3, [sp, #4]	@ zero_extendqisi2
+  87:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         }
+ 210              		.loc 1 87 52 view .LVU48
+ 211 0044 9DF80550 		ldrb	r5, [sp, #5]	@ zero_extendqisi2
+  87:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         }
+ 212              		.loc 1 87 56 view .LVU49
+ 213 0048 2D02     		lsls	r5, r5, #8
+  87:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         }
+ 214              		.loc 1 87 46 view .LVU50
+ 215 004a 45EA0345 		orr	r5, r5, r3, lsl #16
+  87:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         }
+ 216              		.loc 1 87 68 view .LVU51
+ 217 004e 9DF80630 		ldrb	r3, [sp, #6]	@ zero_extendqisi2
+  87:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         }
+ 218              		.loc 1 87 62 view .LVU52
+ 219 0052 1D43     		orrs	r5, r5, r3
+ 220              	.LVL21:
+  87:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         }
+ 221              		.loc 1 87 62 view .LVU53
+ 222 0054 E6E7     		b	.L8
+ 223              	.LVL22:
+ 224              	.L10:
+  81:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     uint8_t buf[3];
+ 225              		.loc 1 81 14 view .LVU54
+ 226 0056 0025     		movs	r5, #0
+ 227 0058 E4E7     		b	.L8
+ 228              		.cfi_endproc
+ 229              	.LFE138:
+ 231              		.section	.text.w25qxx_get_status,"ax",%progbits
+ 232              		.align	1
+ 233              		.global	w25qxx_get_status
+ 234              		.syntax unified
+ARM GAS  /tmp/ccfreBmq.s 			page 7
+
+
+ 235              		.thumb
+ 236              		.thumb_func
+ 238              	w25qxx_get_status:
+ 239              	.LVL23:
+ 240              	.LFB139:
+  93:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+  94:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** uint8_t w25qxx_get_status(W25QXX_HandleTypeDef *w25qxx) {
+ 241              		.loc 1 94 57 is_stmt 1 view -0
+ 242              		.cfi_startproc
+ 243              		@ args = 0, pretend = 0, frame = 8
+ 244              		@ frame_needed = 0, uses_anonymous_args = 0
+ 245              		.loc 1 94 57 is_stmt 0 view .LVU56
+ 246 0000 30B5     		push	{r4, r5, lr}
+ 247              	.LCFI6:
+ 248              		.cfi_def_cfa_offset 12
+ 249              		.cfi_offset 4, -12
+ 250              		.cfi_offset 5, -8
+ 251              		.cfi_offset 14, -4
+ 252 0002 83B0     		sub	sp, sp, #12
+ 253              	.LCFI7:
+ 254              		.cfi_def_cfa_offset 24
+ 255 0004 0446     		mov	r4, r0
+  95:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     uint8_t ret = 0;
+ 256              		.loc 1 95 5 is_stmt 1 view .LVU57
+ 257              	.LVL24:
+  96:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     uint8_t buf = W25QXX_READ_REGISTER_1;
+ 258              		.loc 1 96 5 view .LVU58
+ 259              		.loc 1 96 13 is_stmt 0 view .LVU59
+ 260 0006 0523     		movs	r3, #5
+ 261 0008 8DF80730 		strb	r3, [sp, #7]
+  97:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     cs_on(w25qxx);
+ 262              		.loc 1 97 5 is_stmt 1 view .LVU60
+ 263              	.LVL25:
+ 264              	.LBB46:
+ 265              	.LBI46:
+  39:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     HAL_GPIO_WritePin(w25qxx->cs_port, w25qxx->cs_pin, GPIO_PIN_RESET);
+ 266              		.loc 1 39 20 view .LVU61
+ 267              	.LBB47:
+  40:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 268              		.loc 1 40 5 view .LVU62
+ 269 000c 0022     		movs	r2, #0
+ 270 000e 0189     		ldrh	r1, [r0, #8]
+ 271 0010 4068     		ldr	r0, [r0, #4]
+ 272              	.LVL26:
+  40:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 273              		.loc 1 40 5 is_stmt 0 view .LVU63
+ 274 0012 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 275              	.LVL27:
+  40:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 276              		.loc 1 40 5 view .LVU64
+ 277              	.LBE47:
+ 278              	.LBE46:
+  98:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     if (w25qxx_transmit(w25qxx, &buf, 1) == W25QXX_Ok) {
+ 279              		.loc 1 98 5 is_stmt 1 view .LVU65
+ 280              		.loc 1 98 9 is_stmt 0 view .LVU66
+ 281 0016 0122     		movs	r2, #1
+ 282 0018 0DF10701 		add	r1, sp, #7
+ARM GAS  /tmp/ccfreBmq.s 			page 8
+
+
+ 283 001c 2046     		mov	r0, r4
+ 284 001e FFF7FEFF 		bl	w25qxx_transmit
+ 285              	.LVL28:
+ 286              		.loc 1 98 8 discriminator 1 view .LVU67
+ 287 0022 40B1     		cbz	r0, .L17
+  95:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     uint8_t buf = W25QXX_READ_REGISTER_1;
+ 288              		.loc 1 95 13 view .LVU68
+ 289 0024 0025     		movs	r5, #0
+ 290              	.LVL29:
+ 291              	.L14:
+  99:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         if (w25qxx_receive(w25qxx, &buf, 1) == W25QXX_Ok) {
+ 100:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             ret = buf;
+ 101:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         }
+ 102:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     }
+ 103:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     cs_off(w25qxx);
+ 292              		.loc 1 103 5 is_stmt 1 view .LVU69
+ 293              	.LBB48:
+ 294              	.LBI48:
+  49:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     HAL_GPIO_WritePin(w25qxx->cs_port, w25qxx->cs_pin, GPIO_PIN_SET);
+ 295              		.loc 1 49 20 view .LVU70
+ 296              	.LBB49:
+  50:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 297              		.loc 1 50 5 view .LVU71
+ 298 0026 0122     		movs	r2, #1
+ 299 0028 2189     		ldrh	r1, [r4, #8]
+ 300 002a 6068     		ldr	r0, [r4, #4]
+ 301 002c FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 302              	.LVL30:
+  50:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 303              		.loc 1 50 5 is_stmt 0 view .LVU72
+ 304              	.LBE49:
+ 305              	.LBE48:
+ 104:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     return ret;
+ 306              		.loc 1 104 5 is_stmt 1 view .LVU73
+ 105:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 307              		.loc 1 105 1 is_stmt 0 view .LVU74
+ 308 0030 2846     		mov	r0, r5
+ 309 0032 03B0     		add	sp, sp, #12
+ 310              	.LCFI8:
+ 311              		.cfi_remember_state
+ 312              		.cfi_def_cfa_offset 12
+ 313              		@ sp needed
+ 314 0034 30BD     		pop	{r4, r5, pc}
+ 315              	.LVL31:
+ 316              	.L17:
+ 317              	.LCFI9:
+ 318              		.cfi_restore_state
+ 319              		.loc 1 105 1 view .LVU75
+ 320 0036 0546     		mov	r5, r0
+  99:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             ret = buf;
+ 321              		.loc 1 99 9 is_stmt 1 view .LVU76
+  99:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             ret = buf;
+ 322              		.loc 1 99 13 is_stmt 0 view .LVU77
+ 323 0038 0122     		movs	r2, #1
+ 324 003a 0DF10701 		add	r1, sp, #7
+ 325 003e 2046     		mov	r0, r4
+ 326 0040 FFF7FEFF 		bl	w25qxx_receive
+ARM GAS  /tmp/ccfreBmq.s 			page 9
+
+
+ 327              	.LVL32:
+  99:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             ret = buf;
+ 328              		.loc 1 99 12 discriminator 1 view .LVU78
+ 329 0044 0028     		cmp	r0, #0
+ 330 0046 EED1     		bne	.L14
+ 100:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         }
+ 331              		.loc 1 100 13 is_stmt 1 view .LVU79
+ 100:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         }
+ 332              		.loc 1 100 17 is_stmt 0 view .LVU80
+ 333 0048 9DF80750 		ldrb	r5, [sp, #7]	@ zero_extendqisi2
+ 334              	.LVL33:
+ 100:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         }
+ 335              		.loc 1 100 17 view .LVU81
+ 336 004c EBE7     		b	.L14
+ 337              		.cfi_endproc
+ 338              	.LFE139:
+ 340              		.section	.text.w25qxx_write_enable,"ax",%progbits
+ 341              		.align	1
+ 342              		.global	w25qxx_write_enable
+ 343              		.syntax unified
+ 344              		.thumb
+ 345              		.thumb_func
+ 347              	w25qxx_write_enable:
+ 348              	.LVL34:
+ 349              	.LFB140:
+ 106:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 107:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** W25QXX_result_t w25qxx_write_enable(W25QXX_HandleTypeDef *w25qxx) {
+ 350              		.loc 1 107 67 is_stmt 1 view -0
+ 351              		.cfi_startproc
+ 352              		@ args = 0, pretend = 0, frame = 8
+ 353              		@ frame_needed = 0, uses_anonymous_args = 0
+ 354              		.loc 1 107 67 is_stmt 0 view .LVU83
+ 355 0000 30B5     		push	{r4, r5, lr}
+ 356              	.LCFI10:
+ 357              		.cfi_def_cfa_offset 12
+ 358              		.cfi_offset 4, -12
+ 359              		.cfi_offset 5, -8
+ 360              		.cfi_offset 14, -4
+ 361 0002 83B0     		sub	sp, sp, #12
+ 362              	.LCFI11:
+ 363              		.cfi_def_cfa_offset 24
+ 364 0004 0446     		mov	r4, r0
+ 108:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     W25_DBG("w25qxx_write_enable");
+ 365              		.loc 1 108 35 is_stmt 1 view .LVU84
+ 109:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     W25QXX_result_t ret = W25QXX_Err;
+ 366              		.loc 1 109 5 view .LVU85
+ 367              	.LVL35:
+ 110:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     uint8_t buf[1];
+ 368              		.loc 1 110 5 view .LVU86
+ 111:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     cs_on(w25qxx);
+ 369              		.loc 1 111 5 view .LVU87
+ 370              	.LBB50:
+ 371              	.LBI50:
+  39:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     HAL_GPIO_WritePin(w25qxx->cs_port, w25qxx->cs_pin, GPIO_PIN_RESET);
+ 372              		.loc 1 39 20 view .LVU88
+ 373              	.LBB51:
+  40:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ARM GAS  /tmp/ccfreBmq.s 			page 10
+
+
+ 374              		.loc 1 40 5 view .LVU89
+ 375 0006 0022     		movs	r2, #0
+ 376 0008 0189     		ldrh	r1, [r0, #8]
+ 377 000a 4068     		ldr	r0, [r0, #4]
+ 378              	.LVL36:
+  40:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 379              		.loc 1 40 5 is_stmt 0 view .LVU90
+ 380 000c FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 381              	.LVL37:
+  40:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 382              		.loc 1 40 5 view .LVU91
+ 383              	.LBE51:
+ 384              	.LBE50:
+ 112:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     buf[0] = W25QXX_WRITE_ENABLE;
+ 385              		.loc 1 112 5 is_stmt 1 view .LVU92
+ 386              		.loc 1 112 12 is_stmt 0 view .LVU93
+ 387 0010 0623     		movs	r3, #6
+ 388 0012 8DF80430 		strb	r3, [sp, #4]
+ 113:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     if (w25qxx_transmit(w25qxx, buf, 1) == W25QXX_Ok) {
+ 389              		.loc 1 113 5 is_stmt 1 view .LVU94
+ 390              		.loc 1 113 9 is_stmt 0 view .LVU95
+ 391 0016 0122     		movs	r2, #1
+ 392 0018 01A9     		add	r1, sp, #4
+ 393 001a 2046     		mov	r0, r4
+ 394 001c FFF7FEFF 		bl	w25qxx_transmit
+ 395              	.LVL38:
+ 396              		.loc 1 113 8 discriminator 1 view .LVU96
+ 397 0020 0546     		mov	r5, r0
+ 398 0022 00B1     		cbz	r0, .L19
+ 109:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     uint8_t buf[1];
+ 399              		.loc 1 109 21 view .LVU97
+ 400 0024 0125     		movs	r5, #1
+ 401              	.L19:
+ 402              	.LVL39:
+ 114:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         ret = W25QXX_Ok;
+ 115:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     }
+ 116:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     cs_off(w25qxx);
+ 403              		.loc 1 116 5 is_stmt 1 view .LVU98
+ 404              	.LBB52:
+ 405              	.LBI52:
+  49:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     HAL_GPIO_WritePin(w25qxx->cs_port, w25qxx->cs_pin, GPIO_PIN_SET);
+ 406              		.loc 1 49 20 view .LVU99
+ 407              	.LBB53:
+  50:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 408              		.loc 1 50 5 view .LVU100
+ 409 0026 0122     		movs	r2, #1
+ 410 0028 2189     		ldrh	r1, [r4, #8]
+ 411 002a 6068     		ldr	r0, [r4, #4]
+ 412 002c FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 413              	.LVL40:
+  50:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 414              		.loc 1 50 5 is_stmt 0 view .LVU101
+ 415              	.LBE53:
+ 416              	.LBE52:
+ 117:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     return ret;
+ 417              		.loc 1 117 5 is_stmt 1 view .LVU102
+ 118:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ARM GAS  /tmp/ccfreBmq.s 			page 11
+
+
+ 418              		.loc 1 118 1 is_stmt 0 view .LVU103
+ 419 0030 2846     		mov	r0, r5
+ 420 0032 03B0     		add	sp, sp, #12
+ 421              	.LCFI12:
+ 422              		.cfi_def_cfa_offset 12
+ 423              		@ sp needed
+ 424 0034 30BD     		pop	{r4, r5, pc}
+ 425              		.loc 1 118 1 view .LVU104
+ 426              		.cfi_endproc
+ 427              	.LFE140:
+ 429              		.section	.text.w25qxx_wait_for_ready,"ax",%progbits
+ 430              		.align	1
+ 431              		.global	w25qxx_wait_for_ready
+ 432              		.syntax unified
+ 433              		.thumb
+ 434              		.thumb_func
+ 436              	w25qxx_wait_for_ready:
+ 437              	.LVL41:
+ 438              	.LFB141:
+ 119:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 120:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** W25QXX_result_t w25qxx_wait_for_ready(W25QXX_HandleTypeDef *w25qxx, uint32_t timeout) {
+ 439              		.loc 1 120 87 is_stmt 1 view -0
+ 440              		.cfi_startproc
+ 441              		@ args = 0, pretend = 0, frame = 0
+ 442              		@ frame_needed = 0, uses_anonymous_args = 0
+ 443              		.loc 1 120 87 is_stmt 0 view .LVU106
+ 444 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 445              	.LCFI13:
+ 446              		.cfi_def_cfa_offset 24
+ 447              		.cfi_offset 3, -24
+ 448              		.cfi_offset 4, -20
+ 449              		.cfi_offset 5, -16
+ 450              		.cfi_offset 6, -12
+ 451              		.cfi_offset 7, -8
+ 452              		.cfi_offset 14, -4
+ 453 0002 0746     		mov	r7, r0
+ 454 0004 0D46     		mov	r5, r1
+ 121:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     W25QXX_result_t ret = W25QXX_Ok;
+ 455              		.loc 1 121 5 is_stmt 1 view .LVU107
+ 456              	.LVL42:
+ 122:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     uint32_t begin = HAL_GetTick();
+ 457              		.loc 1 122 5 view .LVU108
+ 458              		.loc 1 122 22 is_stmt 0 view .LVU109
+ 459 0006 FFF7FEFF 		bl	HAL_GetTick
+ 460              	.LVL43:
+ 461              		.loc 1 122 22 view .LVU110
+ 462 000a 0646     		mov	r6, r0
+ 463              	.LVL44:
+ 123:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     uint32_t now = HAL_GetTick();
+ 464              		.loc 1 123 5 is_stmt 1 view .LVU111
+ 465              		.loc 1 123 20 is_stmt 0 view .LVU112
+ 466 000c FFF7FEFF 		bl	HAL_GetTick
+ 467              	.LVL45:
+ 124:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     while ((now - begin <= timeout) && (w25qxx_get_status(w25qxx) && 0x01 == 0x01)) {
+ 468              		.loc 1 124 5 is_stmt 1 view .LVU113
+ 469              		.loc 1 124 11 is_stmt 0 view .LVU114
+ 470 0010 01E0     		b	.L22
+ARM GAS  /tmp/ccfreBmq.s 			page 12
+
+
+ 471              	.LVL46:
+ 472              	.L24:
+ 125:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         now = HAL_GetTick();
+ 473              		.loc 1 125 9 is_stmt 1 view .LVU115
+ 474              		.loc 1 125 15 is_stmt 0 view .LVU116
+ 475 0012 FFF7FEFF 		bl	HAL_GetTick
+ 476              	.LVL47:
+ 477              	.L22:
+ 124:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     while ((now - begin <= timeout) && (w25qxx_get_status(w25qxx) && 0x01 == 0x01)) {
+ 478              		.loc 1 124 37 is_stmt 1 view .LVU117
+ 124:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     while ((now - begin <= timeout) && (w25qxx_get_status(w25qxx) && 0x01 == 0x01)) {
+ 479              		.loc 1 124 17 is_stmt 0 view .LVU118
+ 480 0016 841B     		subs	r4, r0, r6
+ 124:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     while ((now - begin <= timeout) && (w25qxx_get_status(w25qxx) && 0x01 == 0x01)) {
+ 481              		.loc 1 124 37 view .LVU119
+ 482 0018 AC42     		cmp	r4, r5
+ 483 001a 04D8     		bhi	.L23
+ 124:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     while ((now - begin <= timeout) && (w25qxx_get_status(w25qxx) && 0x01 == 0x01)) {
+ 484              		.loc 1 124 41 discriminator 1 view .LVU120
+ 485 001c 3846     		mov	r0, r7
+ 486              	.LVL48:
+ 124:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     while ((now - begin <= timeout) && (w25qxx_get_status(w25qxx) && 0x01 == 0x01)) {
+ 487              		.loc 1 124 41 discriminator 1 view .LVU121
+ 488 001e FFF7FEFF 		bl	w25qxx_get_status
+ 489              	.LVL49:
+ 124:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     while ((now - begin <= timeout) && (w25qxx_get_status(w25qxx) && 0x01 == 0x01)) {
+ 490              		.loc 1 124 37 discriminator 1 view .LVU122
+ 491 0022 0028     		cmp	r0, #0
+ 492 0024 F5D1     		bne	.L24
+ 493              	.L23:
+ 126:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     }
+ 127:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     if (now - begin == timeout)
+ 494              		.loc 1 127 5 is_stmt 1 view .LVU123
+ 495              		.loc 1 127 8 is_stmt 0 view .LVU124
+ 496 0026 AC42     		cmp	r4, r5
+ 497 0028 01D0     		beq	.L26
+ 121:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     uint32_t begin = HAL_GetTick();
+ 498              		.loc 1 121 21 view .LVU125
+ 499 002a 0020     		movs	r0, #0
+ 500              	.L25:
+ 501              	.LVL50:
+ 128:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         ret = W25QXX_Timeout;
+ 129:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     return ret;
+ 502              		.loc 1 129 5 is_stmt 1 view .LVU126
+ 130:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 503              		.loc 1 130 1 is_stmt 0 view .LVU127
+ 504 002c F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 505              	.LVL51:
+ 506              	.L26:
+ 128:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         ret = W25QXX_Timeout;
+ 507              		.loc 1 128 13 view .LVU128
+ 508 002e 0220     		movs	r0, #2
+ 509 0030 FCE7     		b	.L25
+ 510              		.cfi_endproc
+ 511              	.LFE141:
+ 513              		.section	.text.w25qxx_init,"ax",%progbits
+ 514              		.align	1
+ARM GAS  /tmp/ccfreBmq.s 			page 13
+
+
+ 515              		.global	w25qxx_init
+ 516              		.syntax unified
+ 517              		.thumb
+ 518              		.thumb_func
+ 520              	w25qxx_init:
+ 521              	.LVL52:
+ 522              	.LFB142:
+ 131:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 132:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** #ifdef W25QXX_QSPI
+ 133:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** W25QXX_result_t w25qxx_init(W25QXX_HandleTypeDef *w25qxx, QSPI_HandleTypeDef *qhspi) {
+ 134:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 135:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 136:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** #else
+ 137:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** W25QXX_result_t w25qxx_init(W25QXX_HandleTypeDef *w25qxx, SPI_HandleTypeDef *hspi, GPIO_TypeDef *cs
+ 523              		.loc 1 137 124 is_stmt 1 view -0
+ 524              		.cfi_startproc
+ 525              		@ args = 0, pretend = 0, frame = 0
+ 526              		@ frame_needed = 0, uses_anonymous_args = 0
+ 527              		.loc 1 137 124 is_stmt 0 view .LVU130
+ 528 0000 10B5     		push	{r4, lr}
+ 529              	.LCFI14:
+ 530              		.cfi_def_cfa_offset 8
+ 531              		.cfi_offset 4, -8
+ 532              		.cfi_offset 14, -4
+ 533 0002 0446     		mov	r4, r0
+ 534 0004 1046     		mov	r0, r2
+ 535              	.LVL53:
+ 138:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 139:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     W25QXX_result_t result = W25QXX_Ok;
+ 536              		.loc 1 139 5 is_stmt 1 view .LVU131
+ 140:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 141:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     W25_DBG("w25qxx_init");
+ 537              		.loc 1 141 27 view .LVU132
+ 142:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 143:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     w25qxx->spiHandle = hspi;
+ 538              		.loc 1 143 5 view .LVU133
+ 539              		.loc 1 143 23 is_stmt 0 view .LVU134
+ 540 0006 2160     		str	r1, [r4]
+ 144:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     w25qxx->cs_port = cs_port;
+ 541              		.loc 1 144 5 is_stmt 1 view .LVU135
+ 542              		.loc 1 144 21 is_stmt 0 view .LVU136
+ 543 0008 6260     		str	r2, [r4, #4]
+ 145:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     w25qxx->cs_pin = cs_pin;
+ 544              		.loc 1 145 5 is_stmt 1 view .LVU137
+ 545              		.loc 1 145 20 is_stmt 0 view .LVU138
+ 546 000a 2381     		strh	r3, [r4, #8]	@ movhi
+ 146:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 147:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     cs_off(w25qxx);
+ 547              		.loc 1 147 5 is_stmt 1 view .LVU139
+ 548              	.LVL54:
+ 549              	.LBB54:
+ 550              	.LBI54:
+  49:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     HAL_GPIO_WritePin(w25qxx->cs_port, w25qxx->cs_pin, GPIO_PIN_SET);
+ 551              		.loc 1 49 20 view .LVU140
+ 552              	.LBB55:
+  50:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 553              		.loc 1 50 5 view .LVU141
+ARM GAS  /tmp/ccfreBmq.s 			page 14
+
+
+ 554 000c 0122     		movs	r2, #1
+ 555              	.LVL55:
+  50:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 556              		.loc 1 50 5 is_stmt 0 view .LVU142
+ 557 000e 1946     		mov	r1, r3
+ 558              	.LVL56:
+  50:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 559              		.loc 1 50 5 view .LVU143
+ 560 0010 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 561              	.LVL57:
+  50:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 562              		.loc 1 50 5 view .LVU144
+ 563              	.LBE55:
+ 564              	.LBE54:
+ 148:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 149:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     uint32_t id = w25qxx_read_id(w25qxx);
+ 565              		.loc 1 149 5 is_stmt 1 view .LVU145
+ 566              		.loc 1 149 19 is_stmt 0 view .LVU146
+ 567 0014 2046     		mov	r0, r4
+ 568 0016 FFF7FEFF 		bl	w25qxx_read_id
+ 569              	.LVL58:
+ 150:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     if (id) {
+ 570              		.loc 1 150 5 is_stmt 1 view .LVU147
+ 571              		.loc 1 150 8 is_stmt 0 view .LVU148
+ 572 001a 40B1     		cbz	r0, .L29
+ 151:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         w25qxx->manufacturer_id = (uint8_t) (id >> 16);
+ 573              		.loc 1 151 9 is_stmt 1 view .LVU149
+ 574              		.loc 1 151 35 is_stmt 0 view .LVU150
+ 575 001c C0F30742 		ubfx	r2, r0, #16, #8
+ 576              		.loc 1 151 33 view .LVU151
+ 577 0020 A272     		strb	r2, [r4, #10]
+ 152:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         w25qxx->device_id = (uint16_t) (id & 0xFFFF);
+ 578              		.loc 1 152 9 is_stmt 1 view .LVU152
+ 579              		.loc 1 152 29 is_stmt 0 view .LVU153
+ 580 0022 83B2     		uxth	r3, r0
+ 581              		.loc 1 152 27 view .LVU154
+ 582 0024 A381     		strh	r3, [r4, #12]	@ movhi
+ 153:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 154:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         switch (w25qxx->manufacturer_id) {
+ 583              		.loc 1 154 9 is_stmt 1 view .LVU155
+ 584 0026 C82A     		cmp	r2, #200
+ 585 0028 08D0     		beq	.L30
+ 586 002a EF2A     		cmp	r2, #239
+ 587 002c 1AD0     		beq	.L31
+ 588              	.L29:
+ 589              	.LVL59:
+ 155:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         case W25QXX_MANUFACTURER_GIGADEVICE:
+ 156:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 157:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             w25qxx->block_size = 0x10000;
+ 158:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             w25qxx->sector_size = 0x1000;
+ 159:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             w25qxx->sectors_in_block = 0x10;
+ 160:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             w25qxx->page_size = 0x100;
+ 161:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             w25qxx->pages_in_sector = 0x10;
+ 162:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 163:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             switch (w25qxx->device_id) {
+ 164:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             case 0x6017:
+ 165:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****                 w25qxx->block_count = 0x80;
+ARM GAS  /tmp/ccfreBmq.s 			page 15
+
+
+ 166:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****                 break;
+ 167:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             default:
+ 168:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****                 W25_DBG("Unknown Giga Device device");
+ 169:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****                 result = W25QXX_Err;
+ 170:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             }
+ 171:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 172:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             break;
+ 173:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         case W25QXX_MANUFACTURER_WINBOND:
+ 174:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 175:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             w25qxx->block_size = 0x10000;
+ 176:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             w25qxx->sector_size = 0x1000;
+ 177:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             w25qxx->sectors_in_block = 0x10;
+ 178:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             w25qxx->page_size = 0x100;
+ 179:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             w25qxx->pages_in_sector = 0x10;
+ 180:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 181:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             switch (w25qxx->device_id) {
+ 182:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             case 0x4017:
+ 183:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****                 w25qxx->block_count = 0x100;
+ 184:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****                 break;
+ 185:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             default:
+ 186:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****                 W25_DBG("Unknown Winbond device");
+ 187:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****                 result = W25QXX_Err;
+ 188:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             }
+ 189:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 190:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             break;
+ 191:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         default:
+ 192:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             W25_DBG("Unknown manufacturer");
+ 193:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             result = W25QXX_Err;
+ 194:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         }
+ 195:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     } else {
+ 196:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         result = W25QXX_Err;
+ 197:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     }
+ 198:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 199:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     if (result == W25QXX_Err) {
+ 200:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         // Zero the handle so it is clear initialization failed!
+ 201:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         memset(w25qxx, 0, sizeof(W25QXX_HandleTypeDef));
+ 590              		.loc 1 201 9 view .LVU156
+ 591 002e 2822     		movs	r2, #40
+ 592 0030 0021     		movs	r1, #0
+ 593 0032 2046     		mov	r0, r4
+ 594              	.LVL60:
+ 595              		.loc 1 201 9 is_stmt 0 view .LVU157
+ 596 0034 FFF7FEFF 		bl	memset
+ 597              	.LVL61:
+ 598 0038 0120     		movs	r0, #1
+ 599              	.L32:
+ 202:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     }
+ 203:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 204:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     return result;
+ 600              		.loc 1 204 5 is_stmt 1 view .LVU158
+ 205:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 206:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 601              		.loc 1 206 1 is_stmt 0 view .LVU159
+ 602 003a 10BD     		pop	{r4, pc}
+ 603              	.LVL62:
+ 604              	.L30:
+ 157:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             w25qxx->sector_size = 0x1000;
+ARM GAS  /tmp/ccfreBmq.s 			page 16
+
+
+ 605              		.loc 1 157 13 is_stmt 1 view .LVU160
+ 157:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             w25qxx->sector_size = 0x1000;
+ 606              		.loc 1 157 32 is_stmt 0 view .LVU161
+ 607 003c 4FF48032 		mov	r2, #65536
+ 608 0040 2261     		str	r2, [r4, #16]
+ 158:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             w25qxx->sectors_in_block = 0x10;
+ 609              		.loc 1 158 13 is_stmt 1 view .LVU162
+ 158:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             w25qxx->sectors_in_block = 0x10;
+ 610              		.loc 1 158 33 is_stmt 0 view .LVU163
+ 611 0042 4FF48052 		mov	r2, #4096
+ 612 0046 A261     		str	r2, [r4, #24]
+ 159:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             w25qxx->page_size = 0x100;
+ 613              		.loc 1 159 13 is_stmt 1 view .LVU164
+ 159:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             w25qxx->page_size = 0x100;
+ 614              		.loc 1 159 38 is_stmt 0 view .LVU165
+ 615 0048 1022     		movs	r2, #16
+ 616 004a E261     		str	r2, [r4, #28]
+ 160:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             w25qxx->pages_in_sector = 0x10;
+ 617              		.loc 1 160 13 is_stmt 1 view .LVU166
+ 160:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             w25qxx->pages_in_sector = 0x10;
+ 618              		.loc 1 160 31 is_stmt 0 view .LVU167
+ 619 004c 4FF48071 		mov	r1, #256
+ 620 0050 2162     		str	r1, [r4, #32]
+ 161:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 621              		.loc 1 161 13 is_stmt 1 view .LVU168
+ 161:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 622              		.loc 1 161 37 is_stmt 0 view .LVU169
+ 623 0052 6262     		str	r2, [r4, #36]
+ 163:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             case 0x6017:
+ 624              		.loc 1 163 13 is_stmt 1 view .LVU170
+ 625 0054 46F21702 		movw	r2, #24599
+ 626 0058 9342     		cmp	r3, r2
+ 627 005a E8D1     		bne	.L29
+ 165:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****                 break;
+ 628              		.loc 1 165 17 view .LVU171
+ 165:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****                 break;
+ 629              		.loc 1 165 37 is_stmt 0 view .LVU172
+ 630 005c 8023     		movs	r3, #128
+ 631 005e 6361     		str	r3, [r4, #20]
+ 166:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             default:
+ 632              		.loc 1 166 17 is_stmt 1 view .LVU173
+ 199:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         // Zero the handle so it is clear initialization failed!
+ 633              		.loc 1 199 5 view .LVU174
+ 139:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 634              		.loc 1 139 21 is_stmt 0 view .LVU175
+ 635 0060 0020     		movs	r0, #0
+ 636              	.LVL63:
+ 139:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 637              		.loc 1 139 21 view .LVU176
+ 638 0062 EAE7     		b	.L32
+ 639              	.LVL64:
+ 640              	.L31:
+ 175:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             w25qxx->sector_size = 0x1000;
+ 641              		.loc 1 175 13 is_stmt 1 view .LVU177
+ 175:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             w25qxx->sector_size = 0x1000;
+ 642              		.loc 1 175 32 is_stmt 0 view .LVU178
+ 643 0064 4FF48032 		mov	r2, #65536
+ARM GAS  /tmp/ccfreBmq.s 			page 17
+
+
+ 644 0068 2261     		str	r2, [r4, #16]
+ 176:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             w25qxx->sectors_in_block = 0x10;
+ 645              		.loc 1 176 13 is_stmt 1 view .LVU179
+ 176:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             w25qxx->sectors_in_block = 0x10;
+ 646              		.loc 1 176 33 is_stmt 0 view .LVU180
+ 647 006a 4FF48052 		mov	r2, #4096
+ 648 006e A261     		str	r2, [r4, #24]
+ 177:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             w25qxx->page_size = 0x100;
+ 649              		.loc 1 177 13 is_stmt 1 view .LVU181
+ 177:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             w25qxx->page_size = 0x100;
+ 650              		.loc 1 177 38 is_stmt 0 view .LVU182
+ 651 0070 1022     		movs	r2, #16
+ 652 0072 E261     		str	r2, [r4, #28]
+ 178:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             w25qxx->pages_in_sector = 0x10;
+ 653              		.loc 1 178 13 is_stmt 1 view .LVU183
+ 178:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             w25qxx->pages_in_sector = 0x10;
+ 654              		.loc 1 178 31 is_stmt 0 view .LVU184
+ 655 0074 4FF48071 		mov	r1, #256
+ 656 0078 2162     		str	r1, [r4, #32]
+ 179:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 657              		.loc 1 179 13 is_stmt 1 view .LVU185
+ 179:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 658              		.loc 1 179 37 is_stmt 0 view .LVU186
+ 659 007a 6262     		str	r2, [r4, #36]
+ 181:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             case 0x4017:
+ 660              		.loc 1 181 13 is_stmt 1 view .LVU187
+ 661 007c 44F21702 		movw	r2, #16407
+ 662 0080 9342     		cmp	r3, r2
+ 663 0082 D4D1     		bne	.L29
+ 183:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****                 break;
+ 664              		.loc 1 183 17 view .LVU188
+ 183:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****                 break;
+ 665              		.loc 1 183 37 is_stmt 0 view .LVU189
+ 666 0084 6161     		str	r1, [r4, #20]
+ 184:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             default:
+ 667              		.loc 1 184 17 is_stmt 1 view .LVU190
+ 199:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         // Zero the handle so it is clear initialization failed!
+ 668              		.loc 1 199 5 view .LVU191
+ 139:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 669              		.loc 1 139 21 is_stmt 0 view .LVU192
+ 670 0086 0020     		movs	r0, #0
+ 671              	.LVL65:
+ 139:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 672              		.loc 1 139 21 view .LVU193
+ 673 0088 D7E7     		b	.L32
+ 674              		.cfi_endproc
+ 675              	.LFE142:
+ 677              		.section	.text.w25qxx_read,"ax",%progbits
+ 678              		.align	1
+ 679              		.global	w25qxx_read
+ 680              		.syntax unified
+ 681              		.thumb
+ 682              		.thumb_func
+ 684              	w25qxx_read:
+ 685              	.LVL66:
+ 686              	.LFB143:
+ 207:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** #endif
+ARM GAS  /tmp/ccfreBmq.s 			page 18
+
+
+ 208:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 209:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** W25QXX_result_t w25qxx_read(W25QXX_HandleTypeDef *w25qxx, uint32_t address, uint8_t *buf, uint32_t 
+ 687              		.loc 1 209 105 is_stmt 1 view -0
+ 688              		.cfi_startproc
+ 689              		@ args = 0, pretend = 0, frame = 8
+ 690              		@ frame_needed = 0, uses_anonymous_args = 0
+ 691              		.loc 1 209 105 is_stmt 0 view .LVU195
+ 692 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+ 693              	.LCFI15:
+ 694              		.cfi_def_cfa_offset 20
+ 695              		.cfi_offset 4, -20
+ 696              		.cfi_offset 5, -16
+ 697              		.cfi_offset 6, -12
+ 698              		.cfi_offset 7, -8
+ 699              		.cfi_offset 14, -4
+ 700 0002 83B0     		sub	sp, sp, #12
+ 701              	.LCFI16:
+ 702              		.cfi_def_cfa_offset 32
+ 703 0004 0446     		mov	r4, r0
+ 704 0006 1546     		mov	r5, r2
+ 705 0008 1E46     		mov	r6, r3
+ 210:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 211:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     W25_DBG("w25qxx_read - address: 0x%08lx, lengh: 0x%04lx", address, len);
+ 706              		.loc 1 211 76 is_stmt 1 view .LVU196
+ 212:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 213:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     // Transmit buffer holding command and address
+ 214:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     uint8_t tx[4] = {
+ 707              		.loc 1 214 5 view .LVU197
+ 708              		.loc 1 214 13 is_stmt 0 view .LVU198
+ 709 000a 0323     		movs	r3, #3
+ 710              	.LVL67:
+ 711              		.loc 1 214 13 view .LVU199
+ 712 000c 8DF80430 		strb	r3, [sp, #4]
+ 215:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     W25QXX_READ_DATA, (uint8_t) (address >> 16), (uint8_t) (address >> 8), (uint8_t) (address), };
+ 713              		.loc 1 215 23 view .LVU200
+ 714 0010 C1F30743 		ubfx	r3, r1, #16, #8
+ 214:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     W25QXX_READ_DATA, (uint8_t) (address >> 16), (uint8_t) (address >> 8), (uint8_t) (address), };
+ 715              		.loc 1 214 13 view .LVU201
+ 716 0014 8DF80530 		strb	r3, [sp, #5]
+ 717              		.loc 1 215 50 view .LVU202
+ 718 0018 C1F30723 		ubfx	r3, r1, #8, #8
+ 214:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     W25QXX_READ_DATA, (uint8_t) (address >> 16), (uint8_t) (address >> 8), (uint8_t) (address), };
+ 719              		.loc 1 214 13 view .LVU203
+ 720 001c 8DF80630 		strb	r3, [sp, #6]
+ 721 0020 8DF80710 		strb	r1, [sp, #7]
+ 216:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 217:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     // First wait for device to get ready
+ 218:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     if (w25qxx_wait_for_ready(w25qxx, HAL_MAX_DELAY) != W25QXX_Ok) {
+ 722              		.loc 1 218 5 is_stmt 1 view .LVU204
+ 723              		.loc 1 218 9 is_stmt 0 view .LVU205
+ 724 0024 4FF0FF31 		mov	r1, #-1
+ 725              	.LVL68:
+ 726              		.loc 1 218 9 view .LVU206
+ 727 0028 FFF7FEFF 		bl	w25qxx_wait_for_ready
+ 728              	.LVL69:
+ 729              		.loc 1 218 8 discriminator 1 view .LVU207
+ 730 002c 18B1     		cbz	r0, .L39
+ARM GAS  /tmp/ccfreBmq.s 			page 19
+
+
+ 219:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         return W25QXX_Err;
+ 731              		.loc 1 219 16 view .LVU208
+ 732 002e 0127     		movs	r7, #1
+ 733              	.L35:
+ 220:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     }
+ 221:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 222:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     cs_on(w25qxx);
+ 223:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     if (w25qxx_transmit(w25qxx, tx, 4) == W25QXX_Ok) { // size will always be fixed
+ 224:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         if (w25qxx_receive(w25qxx, buf, len) != W25QXX_Ok) {
+ 225:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             cs_off(w25qxx);
+ 226:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             return W25QXX_Err;
+ 227:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         }
+ 228:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     }
+ 229:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     cs_off(w25qxx);
+ 230:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 231:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     return W25QXX_Ok;
+ 232:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 734              		.loc 1 232 1 view .LVU209
+ 735 0030 3846     		mov	r0, r7
+ 736 0032 03B0     		add	sp, sp, #12
+ 737              	.LCFI17:
+ 738              		.cfi_remember_state
+ 739              		.cfi_def_cfa_offset 20
+ 740              		@ sp needed
+ 741 0034 F0BD     		pop	{r4, r5, r6, r7, pc}
+ 742              	.LVL70:
+ 743              	.L39:
+ 744              	.LCFI18:
+ 745              		.cfi_restore_state
+ 746              		.loc 1 232 1 view .LVU210
+ 747 0036 0746     		mov	r7, r0
+ 222:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     if (w25qxx_transmit(w25qxx, tx, 4) == W25QXX_Ok) { // size will always be fixed
+ 748              		.loc 1 222 5 is_stmt 1 view .LVU211
+ 749              	.LVL71:
+ 750              	.LBB56:
+ 751              	.LBI56:
+  39:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     HAL_GPIO_WritePin(w25qxx->cs_port, w25qxx->cs_pin, GPIO_PIN_RESET);
+ 752              		.loc 1 39 20 view .LVU212
+ 753              	.LBB57:
+  40:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 754              		.loc 1 40 5 view .LVU213
+ 755 0038 0022     		movs	r2, #0
+ 756 003a 2189     		ldrh	r1, [r4, #8]
+ 757 003c 6068     		ldr	r0, [r4, #4]
+ 758 003e FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 759              	.LVL72:
+  40:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 760              		.loc 1 40 5 is_stmt 0 view .LVU214
+ 761              	.LBE57:
+ 762              	.LBE56:
+ 223:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         if (w25qxx_receive(w25qxx, buf, len) != W25QXX_Ok) {
+ 763              		.loc 1 223 5 is_stmt 1 view .LVU215
+ 223:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         if (w25qxx_receive(w25qxx, buf, len) != W25QXX_Ok) {
+ 764              		.loc 1 223 9 is_stmt 0 view .LVU216
+ 765 0042 0422     		movs	r2, #4
+ 766 0044 0DEB0201 		add	r1, sp, r2
+ 767 0048 2046     		mov	r0, r4
+ARM GAS  /tmp/ccfreBmq.s 			page 20
+
+
+ 768 004a FFF7FEFF 		bl	w25qxx_transmit
+ 769              	.LVL73:
+ 223:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         if (w25qxx_receive(w25qxx, buf, len) != W25QXX_Ok) {
+ 770              		.loc 1 223 8 discriminator 1 view .LVU217
+ 771 004e 28B9     		cbnz	r0, .L36
+ 224:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             cs_off(w25qxx);
+ 772              		.loc 1 224 9 is_stmt 1 view .LVU218
+ 224:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             cs_off(w25qxx);
+ 773              		.loc 1 224 13 is_stmt 0 view .LVU219
+ 774 0050 3246     		mov	r2, r6
+ 775 0052 2946     		mov	r1, r5
+ 776 0054 2046     		mov	r0, r4
+ 777 0056 FFF7FEFF 		bl	w25qxx_receive
+ 778              	.LVL74:
+ 224:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             cs_off(w25qxx);
+ 779              		.loc 1 224 12 discriminator 1 view .LVU220
+ 780 005a 28B9     		cbnz	r0, .L40
+ 781              	.L36:
+ 229:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 782              		.loc 1 229 5 is_stmt 1 view .LVU221
+ 783              	.LVL75:
+ 784              	.LBB58:
+ 785              	.LBI58:
+  49:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     HAL_GPIO_WritePin(w25qxx->cs_port, w25qxx->cs_pin, GPIO_PIN_SET);
+ 786              		.loc 1 49 20 view .LVU222
+ 787              	.LBB59:
+  50:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 788              		.loc 1 50 5 view .LVU223
+ 789 005c 0122     		movs	r2, #1
+ 790 005e 2189     		ldrh	r1, [r4, #8]
+ 791 0060 6068     		ldr	r0, [r4, #4]
+ 792 0062 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 793              	.LVL76:
+  50:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 794              		.loc 1 50 5 is_stmt 0 view .LVU224
+ 795              	.LBE59:
+ 796              	.LBE58:
+ 231:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 797              		.loc 1 231 5 is_stmt 1 view .LVU225
+ 231:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 798              		.loc 1 231 12 is_stmt 0 view .LVU226
+ 799 0066 E3E7     		b	.L35
+ 800              	.L40:
+ 225:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             return W25QXX_Err;
+ 801              		.loc 1 225 13 is_stmt 1 view .LVU227
+ 802              	.LVL77:
+ 803              	.LBB60:
+ 804              	.LBI60:
+  49:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     HAL_GPIO_WritePin(w25qxx->cs_port, w25qxx->cs_pin, GPIO_PIN_SET);
+ 805              		.loc 1 49 20 view .LVU228
+ 806              	.LBB61:
+  50:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 807              		.loc 1 50 5 view .LVU229
+ 808 0068 0122     		movs	r2, #1
+ 809 006a 2189     		ldrh	r1, [r4, #8]
+ 810 006c 6068     		ldr	r0, [r4, #4]
+ 811 006e FFF7FEFF 		bl	HAL_GPIO_WritePin
+ARM GAS  /tmp/ccfreBmq.s 			page 21
+
+
+ 812              	.LVL78:
+  50:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 813              		.loc 1 50 5 is_stmt 0 view .LVU230
+ 814              	.LBE61:
+ 815              	.LBE60:
+ 226:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         }
+ 816              		.loc 1 226 13 is_stmt 1 view .LVU231
+ 226:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         }
+ 817              		.loc 1 226 20 is_stmt 0 view .LVU232
+ 818 0072 0127     		movs	r7, #1
+ 819 0074 DCE7     		b	.L35
+ 820              		.cfi_endproc
+ 821              	.LFE143:
+ 823              		.section	.text.w25qxx_write,"ax",%progbits
+ 824              		.align	1
+ 825              		.global	w25qxx_write
+ 826              		.syntax unified
+ 827              		.thumb
+ 828              		.thumb_func
+ 830              	w25qxx_write:
+ 831              	.LVL79:
+ 832              	.LFB144:
+ 233:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 234:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** W25QXX_result_t w25qxx_write(W25QXX_HandleTypeDef *w25qxx, uint32_t address, uint8_t *buf, uint32_t
+ 833              		.loc 1 234 106 is_stmt 1 view -0
+ 834              		.cfi_startproc
+ 835              		@ args = 0, pretend = 0, frame = 16
+ 836              		@ frame_needed = 0, uses_anonymous_args = 0
+ 837              		.loc 1 234 106 is_stmt 0 view .LVU234
+ 838 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 839              	.LCFI19:
+ 840              		.cfi_def_cfa_offset 36
+ 841              		.cfi_offset 4, -36
+ 842              		.cfi_offset 5, -32
+ 843              		.cfi_offset 6, -28
+ 844              		.cfi_offset 7, -24
+ 845              		.cfi_offset 8, -20
+ 846              		.cfi_offset 9, -16
+ 847              		.cfi_offset 10, -12
+ 848              		.cfi_offset 11, -8
+ 849              		.cfi_offset 14, -4
+ 850 0004 85B0     		sub	sp, sp, #20
+ 851              	.LCFI20:
+ 852              		.cfi_def_cfa_offset 56
+ 853 0006 0546     		mov	r5, r0
+ 854 0008 0F46     		mov	r7, r1
+ 855 000a 0192     		str	r2, [sp, #4]
+ 856 000c 9846     		mov	r8, r3
+ 235:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 236:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     W25_DBG("w25qxx_write - address 0x%08lx len 0x%04lx", address, len);
+ 857              		.loc 1 236 72 is_stmt 1 view .LVU235
+ 237:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 238:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     // Let's determine the pages
+ 239:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     uint32_t first_page = address / w25qxx->page_size;
+ 858              		.loc 1 239 5 view .LVU236
+ 859              		.loc 1 239 43 is_stmt 0 view .LVU237
+ 860 000e 036A     		ldr	r3, [r0, #32]
+ARM GAS  /tmp/ccfreBmq.s 			page 22
+
+
+ 861              	.LVL80:
+ 862              		.loc 1 239 14 view .LVU238
+ 863 0010 B1FBF3F9 		udiv	r9, r1, r3
+ 864              	.LVL81:
+ 240:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     uint32_t last_page = (address + len - 1) / w25qxx->page_size;
+ 865              		.loc 1 240 5 is_stmt 1 view .LVU239
+ 866              		.loc 1 240 35 is_stmt 0 view .LVU240
+ 867 0014 01EB080B 		add	fp, r1, r8
+ 868              		.loc 1 240 41 view .LVU241
+ 869 0018 0BF1FF3B 		add	fp, fp, #-1
+ 870              		.loc 1 240 14 view .LVU242
+ 871 001c BBFBF3FB 		udiv	fp, fp, r3
+ 872              	.LVL82:
+ 241:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 242:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     W25_DBG("w25qxx_write %lu pages from %lu to %lu", 1 + last_page - first_page, first_page, last_
+ 873              		.loc 1 242 105 is_stmt 1 view .LVU243
+ 243:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 244:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     uint32_t buffer_offset = 0;
+ 874              		.loc 1 244 5 view .LVU244
+ 245:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     uint32_t start_address = address;
+ 875              		.loc 1 245 5 view .LVU245
+ 246:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 247:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     for (uint32_t page = first_page; page <= last_page; ++page) {
+ 876              		.loc 1 247 5 view .LVU246
+ 877              	.LBB62:
+ 878              		.loc 1 247 10 view .LVU247
+ 879              		.loc 1 247 10 is_stmt 0 view .LVU248
+ 880              	.LBE62:
+ 244:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     uint32_t start_address = address;
+ 881              		.loc 1 244 14 view .LVU249
+ 882 0020 4FF0000A 		mov	r10, #0
+ 883              	.LBB73:
+ 884              		.loc 1 247 5 view .LVU250
+ 885 0024 09E0     		b	.L42
+ 886              	.LVL83:
+ 887              	.L45:
+ 888              	.LBB63:
+ 248:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 249:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         uint32_t write_len = w25qxx->page_size - (start_address & (w25qxx->page_size - 1));
+ 250:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         write_len = len > write_len ? write_len : len;
+ 251:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 252:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         W25_DBG("w25qxx_write: handling page %lu start_address = 0x%08lx buffer_offset = 0x%08lx le
+ 253:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 254:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         // First wait for device to get ready
+ 255:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         if (w25qxx_wait_for_ready(w25qxx, HAL_MAX_DELAY) != W25QXX_Ok) {
+ 256:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             return W25QXX_Err;
+ 257:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         }
+ 258:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 259:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         uint8_t retryCount = 0;
+ 260:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         while(w25qxx_write_enable(w25qxx) != W25QXX_Ok && retryCount < 100){
+ 261:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         	HAL_Delay(1);
+ 262:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         	retryCount++;
+ 263:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         }
+ 264:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 265:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         if (w25qxx_write_enable(w25qxx) == W25QXX_Ok) {
+ 889              		.loc 1 265 9 is_stmt 1 view .LVU251
+ 890              		.loc 1 265 13 is_stmt 0 view .LVU252
+ARM GAS  /tmp/ccfreBmq.s 			page 23
+
+
+ 891 0026 2846     		mov	r0, r5
+ 892 0028 FFF7FEFF 		bl	w25qxx_write_enable
+ 893              	.LVL84:
+ 894              		.loc 1 265 12 discriminator 1 view .LVU253
+ 895 002c 18B3     		cbz	r0, .L52
+ 896              	.L47:
+ 266:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 267:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             uint8_t tx[4] = {
+ 268:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             W25QXX_PAGE_PROGRAM, (uint8_t) (start_address >> 16), (uint8_t) (start_address >> 8), (
+ 269:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 270:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             cs_on(w25qxx);
+ 271:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             if (w25qxx_transmit(w25qxx, tx, 4) == W25QXX_Ok) { // size will always be fixed
+ 272:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****                 // Now write the buffer
+ 273:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****                 if (w25qxx_transmit(w25qxx, buf + buffer_offset, write_len) != W25QXX_Ok) {
+ 274:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****                     cs_off(w25qxx);
+ 275:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****                     return W25QXX_Err;
+ 276:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****                 }
+ 277:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             }
+ 278:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             cs_off(w25qxx);
+ 279:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         }
+ 280:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         start_address += write_len;
+ 897              		.loc 1 280 9 is_stmt 1 view .LVU254
+ 898              		.loc 1 280 23 is_stmt 0 view .LVU255
+ 899 002e 3744     		add	r7, r7, r6
+ 900              	.LVL85:
+ 281:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         buffer_offset += write_len;
+ 901              		.loc 1 281 9 is_stmt 1 view .LVU256
+ 902              		.loc 1 281 23 is_stmt 0 view .LVU257
+ 903 0030 B244     		add	r10, r10, r6
+ 904              	.LVL86:
+ 282:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         len -= write_len;
+ 905              		.loc 1 282 9 is_stmt 1 view .LVU258
+ 906              		.loc 1 282 13 is_stmt 0 view .LVU259
+ 907 0032 A8EB0608 		sub	r8, r8, r6
+ 908              	.LVL87:
+ 909              		.loc 1 282 13 view .LVU260
+ 910              	.LBE63:
+ 247:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 911              		.loc 1 247 57 is_stmt 1 discriminator 2 view .LVU261
+ 912 0036 09F10109 		add	r9, r9, #1
+ 913              	.LVL88:
+ 914              	.L42:
+ 247:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 915              		.loc 1 247 43 discriminator 1 view .LVU262
+ 916 003a D945     		cmp	r9, fp
+ 917 003c 48D8     		bhi	.L53
+ 918              	.LBB71:
+ 249:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         write_len = len > write_len ? write_len : len;
+ 919              		.loc 1 249 9 view .LVU263
+ 249:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         write_len = len > write_len ? write_len : len;
+ 920              		.loc 1 249 36 is_stmt 0 view .LVU264
+ 921 003e 2E6A     		ldr	r6, [r5, #32]
+ 249:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         write_len = len > write_len ? write_len : len;
+ 922              		.loc 1 249 86 view .LVU265
+ 923 0040 731E     		subs	r3, r6, #1
+ 249:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         write_len = len > write_len ? write_len : len;
+ 924              		.loc 1 249 65 view .LVU266
+ARM GAS  /tmp/ccfreBmq.s 			page 24
+
+
+ 925 0042 3B40     		ands	r3, r3, r7
+ 249:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         write_len = len > write_len ? write_len : len;
+ 926              		.loc 1 249 18 view .LVU267
+ 927 0044 F61A     		subs	r6, r6, r3
+ 928              	.LVL89:
+ 250:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 929              		.loc 1 250 9 is_stmt 1 view .LVU268
+ 250:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 930              		.loc 1 250 19 is_stmt 0 view .LVU269
+ 931 0046 4645     		cmp	r6, r8
+ 932 0048 28BF     		it	cs
+ 933 004a 4646     		movcs	r6, r8
+ 934              	.LVL90:
+ 252:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 935              		.loc 1 252 158 is_stmt 1 view .LVU270
+ 255:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             return W25QXX_Err;
+ 936              		.loc 1 255 9 view .LVU271
+ 255:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             return W25QXX_Err;
+ 937              		.loc 1 255 13 is_stmt 0 view .LVU272
+ 938 004c 4FF0FF31 		mov	r1, #-1
+ 939 0050 2846     		mov	r0, r5
+ 940 0052 FFF7FEFF 		bl	w25qxx_wait_for_ready
+ 941              	.LVL91:
+ 255:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             return W25QXX_Err;
+ 942              		.loc 1 255 12 discriminator 1 view .LVU273
+ 943 0056 0446     		mov	r4, r0
+ 944 0058 0028     		cmp	r0, #0
+ 945 005a 3DD1     		bne	.L54
+ 946              	.L44:
+ 947              	.LVL92:
+ 260:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         	HAL_Delay(1);
+ 948              		.loc 1 260 56 is_stmt 1 view .LVU274
+ 260:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         	HAL_Delay(1);
+ 949              		.loc 1 260 15 is_stmt 0 view .LVU275
+ 950 005c 2846     		mov	r0, r5
+ 951 005e FFF7FEFF 		bl	w25qxx_write_enable
+ 952              	.LVL93:
+ 260:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         	HAL_Delay(1);
+ 953              		.loc 1 260 56 discriminator 1 view .LVU276
+ 954 0062 0028     		cmp	r0, #0
+ 955 0064 DFD0     		beq	.L45
+ 956 0066 632C     		cmp	r4, #99
+ 957 0068 DDD8     		bhi	.L45
+ 261:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         	retryCount++;
+ 958              		.loc 1 261 10 is_stmt 1 view .LVU277
+ 959 006a 0120     		movs	r0, #1
+ 960 006c FFF7FEFF 		bl	HAL_Delay
+ 961              	.LVL94:
+ 262:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         }
+ 962              		.loc 1 262 10 view .LVU278
+ 262:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         }
+ 963              		.loc 1 262 20 is_stmt 0 view .LVU279
+ 964 0070 0134     		adds	r4, r4, #1
+ 965              	.LVL95:
+ 262:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         }
+ 966              		.loc 1 262 20 view .LVU280
+ 967 0072 E4B2     		uxtb	r4, r4
+ARM GAS  /tmp/ccfreBmq.s 			page 25
+
+
+ 968              	.LVL96:
+ 262:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         }
+ 969              		.loc 1 262 20 view .LVU281
+ 970 0074 F2E7     		b	.L44
+ 971              	.L52:
+ 972              	.LBB64:
+ 267:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             W25QXX_PAGE_PROGRAM, (uint8_t) (start_address >> 16), (uint8_t) (start_address >> 8), (
+ 973              		.loc 1 267 13 is_stmt 1 view .LVU282
+ 267:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             W25QXX_PAGE_PROGRAM, (uint8_t) (start_address >> 16), (uint8_t) (start_address >> 8), (
+ 974              		.loc 1 267 21 is_stmt 0 view .LVU283
+ 975 0076 0223     		movs	r3, #2
+ 976 0078 8DF80C30 		strb	r3, [sp, #12]
+ 268:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 977              		.loc 1 268 34 view .LVU284
+ 978 007c C7F30743 		ubfx	r3, r7, #16, #8
+ 267:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             W25QXX_PAGE_PROGRAM, (uint8_t) (start_address >> 16), (uint8_t) (start_address >> 8), (
+ 979              		.loc 1 267 21 view .LVU285
+ 980 0080 8DF80D30 		strb	r3, [sp, #13]
+ 268:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 981              		.loc 1 268 67 view .LVU286
+ 982 0084 C7F30723 		ubfx	r3, r7, #8, #8
+ 267:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             W25QXX_PAGE_PROGRAM, (uint8_t) (start_address >> 16), (uint8_t) (start_address >> 8), (
+ 983              		.loc 1 267 21 view .LVU287
+ 984 0088 8DF80E30 		strb	r3, [sp, #14]
+ 985 008c 8DF80F70 		strb	r7, [sp, #15]
+ 270:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             if (w25qxx_transmit(w25qxx, tx, 4) == W25QXX_Ok) { // size will always be fixed
+ 986              		.loc 1 270 13 is_stmt 1 view .LVU288
+ 987              	.LVL97:
+ 988              	.LBB65:
+ 989              	.LBI65:
+  39:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     HAL_GPIO_WritePin(w25qxx->cs_port, w25qxx->cs_pin, GPIO_PIN_RESET);
+ 990              		.loc 1 39 20 view .LVU289
+ 991              	.LBB66:
+  40:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 992              		.loc 1 40 5 view .LVU290
+ 993 0090 0022     		movs	r2, #0
+ 994 0092 2989     		ldrh	r1, [r5, #8]
+ 995 0094 6868     		ldr	r0, [r5, #4]
+ 996 0096 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 997              	.LVL98:
+  40:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 998              		.loc 1 40 5 is_stmt 0 view .LVU291
+ 999              	.LBE66:
+ 1000              	.LBE65:
+ 271:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****                 // Now write the buffer
+ 1001              		.loc 1 271 13 is_stmt 1 view .LVU292
+ 271:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****                 // Now write the buffer
+ 1002              		.loc 1 271 17 is_stmt 0 view .LVU293
+ 1003 009a 0422     		movs	r2, #4
+ 1004 009c 03A9     		add	r1, sp, #12
+ 1005 009e 2846     		mov	r0, r5
+ 1006 00a0 FFF7FEFF 		bl	w25qxx_transmit
+ 1007              	.LVL99:
+ 271:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****                 // Now write the buffer
+ 1008              		.loc 1 271 16 discriminator 1 view .LVU294
+ 1009 00a4 38B9     		cbnz	r0, .L48
+ 273:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****                     cs_off(w25qxx);
+ARM GAS  /tmp/ccfreBmq.s 			page 26
+
+
+ 1010              		.loc 1 273 17 is_stmt 1 view .LVU295
+ 273:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****                     cs_off(w25qxx);
+ 1011              		.loc 1 273 21 is_stmt 0 view .LVU296
+ 1012 00a6 3246     		mov	r2, r6
+ 1013 00a8 019B     		ldr	r3, [sp, #4]
+ 1014 00aa 03EB0A01 		add	r1, r3, r10
+ 1015 00ae 2846     		mov	r0, r5
+ 1016 00b0 FFF7FEFF 		bl	w25qxx_transmit
+ 1017              	.LVL100:
+ 273:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****                     cs_off(w25qxx);
+ 1018              		.loc 1 273 20 discriminator 1 view .LVU297
+ 1019 00b4 28B9     		cbnz	r0, .L55
+ 1020              	.L48:
+ 278:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         }
+ 1021              		.loc 1 278 13 is_stmt 1 view .LVU298
+ 1022              	.LVL101:
+ 1023              	.LBB67:
+ 1024              	.LBI67:
+  49:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     HAL_GPIO_WritePin(w25qxx->cs_port, w25qxx->cs_pin, GPIO_PIN_SET);
+ 1025              		.loc 1 49 20 view .LVU299
+ 1026              	.LBB68:
+  50:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 1027              		.loc 1 50 5 view .LVU300
+ 1028 00b6 0122     		movs	r2, #1
+ 1029 00b8 2989     		ldrh	r1, [r5, #8]
+ 1030 00ba 6868     		ldr	r0, [r5, #4]
+ 1031 00bc FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 1032              	.LVL102:
+  50:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 1033              		.loc 1 50 5 is_stmt 0 view .LVU301
+ 1034              	.LBE68:
+ 1035              	.LBE67:
+ 1036 00c0 B5E7     		b	.L47
+ 1037              	.L55:
+ 274:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****                     return W25QXX_Err;
+ 1038              		.loc 1 274 21 is_stmt 1 view .LVU302
+ 1039              	.LVL103:
+ 1040              	.LBB69:
+ 1041              	.LBI69:
+  49:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     HAL_GPIO_WritePin(w25qxx->cs_port, w25qxx->cs_pin, GPIO_PIN_SET);
+ 1042              		.loc 1 49 20 view .LVU303
+ 1043              	.LBB70:
+  50:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 1044              		.loc 1 50 5 view .LVU304
+ 1045 00c2 0122     		movs	r2, #1
+ 1046 00c4 2989     		ldrh	r1, [r5, #8]
+ 1047 00c6 6868     		ldr	r0, [r5, #4]
+ 1048 00c8 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 1049              	.LVL104:
+  50:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 1050              		.loc 1 50 5 is_stmt 0 view .LVU305
+ 1051              	.LBE70:
+ 1052              	.LBE69:
+ 275:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****                 }
+ 1053              		.loc 1 275 21 is_stmt 1 view .LVU306
+ 275:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****                 }
+ 1054              		.loc 1 275 28 is_stmt 0 view .LVU307
+ARM GAS  /tmp/ccfreBmq.s 			page 27
+
+
+ 1055 00cc 0120     		movs	r0, #1
+ 1056 00ce 00E0     		b	.L43
+ 1057              	.LVL105:
+ 1058              	.L53:
+ 275:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****                 }
+ 1059              		.loc 1 275 28 view .LVU308
+ 1060              	.LBE64:
+ 1061              	.LBE71:
+ 1062              	.LBE73:
+ 283:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     }
+ 284:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 285:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     return W25QXX_Ok;
+ 1063              		.loc 1 285 12 view .LVU309
+ 1064 00d0 0020     		movs	r0, #0
+ 1065              	.L43:
+ 286:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 1066              		.loc 1 286 1 view .LVU310
+ 1067 00d2 05B0     		add	sp, sp, #20
+ 1068              	.LCFI21:
+ 1069              		.cfi_remember_state
+ 1070              		.cfi_def_cfa_offset 36
+ 1071              		@ sp needed
+ 1072 00d4 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 1073              	.LVL106:
+ 1074              	.L54:
+ 1075              	.LCFI22:
+ 1076              		.cfi_restore_state
+ 1077              	.LBB74:
+ 1078              	.LBB72:
+ 256:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         }
+ 1079              		.loc 1 256 20 view .LVU311
+ 1080 00d8 0120     		movs	r0, #1
+ 1081 00da FAE7     		b	.L43
+ 1082              	.LBE72:
+ 1083              	.LBE74:
+ 1084              		.cfi_endproc
+ 1085              	.LFE144:
+ 1087              		.section	.text.w25qxx_erase,"ax",%progbits
+ 1088              		.align	1
+ 1089              		.global	w25qxx_erase
+ 1090              		.syntax unified
+ 1091              		.thumb
+ 1092              		.thumb_func
+ 1094              	w25qxx_erase:
+ 1095              	.LVL107:
+ 1096              	.LFB145:
+ 287:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 288:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** W25QXX_result_t w25qxx_erase(W25QXX_HandleTypeDef *w25qxx, uint32_t address, uint32_t len) {
+ 1097              		.loc 1 288 92 is_stmt 1 view -0
+ 1098              		.cfi_startproc
+ 1099              		@ args = 0, pretend = 0, frame = 8
+ 1100              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1101              		.loc 1 288 92 is_stmt 0 view .LVU313
+ 1102 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+ 1103              	.LCFI23:
+ 1104              		.cfi_def_cfa_offset 20
+ 1105              		.cfi_offset 4, -20
+ARM GAS  /tmp/ccfreBmq.s 			page 28
+
+
+ 1106              		.cfi_offset 5, -16
+ 1107              		.cfi_offset 6, -12
+ 1108              		.cfi_offset 7, -8
+ 1109              		.cfi_offset 14, -4
+ 1110 0002 83B0     		sub	sp, sp, #12
+ 1111              	.LCFI24:
+ 1112              		.cfi_def_cfa_offset 32
+ 1113 0004 0546     		mov	r5, r0
+ 289:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 290:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     W25_DBG("w25qxx_erase, address = 0x%08lx len = 0x%04lx", address, len);
+ 1114              		.loc 1 290 75 is_stmt 1 view .LVU314
+ 291:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 292:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     W25QXX_result_t ret = W25QXX_Ok;
+ 1115              		.loc 1 292 5 view .LVU315
+ 1116              	.LVL108:
+ 293:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 294:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     // Let's determine the sector start
+ 295:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     uint32_t first_sector = address / w25qxx->sector_size;
+ 1117              		.loc 1 295 5 view .LVU316
+ 1118              		.loc 1 295 45 is_stmt 0 view .LVU317
+ 1119 0006 8369     		ldr	r3, [r0, #24]
+ 1120              		.loc 1 295 14 view .LVU318
+ 1121 0008 B1FBF3F4 		udiv	r4, r1, r3
+ 1122              	.LVL109:
+ 296:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     uint32_t last_sector = (address + len - 1) / w25qxx->sector_size;
+ 1123              		.loc 1 296 5 is_stmt 1 view .LVU319
+ 1124              		.loc 1 296 37 is_stmt 0 view .LVU320
+ 1125 000c 8E18     		adds	r6, r1, r2
+ 1126              		.loc 1 296 43 view .LVU321
+ 1127 000e 013E     		subs	r6, r6, #1
+ 1128              		.loc 1 296 14 view .LVU322
+ 1129 0010 B6FBF3F6 		udiv	r6, r6, r3
+ 1130              	.LVL110:
+ 297:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 298:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     W25_DBG("w25qxx_erase: first sector: 0x%04lx", first_sector);W25_DBG("w25qxx_erase: last sector
+ 1131              		.loc 1 298 65 is_stmt 1 view .LVU323
+ 1132              		.loc 1 298 125 view .LVU324
+ 299:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 300:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     for (uint32_t sector = first_sector; sector <= last_sector; ++sector) {
+ 1133              		.loc 1 300 5 view .LVU325
+ 1134              	.LBB75:
+ 1135              		.loc 1 300 10 view .LVU326
+ 1136              		.loc 1 300 10 is_stmt 0 view .LVU327
+ 1137              	.LBE75:
+ 292:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 1138              		.loc 1 292 21 view .LVU328
+ 1139 0014 0027     		movs	r7, #0
+ 1140              	.LBB81:
+ 1141              		.loc 1 300 5 view .LVU329
+ 1142 0016 04E0     		b	.L57
+ 1143              	.LVL111:
+ 1144              	.L66:
+ 301:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 302:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         W25_DBG("Erasing sector %lu, starting at: 0x%08lx", sector, sector * w25qxx->sector_size);
+ 303:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 304:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         // First we have to ensure the device is not busy
+ 305:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         if (w25qxx_wait_for_ready(w25qxx, HAL_MAX_DELAY) == W25QXX_Ok) {
+ARM GAS  /tmp/ccfreBmq.s 			page 29
+
+
+ 306:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             if (w25qxx_write_enable(w25qxx) == W25QXX_Ok) {
+ 1145              		.loc 1 306 13 is_stmt 1 view .LVU330
+ 1146              		.loc 1 306 17 is_stmt 0 view .LVU331
+ 1147 0018 2846     		mov	r0, r5
+ 1148 001a FFF7FEFF 		bl	w25qxx_write_enable
+ 1149              	.LVL112:
+ 1150              		.loc 1 306 16 discriminator 1 view .LVU332
+ 1151 001e 58B1     		cbz	r0, .L64
+ 1152              	.LVL113:
+ 1153              	.L58:
+ 300:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 1154              		.loc 1 300 65 is_stmt 1 discriminator 2 view .LVU333
+ 1155 0020 0134     		adds	r4, r4, #1
+ 1156              	.LVL114:
+ 1157              	.L57:
+ 300:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 1158              		.loc 1 300 49 discriminator 1 view .LVU334
+ 1159 0022 B442     		cmp	r4, r6
+ 1160 0024 2BD8     		bhi	.L65
+ 302:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 1161              		.loc 1 302 98 view .LVU335
+ 305:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             if (w25qxx_write_enable(w25qxx) == W25QXX_Ok) {
+ 1162              		.loc 1 305 9 view .LVU336
+ 305:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             if (w25qxx_write_enable(w25qxx) == W25QXX_Ok) {
+ 1163              		.loc 1 305 13 is_stmt 0 view .LVU337
+ 1164 0026 4FF0FF31 		mov	r1, #-1
+ 1165 002a 2846     		mov	r0, r5
+ 1166 002c FFF7FEFF 		bl	w25qxx_wait_for_ready
+ 1167              	.LVL115:
+ 305:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             if (w25qxx_write_enable(w25qxx) == W25QXX_Ok) {
+ 1168              		.loc 1 305 12 discriminator 1 view .LVU338
+ 1169 0030 0028     		cmp	r0, #0
+ 1170 0032 F1D0     		beq	.L66
+ 307:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 308:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****                 uint32_t sector_start_address = sector * w25qxx->sector_size;
+ 309:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 310:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****                 uint8_t tx[4] = {
+ 311:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****                 W25QXX_SECTOR_ERASE, (uint8_t) (sector_start_address >> 16), (uint8_t) (sector_star
+ 312:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 313:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****                 cs_on(w25qxx);
+ 314:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****                 if (w25qxx_transmit(w25qxx, tx, 4) != W25QXX_Ok) {
+ 315:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****                     ret = W25QXX_Err;
+ 316:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****                 }
+ 317:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****                 cs_off(w25qxx);
+ 318:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             }
+ 319:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         } else {
+ 320:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             ret = W25QXX_Timeout;
+ 1171              		.loc 1 320 17 view .LVU339
+ 1172 0034 0227     		movs	r7, #2
+ 1173              	.LVL116:
+ 1174              		.loc 1 320 17 view .LVU340
+ 1175 0036 F3E7     		b	.L58
+ 1176              	.LVL117:
+ 1177              	.L64:
+ 1178              	.LBB76:
+ 308:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 1179              		.loc 1 308 17 is_stmt 1 view .LVU341
+ARM GAS  /tmp/ccfreBmq.s 			page 30
+
+
+ 308:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 1180              		.loc 1 308 64 is_stmt 0 view .LVU342
+ 1181 0038 AB69     		ldr	r3, [r5, #24]
+ 308:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 1182              		.loc 1 308 26 view .LVU343
+ 1183 003a 04FB03F3 		mul	r3, r4, r3
+ 1184              	.LVL118:
+ 310:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****                 W25QXX_SECTOR_ERASE, (uint8_t) (sector_start_address >> 16), (uint8_t) (sector_star
+ 1185              		.loc 1 310 17 is_stmt 1 view .LVU344
+ 310:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****                 W25QXX_SECTOR_ERASE, (uint8_t) (sector_start_address >> 16), (uint8_t) (sector_star
+ 1186              		.loc 1 310 25 is_stmt 0 view .LVU345
+ 1187 003e 2022     		movs	r2, #32
+ 1188 0040 8DF80420 		strb	r2, [sp, #4]
+ 311:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 1189              		.loc 1 311 38 view .LVU346
+ 1190 0044 C3F30742 		ubfx	r2, r3, #16, #8
+ 310:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****                 W25QXX_SECTOR_ERASE, (uint8_t) (sector_start_address >> 16), (uint8_t) (sector_star
+ 1191              		.loc 1 310 25 view .LVU347
+ 1192 0048 8DF80520 		strb	r2, [sp, #5]
+ 311:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 1193              		.loc 1 311 78 view .LVU348
+ 1194 004c C3F30722 		ubfx	r2, r3, #8, #8
+ 310:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****                 W25QXX_SECTOR_ERASE, (uint8_t) (sector_start_address >> 16), (uint8_t) (sector_star
+ 1195              		.loc 1 310 25 view .LVU349
+ 1196 0050 8DF80620 		strb	r2, [sp, #6]
+ 1197 0054 8DF80730 		strb	r3, [sp, #7]
+ 313:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****                 if (w25qxx_transmit(w25qxx, tx, 4) != W25QXX_Ok) {
+ 1198              		.loc 1 313 17 is_stmt 1 view .LVU350
+ 1199              	.LVL119:
+ 1200              	.LBB77:
+ 1201              	.LBI77:
+  39:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     HAL_GPIO_WritePin(w25qxx->cs_port, w25qxx->cs_pin, GPIO_PIN_RESET);
+ 1202              		.loc 1 39 20 view .LVU351
+ 1203              	.LBB78:
+  40:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 1204              		.loc 1 40 5 view .LVU352
+ 1205 0058 0022     		movs	r2, #0
+ 1206 005a 2989     		ldrh	r1, [r5, #8]
+ 1207 005c 6868     		ldr	r0, [r5, #4]
+ 1208 005e FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 1209              	.LVL120:
+  40:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 1210              		.loc 1 40 5 is_stmt 0 view .LVU353
+ 1211              	.LBE78:
+ 1212              	.LBE77:
+ 314:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****                     ret = W25QXX_Err;
+ 1213              		.loc 1 314 17 is_stmt 1 view .LVU354
+ 314:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****                     ret = W25QXX_Err;
+ 1214              		.loc 1 314 21 is_stmt 0 view .LVU355
+ 1215 0062 0422     		movs	r2, #4
+ 1216 0064 0DEB0201 		add	r1, sp, r2
+ 1217 0068 2846     		mov	r0, r5
+ 1218 006a FFF7FEFF 		bl	w25qxx_transmit
+ 1219              	.LVL121:
+ 314:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****                     ret = W25QXX_Err;
+ 1220              		.loc 1 314 20 discriminator 1 view .LVU356
+ 1221 006e 00B1     		cbz	r0, .L59
+ARM GAS  /tmp/ccfreBmq.s 			page 31
+
+
+ 315:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****                 }
+ 1222              		.loc 1 315 25 view .LVU357
+ 1223 0070 0127     		movs	r7, #1
+ 1224              	.LVL122:
+ 1225              	.L59:
+ 317:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             }
+ 1226              		.loc 1 317 17 is_stmt 1 view .LVU358
+ 1227              	.LBB79:
+ 1228              	.LBI79:
+  49:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     HAL_GPIO_WritePin(w25qxx->cs_port, w25qxx->cs_pin, GPIO_PIN_SET);
+ 1229              		.loc 1 49 20 view .LVU359
+ 1230              	.LBB80:
+  50:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 1231              		.loc 1 50 5 view .LVU360
+ 1232 0072 0122     		movs	r2, #1
+ 1233 0074 2989     		ldrh	r1, [r5, #8]
+ 1234 0076 6868     		ldr	r0, [r5, #4]
+ 1235 0078 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 1236              	.LVL123:
+  50:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 1237              		.loc 1 50 5 is_stmt 0 view .LVU361
+ 1238 007c D0E7     		b	.L58
+ 1239              	.LVL124:
+ 1240              	.L65:
+  50:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 1241              		.loc 1 50 5 view .LVU362
+ 1242              	.LBE80:
+ 1243              	.LBE79:
+ 1244              	.LBE76:
+ 1245              	.LBE81:
+ 321:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         }
+ 322:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 323:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     }
+ 324:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ 325:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     return ret;
+ 1246              		.loc 1 325 5 is_stmt 1 view .LVU363
+ 326:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 1247              		.loc 1 326 1 is_stmt 0 view .LVU364
+ 1248 007e 3846     		mov	r0, r7
+ 1249 0080 03B0     		add	sp, sp, #12
+ 1250              	.LCFI25:
+ 1251              		.cfi_def_cfa_offset 20
+ 1252              		@ sp needed
+ 1253 0082 F0BD     		pop	{r4, r5, r6, r7, pc}
+ 1254              		.loc 1 326 1 view .LVU365
+ 1255              		.cfi_endproc
+ 1256              	.LFE145:
+ 1258              		.section	.text.w25qxx_chip_erase,"ax",%progbits
+ 1259              		.align	1
+ 1260              		.global	w25qxx_chip_erase
+ 1261              		.syntax unified
+ 1262              		.thumb
+ 1263              		.thumb_func
+ 1265              	w25qxx_chip_erase:
+ 1266              	.LVL125:
+ 1267              	.LFB146:
+ 327:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** 
+ARM GAS  /tmp/ccfreBmq.s 			page 32
+
+
+ 328:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** W25QXX_result_t w25qxx_chip_erase(W25QXX_HandleTypeDef *w25qxx) {
+ 1268              		.loc 1 328 65 is_stmt 1 view -0
+ 1269              		.cfi_startproc
+ 1270              		@ args = 0, pretend = 0, frame = 8
+ 1271              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1272              		.loc 1 328 65 is_stmt 0 view .LVU367
+ 1273 0000 10B5     		push	{r4, lr}
+ 1274              	.LCFI26:
+ 1275              		.cfi_def_cfa_offset 8
+ 1276              		.cfi_offset 4, -8
+ 1277              		.cfi_offset 14, -4
+ 1278 0002 82B0     		sub	sp, sp, #8
+ 1279              	.LCFI27:
+ 1280              		.cfi_def_cfa_offset 16
+ 1281 0004 0446     		mov	r4, r0
+ 329:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     if (w25qxx_write_enable(w25qxx) == W25QXX_Ok) {
+ 1282              		.loc 1 329 5 is_stmt 1 view .LVU368
+ 1283              		.loc 1 329 9 is_stmt 0 view .LVU369
+ 1284 0006 FFF7FEFF 		bl	w25qxx_write_enable
+ 1285              	.LVL126:
+ 1286              		.loc 1 329 8 discriminator 1 view .LVU370
+ 1287 000a 10B1     		cbz	r0, .L72
+ 330:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         uint8_t tx[1] = {
+ 331:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         W25QXX_CHIP_ERASE };
+ 332:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         cs_on(w25qxx);
+ 333:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         if (w25qxx_transmit(w25qxx, tx, 1) != W25QXX_Ok) {
+ 334:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             return W25QXX_Err;
+ 335:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         }
+ 336:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         cs_off(w25qxx);
+ 337:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         if (w25qxx_wait_for_ready(w25qxx, HAL_MAX_DELAY) != W25QXX_Ok) {
+ 338:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             return W25QXX_Err;
+ 339:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         }
+ 340:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     }
+ 341:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     return W25QXX_Ok;
+ 1288              		.loc 1 341 12 view .LVU371
+ 1289 000c 0020     		movs	r0, #0
+ 1290              	.L68:
+ 342:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 1291              		.loc 1 342 1 view .LVU372
+ 1292 000e 02B0     		add	sp, sp, #8
+ 1293              	.LCFI28:
+ 1294              		.cfi_remember_state
+ 1295              		.cfi_def_cfa_offset 8
+ 1296              		@ sp needed
+ 1297 0010 10BD     		pop	{r4, pc}
+ 1298              	.LVL127:
+ 1299              	.L72:
+ 1300              	.LCFI29:
+ 1301              		.cfi_restore_state
+ 1302              	.LBB82:
+ 330:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         uint8_t tx[1] = {
+ 1303              		.loc 1 330 9 is_stmt 1 view .LVU373
+ 330:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         uint8_t tx[1] = {
+ 1304              		.loc 1 330 17 is_stmt 0 view .LVU374
+ 1305 0012 C723     		movs	r3, #199
+ 1306 0014 8DF80430 		strb	r3, [sp, #4]
+ 332:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         if (w25qxx_transmit(w25qxx, tx, 1) != W25QXX_Ok) {
+ARM GAS  /tmp/ccfreBmq.s 			page 33
+
+
+ 1307              		.loc 1 332 9 is_stmt 1 view .LVU375
+ 1308              	.LVL128:
+ 1309              	.LBB83:
+ 1310              	.LBI83:
+  39:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     HAL_GPIO_WritePin(w25qxx->cs_port, w25qxx->cs_pin, GPIO_PIN_RESET);
+ 1311              		.loc 1 39 20 view .LVU376
+ 1312              	.LBB84:
+  40:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 1313              		.loc 1 40 5 view .LVU377
+ 1314 0018 0022     		movs	r2, #0
+ 1315 001a 2189     		ldrh	r1, [r4, #8]
+ 1316 001c 6068     		ldr	r0, [r4, #4]
+ 1317 001e FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 1318              	.LVL129:
+  40:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 1319              		.loc 1 40 5 is_stmt 0 view .LVU378
+ 1320              	.LBE84:
+ 1321              	.LBE83:
+ 333:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             return W25QXX_Err;
+ 1322              		.loc 1 333 9 is_stmt 1 view .LVU379
+ 333:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             return W25QXX_Err;
+ 1323              		.loc 1 333 13 is_stmt 0 view .LVU380
+ 1324 0022 0122     		movs	r2, #1
+ 1325 0024 01A9     		add	r1, sp, #4
+ 1326 0026 2046     		mov	r0, r4
+ 1327 0028 FFF7FEFF 		bl	w25qxx_transmit
+ 1328              	.LVL130:
+ 333:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             return W25QXX_Err;
+ 1329              		.loc 1 333 12 discriminator 1 view .LVU381
+ 1330 002c 08B1     		cbz	r0, .L73
+ 1331              	.L69:
+ 334:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         }
+ 1332              		.loc 1 334 20 discriminator 1 view .LVU382
+ 1333 002e 0120     		movs	r0, #1
+ 1334 0030 EDE7     		b	.L68
+ 1335              	.L73:
+ 336:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****         if (w25qxx_wait_for_ready(w25qxx, HAL_MAX_DELAY) != W25QXX_Ok) {
+ 1336              		.loc 1 336 9 is_stmt 1 view .LVU383
+ 1337              	.LVL131:
+ 1338              	.LBB85:
+ 1339              	.LBI85:
+  49:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****     HAL_GPIO_WritePin(w25qxx->cs_port, w25qxx->cs_pin, GPIO_PIN_SET);
+ 1340              		.loc 1 49 20 view .LVU384
+ 1341              	.LBB86:
+  50:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 1342              		.loc 1 50 5 view .LVU385
+ 1343 0032 0122     		movs	r2, #1
+ 1344 0034 2189     		ldrh	r1, [r4, #8]
+ 1345 0036 6068     		ldr	r0, [r4, #4]
+ 1346 0038 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 1347              	.LVL132:
+  50:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c **** }
+ 1348              		.loc 1 50 5 is_stmt 0 view .LVU386
+ 1349              	.LBE86:
+ 1350              	.LBE85:
+ 337:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             return W25QXX_Err;
+ 1351              		.loc 1 337 9 is_stmt 1 view .LVU387
+ARM GAS  /tmp/ccfreBmq.s 			page 34
+
+
+ 337:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             return W25QXX_Err;
+ 1352              		.loc 1 337 13 is_stmt 0 view .LVU388
+ 1353 003c 4FF0FF31 		mov	r1, #-1
+ 1354 0040 2046     		mov	r0, r4
+ 1355 0042 FFF7FEFF 		bl	w25qxx_wait_for_ready
+ 1356              	.LVL133:
+ 337:/home/dat/Documents/colir_one/rocket_code/Module/Src/w25qxx.c ****             return W25QXX_Err;
+ 1357              		.loc 1 337 12 discriminator 1 view .LVU389
+ 1358 0046 0028     		cmp	r0, #0
+ 1359 0048 E1D0     		beq	.L68
+ 1360 004a F0E7     		b	.L69
+ 1361              	.LBE82:
+ 1362              		.cfi_endproc
+ 1363              	.LFE146:
+ 1365              		.text
+ 1366              	.Letext0:
+ 1367              		.file 2 "/home/dat/.config/Code/User/globalStorage/litaitech.stm32-colir-one/@xpack-dev-tools/arm-
+ 1368              		.file 3 "/home/dat/.config/Code/User/globalStorage/litaitech.stm32-colir-one/@xpack-dev-tools/arm-
+ 1369              		.file 4 "/home/dat/Documents/colir_one/rocket_code/Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32
+ 1370              		.file 5 "/home/dat/.config/Code/User/globalStorage/litaitech.stm32-colir-one/@xpack-dev-tools/arm-
+ 1371              		.file 6 "/home/dat/Documents/colir_one/rocket_code/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_
+ 1372              		.file 7 "/home/dat/Documents/colir_one/rocket_code/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_
+ 1373              		.file 8 "/home/dat/Documents/colir_one/rocket_code/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_
+ 1374              		.file 9 "/home/dat/Documents/colir_one/rocket_code/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_
+ 1375              		.file 10 "/home/dat/Documents/colir_one/rocket_code/Module/Inc/w25qxx.h"
+ 1376              		.file 11 "/home/dat/Documents/colir_one/rocket_code/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal
+ 1377              		.file 12 "/home/dat/.config/Code/User/globalStorage/litaitech.stm32-colir-one/@xpack-dev-tools/arm
+ 1378              		.file 13 "<built-in>"
+ARM GAS  /tmp/ccfreBmq.s 			page 35
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 w25qxx.c
+     /tmp/ccfreBmq.s:21     .text.w25qxx_transmit:00000000 $t
+     /tmp/ccfreBmq.s:27     .text.w25qxx_transmit:00000000 w25qxx_transmit
+     /tmp/ccfreBmq.s:66     .text.w25qxx_receive:00000000 $t
+     /tmp/ccfreBmq.s:72     .text.w25qxx_receive:00000000 w25qxx_receive
+     /tmp/ccfreBmq.s:111    .text.w25qxx_read_id:00000000 $t
+     /tmp/ccfreBmq.s:117    .text.w25qxx_read_id:00000000 w25qxx_read_id
+     /tmp/ccfreBmq.s:232    .text.w25qxx_get_status:00000000 $t
+     /tmp/ccfreBmq.s:238    .text.w25qxx_get_status:00000000 w25qxx_get_status
+     /tmp/ccfreBmq.s:341    .text.w25qxx_write_enable:00000000 $t
+     /tmp/ccfreBmq.s:347    .text.w25qxx_write_enable:00000000 w25qxx_write_enable
+     /tmp/ccfreBmq.s:430    .text.w25qxx_wait_for_ready:00000000 $t
+     /tmp/ccfreBmq.s:436    .text.w25qxx_wait_for_ready:00000000 w25qxx_wait_for_ready
+     /tmp/ccfreBmq.s:514    .text.w25qxx_init:00000000 $t
+     /tmp/ccfreBmq.s:520    .text.w25qxx_init:00000000 w25qxx_init
+     /tmp/ccfreBmq.s:678    .text.w25qxx_read:00000000 $t
+     /tmp/ccfreBmq.s:684    .text.w25qxx_read:00000000 w25qxx_read
+     /tmp/ccfreBmq.s:824    .text.w25qxx_write:00000000 $t
+     /tmp/ccfreBmq.s:830    .text.w25qxx_write:00000000 w25qxx_write
+     /tmp/ccfreBmq.s:1088   .text.w25qxx_erase:00000000 $t
+     /tmp/ccfreBmq.s:1094   .text.w25qxx_erase:00000000 w25qxx_erase
+     /tmp/ccfreBmq.s:1259   .text.w25qxx_chip_erase:00000000 $t
+     /tmp/ccfreBmq.s:1265   .text.w25qxx_chip_erase:00000000 w25qxx_chip_erase
+
+UNDEFINED SYMBOLS
+HAL_SPI_Transmit
+HAL_SPI_Receive
+HAL_GPIO_WritePin
+HAL_GetTick
+memset
+HAL_Delay

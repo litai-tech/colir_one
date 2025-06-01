@@ -1,0 +1,2357 @@
+ARM GAS  /tmp/ccdiHilA.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"stm32f4xx_hal_msp.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c"
+  20              		.section	.text.HAL_MspInit,"ax",%progbits
+  21              		.align	1
+  22              		.global	HAL_MspInit
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	HAL_MspInit:
+  28              	.LFB134:
+   1:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+   2:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** /* USER CODE BEGIN Header */
+   3:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** /**
+   4:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   ******************************************************************************
+   5:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   * @file         stm32f4xx_hal_msp.c
+   6:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   * @brief        This file provides code for the MSP Initialization
+   7:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   *               and de-Initialization codes.
+   8:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   ******************************************************************************
+   9:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   * @attention
+  10:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   *
+  11:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   * Copyright (c) 2024 STMicroelectronics.
+  12:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   * All rights reserved.
+  13:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   *
+  14:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   * This software is licensed under terms that can be found in the LICENSE file
+  15:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   * in the root directory of this software component.
+  16:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   * If no LICENSE file comes with this software, it is provided AS-IS.
+  17:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   *
+  18:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   ******************************************************************************
+  19:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   */
+  20:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** /* USER CODE END Header */
+  21:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+  22:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** /* Includes ------------------------------------------------------------------*/
+  23:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** #include "stm32f4xx_hal.h"
+  24:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** /* USER CODE BEGIN Includes */
+  25:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+  26:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** /* USER CODE END Includes */
+  27:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** extern DMA_HandleTypeDef hdma_sdio_rx;
+  28:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+  29:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** extern DMA_HandleTypeDef hdma_sdio_tx;
+  30:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ARM GAS  /tmp/ccdiHilA.s 			page 2
+
+
+  31:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** extern DMA_HandleTypeDef hdma_usart2_rx;
+  32:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+  33:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** extern DMA_HandleTypeDef hdma_usart2_tx;
+  34:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+  35:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** /* Private typedef -----------------------------------------------------------*/
+  36:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** /* USER CODE BEGIN TD */
+  37:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+  38:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** /* USER CODE END TD */
+  39:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+  40:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** /* Private define ------------------------------------------------------------*/
+  41:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** /* USER CODE BEGIN Define */
+  42:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+  43:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** /* USER CODE END Define */
+  44:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+  45:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** /* Private macro -------------------------------------------------------------*/
+  46:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** /* USER CODE BEGIN Macro */
+  47:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+  48:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** /* USER CODE END Macro */
+  49:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+  50:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** /* Private variables ---------------------------------------------------------*/
+  51:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** /* USER CODE BEGIN PV */
+  52:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+  53:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** /* USER CODE END PV */
+  54:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+  55:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** /* Private function prototypes -----------------------------------------------*/
+  56:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** /* USER CODE BEGIN PFP */
+  57:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+  58:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** /* USER CODE END PFP */
+  59:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+  60:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** /* External functions --------------------------------------------------------*/
+  61:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** /* USER CODE BEGIN ExternalFunctions */
+  62:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+  63:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** /* USER CODE END ExternalFunctions */
+  64:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+  65:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** /* USER CODE BEGIN 0 */
+  66:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+  67:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** /* USER CODE END 0 */
+  68:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** /**
+  69:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   * Initializes the Global MSP.
+  70:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   */
+  71:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** void HAL_MspInit(void)
+  72:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** {
+  29              		.loc 1 72 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 8
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		@ link register save eliminated.
+  34 0000 82B0     		sub	sp, sp, #8
+  35              	.LCFI0:
+  36              		.cfi_def_cfa_offset 8
+  73:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+  74:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE BEGIN MspInit 0 */
+  75:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+  76:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE END MspInit 0 */
+  77:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+  78:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   __HAL_RCC_SYSCFG_CLK_ENABLE();
+  37              		.loc 1 78 3 view .LVU1
+ARM GAS  /tmp/ccdiHilA.s 			page 3
+
+
+  38              	.LBB2:
+  39              		.loc 1 78 3 view .LVU2
+  40 0002 0021     		movs	r1, #0
+  41 0004 0091     		str	r1, [sp]
+  42              		.loc 1 78 3 view .LVU3
+  43 0006 0B4B     		ldr	r3, .L3
+  44 0008 5A6C     		ldr	r2, [r3, #68]
+  45 000a 42F48042 		orr	r2, r2, #16384
+  46 000e 5A64     		str	r2, [r3, #68]
+  47              		.loc 1 78 3 view .LVU4
+  48 0010 5A6C     		ldr	r2, [r3, #68]
+  49 0012 02F48042 		and	r2, r2, #16384
+  50 0016 0092     		str	r2, [sp]
+  51              		.loc 1 78 3 view .LVU5
+  52 0018 009A     		ldr	r2, [sp]
+  53              	.LBE2:
+  54              		.loc 1 78 3 view .LVU6
+  79:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   __HAL_RCC_PWR_CLK_ENABLE();
+  55              		.loc 1 79 3 view .LVU7
+  56              	.LBB3:
+  57              		.loc 1 79 3 view .LVU8
+  58 001a 0191     		str	r1, [sp, #4]
+  59              		.loc 1 79 3 view .LVU9
+  60 001c 1A6C     		ldr	r2, [r3, #64]
+  61 001e 42F08052 		orr	r2, r2, #268435456
+  62 0022 1A64     		str	r2, [r3, #64]
+  63              		.loc 1 79 3 view .LVU10
+  64 0024 1B6C     		ldr	r3, [r3, #64]
+  65 0026 03F08053 		and	r3, r3, #268435456
+  66 002a 0193     		str	r3, [sp, #4]
+  67              		.loc 1 79 3 view .LVU11
+  68 002c 019B     		ldr	r3, [sp, #4]
+  69              	.LBE3:
+  70              		.loc 1 79 3 view .LVU12
+  80:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+  81:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* System interrupt init*/
+  82:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+  83:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE BEGIN MspInit 1 */
+  84:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+  85:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE END MspInit 1 */
+  86:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** }
+  71              		.loc 1 86 1 is_stmt 0 view .LVU13
+  72 002e 02B0     		add	sp, sp, #8
+  73              	.LCFI1:
+  74              		.cfi_def_cfa_offset 0
+  75              		@ sp needed
+  76 0030 7047     		bx	lr
+  77              	.L4:
+  78 0032 00BF     		.align	2
+  79              	.L3:
+  80 0034 00380240 		.word	1073887232
+  81              		.cfi_endproc
+  82              	.LFE134:
+  84              		.section	.text.HAL_I2C_MspInit,"ax",%progbits
+  85              		.align	1
+  86              		.global	HAL_I2C_MspInit
+  87              		.syntax unified
+ARM GAS  /tmp/ccdiHilA.s 			page 4
+
+
+  88              		.thumb
+  89              		.thumb_func
+  91              	HAL_I2C_MspInit:
+  92              	.LVL0:
+  93              	.LFB135:
+  87:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+  88:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** /**
+  89:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** * @brief I2C MSP Initialization
+  90:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** * This function configures the hardware resources used in this example
+  91:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** * @param hi2c: I2C handle pointer
+  92:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** * @retval None
+  93:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** */
+  94:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** void HAL_I2C_MspInit(I2C_HandleTypeDef* hi2c)
+  95:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** {
+  94              		.loc 1 95 1 is_stmt 1 view -0
+  95              		.cfi_startproc
+  96              		@ args = 0, pretend = 0, frame = 32
+  97              		@ frame_needed = 0, uses_anonymous_args = 0
+  98              		.loc 1 95 1 is_stmt 0 view .LVU15
+  99 0000 30B5     		push	{r4, r5, lr}
+ 100              	.LCFI2:
+ 101              		.cfi_def_cfa_offset 12
+ 102              		.cfi_offset 4, -12
+ 103              		.cfi_offset 5, -8
+ 104              		.cfi_offset 14, -4
+ 105 0002 89B0     		sub	sp, sp, #36
+ 106              	.LCFI3:
+ 107              		.cfi_def_cfa_offset 48
+  96:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   GPIO_InitTypeDef GPIO_InitStruct = {0};
+ 108              		.loc 1 96 3 is_stmt 1 view .LVU16
+ 109              		.loc 1 96 20 is_stmt 0 view .LVU17
+ 110 0004 0023     		movs	r3, #0
+ 111 0006 0393     		str	r3, [sp, #12]
+ 112 0008 0493     		str	r3, [sp, #16]
+ 113 000a 0593     		str	r3, [sp, #20]
+ 114 000c 0693     		str	r3, [sp, #24]
+ 115 000e 0793     		str	r3, [sp, #28]
+  97:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   if(hi2c->Instance==I2C2)
+ 116              		.loc 1 97 3 is_stmt 1 view .LVU18
+ 117              		.loc 1 97 10 is_stmt 0 view .LVU19
+ 118 0010 0268     		ldr	r2, [r0]
+ 119              		.loc 1 97 5 view .LVU20
+ 120 0012 144B     		ldr	r3, .L9
+ 121 0014 9A42     		cmp	r2, r3
+ 122 0016 01D0     		beq	.L8
+ 123              	.LVL1:
+ 124              	.L5:
+  98:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   {
+  99:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE BEGIN I2C2_MspInit 0 */
+ 100:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 101:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE END I2C2_MspInit 0 */
+ 102:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 103:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     __HAL_RCC_GPIOB_CLK_ENABLE();
+ 104:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /**I2C2 GPIO Configuration
+ 105:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     PB10     ------> I2C2_SCL
+ 106:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     PB11     ------> I2C2_SDA
+ 107:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     */
+ARM GAS  /tmp/ccdiHilA.s 			page 5
+
+
+ 108:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Pin = GPIO_PIN_10|GPIO_PIN_11;
+ 109:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
+ 110:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 111:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 112:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Alternate = GPIO_AF4_I2C2;
+ 113:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+ 114:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 115:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /* Peripheral clock enable */
+ 116:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     __HAL_RCC_I2C2_CLK_ENABLE();
+ 117:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE BEGIN I2C2_MspInit 1 */
+ 118:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 119:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE END I2C2_MspInit 1 */
+ 120:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 121:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   }
+ 122:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 123:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** }
+ 125              		.loc 1 123 1 view .LVU21
+ 126 0018 09B0     		add	sp, sp, #36
+ 127              	.LCFI4:
+ 128              		.cfi_remember_state
+ 129              		.cfi_def_cfa_offset 12
+ 130              		@ sp needed
+ 131 001a 30BD     		pop	{r4, r5, pc}
+ 132              	.LVL2:
+ 133              	.L8:
+ 134              	.LCFI5:
+ 135              		.cfi_restore_state
+ 103:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /**I2C2 GPIO Configuration
+ 136              		.loc 1 103 5 is_stmt 1 view .LVU22
+ 137              	.LBB4:
+ 103:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /**I2C2 GPIO Configuration
+ 138              		.loc 1 103 5 view .LVU23
+ 139 001c 0025     		movs	r5, #0
+ 140 001e 0195     		str	r5, [sp, #4]
+ 103:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /**I2C2 GPIO Configuration
+ 141              		.loc 1 103 5 view .LVU24
+ 142 0020 114C     		ldr	r4, .L9+4
+ 143 0022 236B     		ldr	r3, [r4, #48]
+ 144 0024 43F00203 		orr	r3, r3, #2
+ 145 0028 2363     		str	r3, [r4, #48]
+ 103:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /**I2C2 GPIO Configuration
+ 146              		.loc 1 103 5 view .LVU25
+ 147 002a 236B     		ldr	r3, [r4, #48]
+ 148 002c 03F00203 		and	r3, r3, #2
+ 149 0030 0193     		str	r3, [sp, #4]
+ 103:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /**I2C2 GPIO Configuration
+ 150              		.loc 1 103 5 view .LVU26
+ 151 0032 019B     		ldr	r3, [sp, #4]
+ 152              	.LBE4:
+ 103:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /**I2C2 GPIO Configuration
+ 153              		.loc 1 103 5 view .LVU27
+ 108:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
+ 154              		.loc 1 108 5 view .LVU28
+ 108:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
+ 155              		.loc 1 108 25 is_stmt 0 view .LVU29
+ 156 0034 4FF44063 		mov	r3, #3072
+ 157 0038 0393     		str	r3, [sp, #12]
+ARM GAS  /tmp/ccdiHilA.s 			page 6
+
+
+ 109:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 158              		.loc 1 109 5 is_stmt 1 view .LVU30
+ 109:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 159              		.loc 1 109 26 is_stmt 0 view .LVU31
+ 160 003a 1223     		movs	r3, #18
+ 161 003c 0493     		str	r3, [sp, #16]
+ 110:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 162              		.loc 1 110 5 is_stmt 1 view .LVU32
+ 111:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Alternate = GPIO_AF4_I2C2;
+ 163              		.loc 1 111 5 view .LVU33
+ 111:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Alternate = GPIO_AF4_I2C2;
+ 164              		.loc 1 111 27 is_stmt 0 view .LVU34
+ 165 003e 0323     		movs	r3, #3
+ 166 0040 0693     		str	r3, [sp, #24]
+ 112:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+ 167              		.loc 1 112 5 is_stmt 1 view .LVU35
+ 112:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+ 168              		.loc 1 112 31 is_stmt 0 view .LVU36
+ 169 0042 0423     		movs	r3, #4
+ 170 0044 0793     		str	r3, [sp, #28]
+ 113:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 171              		.loc 1 113 5 is_stmt 1 view .LVU37
+ 172 0046 03A9     		add	r1, sp, #12
+ 173 0048 0848     		ldr	r0, .L9+8
+ 174              	.LVL3:
+ 113:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 175              		.loc 1 113 5 is_stmt 0 view .LVU38
+ 176 004a FFF7FEFF 		bl	HAL_GPIO_Init
+ 177              	.LVL4:
+ 116:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE BEGIN I2C2_MspInit 1 */
+ 178              		.loc 1 116 5 is_stmt 1 view .LVU39
+ 179              	.LBB5:
+ 116:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE BEGIN I2C2_MspInit 1 */
+ 180              		.loc 1 116 5 view .LVU40
+ 181 004e 0295     		str	r5, [sp, #8]
+ 116:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE BEGIN I2C2_MspInit 1 */
+ 182              		.loc 1 116 5 view .LVU41
+ 183 0050 236C     		ldr	r3, [r4, #64]
+ 184 0052 43F48003 		orr	r3, r3, #4194304
+ 185 0056 2364     		str	r3, [r4, #64]
+ 116:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE BEGIN I2C2_MspInit 1 */
+ 186              		.loc 1 116 5 view .LVU42
+ 187 0058 236C     		ldr	r3, [r4, #64]
+ 188 005a 03F48003 		and	r3, r3, #4194304
+ 189 005e 0293     		str	r3, [sp, #8]
+ 116:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE BEGIN I2C2_MspInit 1 */
+ 190              		.loc 1 116 5 view .LVU43
+ 191 0060 029B     		ldr	r3, [sp, #8]
+ 192              	.LBE5:
+ 116:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE BEGIN I2C2_MspInit 1 */
+ 193              		.loc 1 116 5 discriminator 1 view .LVU44
+ 194              		.loc 1 123 1 is_stmt 0 view .LVU45
+ 195 0062 D9E7     		b	.L5
+ 196              	.L10:
+ 197              		.align	2
+ 198              	.L9:
+ 199 0064 00580040 		.word	1073764352
+ARM GAS  /tmp/ccdiHilA.s 			page 7
+
+
+ 200 0068 00380240 		.word	1073887232
+ 201 006c 00040240 		.word	1073873920
+ 202              		.cfi_endproc
+ 203              	.LFE135:
+ 205              		.section	.text.HAL_I2C_MspDeInit,"ax",%progbits
+ 206              		.align	1
+ 207              		.global	HAL_I2C_MspDeInit
+ 208              		.syntax unified
+ 209              		.thumb
+ 210              		.thumb_func
+ 212              	HAL_I2C_MspDeInit:
+ 213              	.LVL5:
+ 214              	.LFB136:
+ 124:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 125:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** /**
+ 126:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** * @brief I2C MSP De-Initialization
+ 127:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** * This function freeze the hardware resources used in this example
+ 128:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** * @param hi2c: I2C handle pointer
+ 129:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** * @retval None
+ 130:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** */
+ 131:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** void HAL_I2C_MspDeInit(I2C_HandleTypeDef* hi2c)
+ 132:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** {
+ 215              		.loc 1 132 1 is_stmt 1 view -0
+ 216              		.cfi_startproc
+ 217              		@ args = 0, pretend = 0, frame = 0
+ 218              		@ frame_needed = 0, uses_anonymous_args = 0
+ 133:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   if(hi2c->Instance==I2C2)
+ 219              		.loc 1 133 3 view .LVU47
+ 220              		.loc 1 133 10 is_stmt 0 view .LVU48
+ 221 0000 0268     		ldr	r2, [r0]
+ 222              		.loc 1 133 5 view .LVU49
+ 223 0002 0B4B     		ldr	r3, .L18
+ 224 0004 9A42     		cmp	r2, r3
+ 225 0006 00D0     		beq	.L17
+ 226 0008 7047     		bx	lr
+ 227              	.L17:
+ 132:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   if(hi2c->Instance==I2C2)
+ 228              		.loc 1 132 1 view .LVU50
+ 229 000a 10B5     		push	{r4, lr}
+ 230              	.LCFI6:
+ 231              		.cfi_def_cfa_offset 8
+ 232              		.cfi_offset 4, -8
+ 233              		.cfi_offset 14, -4
+ 134:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   {
+ 135:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE BEGIN I2C2_MspDeInit 0 */
+ 136:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 137:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE END I2C2_MspDeInit 0 */
+ 138:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /* Peripheral clock disable */
+ 139:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     __HAL_RCC_I2C2_CLK_DISABLE();
+ 234              		.loc 1 139 5 is_stmt 1 view .LVU51
+ 235 000c 094A     		ldr	r2, .L18+4
+ 236 000e 136C     		ldr	r3, [r2, #64]
+ 237 0010 23F48003 		bic	r3, r3, #4194304
+ 238 0014 1364     		str	r3, [r2, #64]
+ 140:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 141:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /**I2C2 GPIO Configuration
+ 142:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     PB10     ------> I2C2_SCL
+ARM GAS  /tmp/ccdiHilA.s 			page 8
+
+
+ 143:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     PB11     ------> I2C2_SDA
+ 144:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     */
+ 145:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     HAL_GPIO_DeInit(GPIOB, GPIO_PIN_10);
+ 239              		.loc 1 145 5 view .LVU52
+ 240 0016 084C     		ldr	r4, .L18+8
+ 241 0018 4FF48061 		mov	r1, #1024
+ 242 001c 2046     		mov	r0, r4
+ 243              	.LVL6:
+ 244              		.loc 1 145 5 is_stmt 0 view .LVU53
+ 245 001e FFF7FEFF 		bl	HAL_GPIO_DeInit
+ 246              	.LVL7:
+ 146:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 147:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     HAL_GPIO_DeInit(GPIOB, GPIO_PIN_11);
+ 247              		.loc 1 147 5 is_stmt 1 view .LVU54
+ 248 0022 4FF40061 		mov	r1, #2048
+ 249 0026 2046     		mov	r0, r4
+ 250 0028 FFF7FEFF 		bl	HAL_GPIO_DeInit
+ 251              	.LVL8:
+ 148:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 149:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE BEGIN I2C2_MspDeInit 1 */
+ 150:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 151:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE END I2C2_MspDeInit 1 */
+ 152:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   }
+ 153:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 154:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** }
+ 252              		.loc 1 154 1 is_stmt 0 view .LVU55
+ 253 002c 10BD     		pop	{r4, pc}
+ 254              	.L19:
+ 255 002e 00BF     		.align	2
+ 256              	.L18:
+ 257 0030 00580040 		.word	1073764352
+ 258 0034 00380240 		.word	1073887232
+ 259 0038 00040240 		.word	1073873920
+ 260              		.cfi_endproc
+ 261              	.LFE136:
+ 263              		.section	.text.HAL_SD_MspInit,"ax",%progbits
+ 264              		.align	1
+ 265              		.global	HAL_SD_MspInit
+ 266              		.syntax unified
+ 267              		.thumb
+ 268              		.thumb_func
+ 270              	HAL_SD_MspInit:
+ 271              	.LVL9:
+ 272              	.LFB137:
+ 155:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 156:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** /**
+ 157:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** * @brief SD MSP Initialization
+ 158:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** * This function configures the hardware resources used in this example
+ 159:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** * @param hsd: SD handle pointer
+ 160:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** * @retval None
+ 161:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** */
+ 162:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** void HAL_SD_MspInit(SD_HandleTypeDef* hsd)
+ 163:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** {
+ 273              		.loc 1 163 1 is_stmt 1 view -0
+ 274              		.cfi_startproc
+ 275              		@ args = 0, pretend = 0, frame = 32
+ 276              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  /tmp/ccdiHilA.s 			page 9
+
+
+ 277              		.loc 1 163 1 is_stmt 0 view .LVU57
+ 278 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 279              	.LCFI7:
+ 280              		.cfi_def_cfa_offset 36
+ 281              		.cfi_offset 4, -36
+ 282              		.cfi_offset 5, -32
+ 283              		.cfi_offset 6, -28
+ 284              		.cfi_offset 7, -24
+ 285              		.cfi_offset 8, -20
+ 286              		.cfi_offset 9, -16
+ 287              		.cfi_offset 10, -12
+ 288              		.cfi_offset 11, -8
+ 289              		.cfi_offset 14, -4
+ 290 0004 89B0     		sub	sp, sp, #36
+ 291              	.LCFI8:
+ 292              		.cfi_def_cfa_offset 72
+ 164:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   GPIO_InitTypeDef GPIO_InitStruct = {0};
+ 293              		.loc 1 164 3 is_stmt 1 view .LVU58
+ 294              		.loc 1 164 20 is_stmt 0 view .LVU59
+ 295 0006 0023     		movs	r3, #0
+ 296 0008 0393     		str	r3, [sp, #12]
+ 297 000a 0493     		str	r3, [sp, #16]
+ 298 000c 0593     		str	r3, [sp, #20]
+ 299 000e 0693     		str	r3, [sp, #24]
+ 300 0010 0793     		str	r3, [sp, #28]
+ 165:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   if(hsd->Instance==SDIO)
+ 301              		.loc 1 165 3 is_stmt 1 view .LVU60
+ 302              		.loc 1 165 9 is_stmt 0 view .LVU61
+ 303 0012 0268     		ldr	r2, [r0]
+ 304              		.loc 1 165 5 view .LVU62
+ 305 0014 594B     		ldr	r3, .L28
+ 306 0016 9A42     		cmp	r2, r3
+ 307 0018 02D0     		beq	.L25
+ 308              	.LVL10:
+ 309              	.L20:
+ 166:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   {
+ 167:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE BEGIN SDIO_MspInit 0 */
+ 168:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 169:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE END SDIO_MspInit 0 */
+ 170:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /* Peripheral clock enable */
+ 171:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     __HAL_RCC_SDIO_CLK_ENABLE();
+ 172:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 173:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     __HAL_RCC_GPIOC_CLK_ENABLE();
+ 174:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     __HAL_RCC_GPIOD_CLK_ENABLE();
+ 175:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /**SDIO GPIO Configuration
+ 176:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     PC8     ------> SDIO_D0
+ 177:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     PC12     ------> SDIO_CK
+ 178:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     PD2     ------> SDIO_CMD
+ 179:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     */
+ 180:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Pin = GPIO_PIN_8;
+ 181:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 182:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Pull = GPIO_PULLUP;
+ 183:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 184:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Alternate = GPIO_AF12_SDIO;
+ 185:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+ 186:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 187:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Pin = GPIO_PIN_12;
+ARM GAS  /tmp/ccdiHilA.s 			page 10
+
+
+ 188:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 189:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 190:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 191:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Alternate = GPIO_AF12_SDIO;
+ 192:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+ 193:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 194:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Pin = GPIO_PIN_2;
+ 195:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 196:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Pull = GPIO_PULLUP;
+ 197:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 198:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Alternate = GPIO_AF12_SDIO;
+ 199:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+ 200:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 201:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /* SDIO DMA Init */
+ 202:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /* SDIO_RX Init */
+ 203:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_rx.Instance = DMA2_Stream3;
+ 204:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_rx.Init.Channel = DMA_CHANNEL_4;
+ 205:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
+ 206:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_rx.Init.PeriphInc = DMA_PINC_DISABLE;
+ 207:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_rx.Init.MemInc = DMA_MINC_ENABLE;
+ 208:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_WORD;
+ 209:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_rx.Init.MemDataAlignment = DMA_MDATAALIGN_WORD;
+ 210:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_rx.Init.Mode = DMA_PFCTRL;
+ 211:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_rx.Init.Priority = DMA_PRIORITY_LOW;
+ 212:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_rx.Init.FIFOMode = DMA_FIFOMODE_ENABLE;
+ 213:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_rx.Init.FIFOThreshold = DMA_FIFO_THRESHOLD_FULL;
+ 214:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_rx.Init.MemBurst = DMA_MBURST_INC4;
+ 215:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_rx.Init.PeriphBurst = DMA_PBURST_INC4;
+ 216:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     if (HAL_DMA_Init(&hdma_sdio_rx) != HAL_OK)
+ 217:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     {
+ 218:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****       Error_Handler();
+ 219:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     }
+ 220:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 221:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     __HAL_LINKDMA(hsd,hdmarx,hdma_sdio_rx);
+ 222:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 223:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /* SDIO_TX Init */
+ 224:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_tx.Instance = DMA2_Stream6;
+ 225:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_tx.Init.Channel = DMA_CHANNEL_4;
+ 226:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_tx.Init.Direction = DMA_MEMORY_TO_PERIPH;
+ 227:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_tx.Init.PeriphInc = DMA_PINC_DISABLE;
+ 228:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_tx.Init.MemInc = DMA_MINC_ENABLE;
+ 229:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_tx.Init.PeriphDataAlignment = DMA_PDATAALIGN_WORD;
+ 230:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_tx.Init.MemDataAlignment = DMA_MDATAALIGN_WORD;
+ 231:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_tx.Init.Mode = DMA_PFCTRL;
+ 232:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_tx.Init.Priority = DMA_PRIORITY_LOW;
+ 233:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_tx.Init.FIFOMode = DMA_FIFOMODE_ENABLE;
+ 234:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_tx.Init.FIFOThreshold = DMA_FIFO_THRESHOLD_FULL;
+ 235:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_tx.Init.MemBurst = DMA_MBURST_INC4;
+ 236:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_tx.Init.PeriphBurst = DMA_PBURST_INC4;
+ 237:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     if (HAL_DMA_Init(&hdma_sdio_tx) != HAL_OK)
+ 238:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     {
+ 239:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****       Error_Handler();
+ 240:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     }
+ 241:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 242:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     __HAL_LINKDMA(hsd,hdmatx,hdma_sdio_tx);
+ 243:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 244:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /* SDIO interrupt Init */
+ARM GAS  /tmp/ccdiHilA.s 			page 11
+
+
+ 245:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     HAL_NVIC_SetPriority(SDIO_IRQn, 0, 0);
+ 246:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     HAL_NVIC_EnableIRQ(SDIO_IRQn);
+ 247:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE BEGIN SDIO_MspInit 1 */
+ 248:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 249:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE END SDIO_MspInit 1 */
+ 250:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 251:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   }
+ 252:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 253:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** }
+ 310              		.loc 1 253 1 view .LVU63
+ 311 001a 09B0     		add	sp, sp, #36
+ 312              	.LCFI9:
+ 313              		.cfi_remember_state
+ 314              		.cfi_def_cfa_offset 36
+ 315              		@ sp needed
+ 316 001c BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 317              	.LVL11:
+ 318              	.L25:
+ 319              	.LCFI10:
+ 320              		.cfi_restore_state
+ 321              		.loc 1 253 1 view .LVU64
+ 322 0020 0446     		mov	r4, r0
+ 171:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 323              		.loc 1 171 5 is_stmt 1 view .LVU65
+ 324              	.LBB6:
+ 171:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 325              		.loc 1 171 5 view .LVU66
+ 326 0022 0025     		movs	r5, #0
+ 327 0024 0095     		str	r5, [sp]
+ 171:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 328              		.loc 1 171 5 view .LVU67
+ 329 0026 03F58633 		add	r3, r3, #68608
+ 330 002a 5A6C     		ldr	r2, [r3, #68]
+ 331 002c 42F40062 		orr	r2, r2, #2048
+ 332 0030 5A64     		str	r2, [r3, #68]
+ 171:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 333              		.loc 1 171 5 view .LVU68
+ 334 0032 5A6C     		ldr	r2, [r3, #68]
+ 335 0034 02F40062 		and	r2, r2, #2048
+ 336 0038 0092     		str	r2, [sp]
+ 171:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 337              		.loc 1 171 5 view .LVU69
+ 338 003a 009A     		ldr	r2, [sp]
+ 339              	.LBE6:
+ 171:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 340              		.loc 1 171 5 view .LVU70
+ 173:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     __HAL_RCC_GPIOD_CLK_ENABLE();
+ 341              		.loc 1 173 5 view .LVU71
+ 342              	.LBB7:
+ 173:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     __HAL_RCC_GPIOD_CLK_ENABLE();
+ 343              		.loc 1 173 5 view .LVU72
+ 344 003c 0195     		str	r5, [sp, #4]
+ 173:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     __HAL_RCC_GPIOD_CLK_ENABLE();
+ 345              		.loc 1 173 5 view .LVU73
+ 346 003e 1A6B     		ldr	r2, [r3, #48]
+ 347 0040 42F00402 		orr	r2, r2, #4
+ 348 0044 1A63     		str	r2, [r3, #48]
+ARM GAS  /tmp/ccdiHilA.s 			page 12
+
+
+ 173:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     __HAL_RCC_GPIOD_CLK_ENABLE();
+ 349              		.loc 1 173 5 view .LVU74
+ 350 0046 1A6B     		ldr	r2, [r3, #48]
+ 351 0048 02F00402 		and	r2, r2, #4
+ 352 004c 0192     		str	r2, [sp, #4]
+ 173:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     __HAL_RCC_GPIOD_CLK_ENABLE();
+ 353              		.loc 1 173 5 view .LVU75
+ 354 004e 019A     		ldr	r2, [sp, #4]
+ 355              	.LBE7:
+ 173:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     __HAL_RCC_GPIOD_CLK_ENABLE();
+ 356              		.loc 1 173 5 view .LVU76
+ 174:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /**SDIO GPIO Configuration
+ 357              		.loc 1 174 5 view .LVU77
+ 358              	.LBB8:
+ 174:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /**SDIO GPIO Configuration
+ 359              		.loc 1 174 5 view .LVU78
+ 360 0050 0295     		str	r5, [sp, #8]
+ 174:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /**SDIO GPIO Configuration
+ 361              		.loc 1 174 5 view .LVU79
+ 362 0052 1A6B     		ldr	r2, [r3, #48]
+ 363 0054 42F00802 		orr	r2, r2, #8
+ 364 0058 1A63     		str	r2, [r3, #48]
+ 174:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /**SDIO GPIO Configuration
+ 365              		.loc 1 174 5 view .LVU80
+ 366 005a 1B6B     		ldr	r3, [r3, #48]
+ 367 005c 03F00803 		and	r3, r3, #8
+ 368 0060 0293     		str	r3, [sp, #8]
+ 174:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /**SDIO GPIO Configuration
+ 369              		.loc 1 174 5 view .LVU81
+ 370 0062 029B     		ldr	r3, [sp, #8]
+ 371              	.LBE8:
+ 174:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /**SDIO GPIO Configuration
+ 372              		.loc 1 174 5 view .LVU82
+ 180:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 373              		.loc 1 180 5 view .LVU83
+ 180:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 374              		.loc 1 180 25 is_stmt 0 view .LVU84
+ 375 0064 4FF48073 		mov	r3, #256
+ 376 0068 0393     		str	r3, [sp, #12]
+ 181:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Pull = GPIO_PULLUP;
+ 377              		.loc 1 181 5 is_stmt 1 view .LVU85
+ 181:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Pull = GPIO_PULLUP;
+ 378              		.loc 1 181 26 is_stmt 0 view .LVU86
+ 379 006a 4FF00208 		mov	r8, #2
+ 380 006e CDF81080 		str	r8, [sp, #16]
+ 182:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 381              		.loc 1 182 5 is_stmt 1 view .LVU87
+ 182:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 382              		.loc 1 182 26 is_stmt 0 view .LVU88
+ 383 0072 4FF0010B 		mov	fp, #1
+ 384 0076 CDF814B0 		str	fp, [sp, #20]
+ 183:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Alternate = GPIO_AF12_SDIO;
+ 385              		.loc 1 183 5 is_stmt 1 view .LVU89
+ 183:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Alternate = GPIO_AF12_SDIO;
+ 386              		.loc 1 183 27 is_stmt 0 view .LVU90
+ 387 007a 0326     		movs	r6, #3
+ 388 007c 0696     		str	r6, [sp, #24]
+ARM GAS  /tmp/ccdiHilA.s 			page 13
+
+
+ 184:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+ 389              		.loc 1 184 5 is_stmt 1 view .LVU91
+ 184:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+ 390              		.loc 1 184 31 is_stmt 0 view .LVU92
+ 391 007e 0C27     		movs	r7, #12
+ 392 0080 0797     		str	r7, [sp, #28]
+ 185:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 393              		.loc 1 185 5 is_stmt 1 view .LVU93
+ 394 0082 DFF81091 		ldr	r9, .L28+24
+ 395 0086 0DEB0701 		add	r1, sp, r7
+ 396 008a 4846     		mov	r0, r9
+ 397              	.LVL12:
+ 185:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 398              		.loc 1 185 5 is_stmt 0 view .LVU94
+ 399 008c FFF7FEFF 		bl	HAL_GPIO_Init
+ 400              	.LVL13:
+ 187:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 401              		.loc 1 187 5 is_stmt 1 view .LVU95
+ 187:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 402              		.loc 1 187 25 is_stmt 0 view .LVU96
+ 403 0090 4FF4805A 		mov	r10, #4096
+ 404 0094 CDF80CA0 		str	r10, [sp, #12]
+ 188:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 405              		.loc 1 188 5 is_stmt 1 view .LVU97
+ 188:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 406              		.loc 1 188 26 is_stmt 0 view .LVU98
+ 407 0098 CDF81080 		str	r8, [sp, #16]
+ 189:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 408              		.loc 1 189 5 is_stmt 1 view .LVU99
+ 189:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 409              		.loc 1 189 26 is_stmt 0 view .LVU100
+ 410 009c 0595     		str	r5, [sp, #20]
+ 190:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Alternate = GPIO_AF12_SDIO;
+ 411              		.loc 1 190 5 is_stmt 1 view .LVU101
+ 190:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Alternate = GPIO_AF12_SDIO;
+ 412              		.loc 1 190 27 is_stmt 0 view .LVU102
+ 413 009e 0696     		str	r6, [sp, #24]
+ 191:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+ 414              		.loc 1 191 5 is_stmt 1 view .LVU103
+ 191:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+ 415              		.loc 1 191 31 is_stmt 0 view .LVU104
+ 416 00a0 0797     		str	r7, [sp, #28]
+ 192:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 417              		.loc 1 192 5 is_stmt 1 view .LVU105
+ 418 00a2 0DEB0701 		add	r1, sp, r7
+ 419 00a6 4846     		mov	r0, r9
+ 420 00a8 FFF7FEFF 		bl	HAL_GPIO_Init
+ 421              	.LVL14:
+ 194:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 422              		.loc 1 194 5 view .LVU106
+ 194:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 423              		.loc 1 194 25 is_stmt 0 view .LVU107
+ 424 00ac 4FF00409 		mov	r9, #4
+ 425 00b0 CDF80C90 		str	r9, [sp, #12]
+ 195:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Pull = GPIO_PULLUP;
+ 426              		.loc 1 195 5 is_stmt 1 view .LVU108
+ 195:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Pull = GPIO_PULLUP;
+ARM GAS  /tmp/ccdiHilA.s 			page 14
+
+
+ 427              		.loc 1 195 26 is_stmt 0 view .LVU109
+ 428 00b4 CDF81080 		str	r8, [sp, #16]
+ 196:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 429              		.loc 1 196 5 is_stmt 1 view .LVU110
+ 196:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 430              		.loc 1 196 26 is_stmt 0 view .LVU111
+ 431 00b8 CDF814B0 		str	fp, [sp, #20]
+ 197:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Alternate = GPIO_AF12_SDIO;
+ 432              		.loc 1 197 5 is_stmt 1 view .LVU112
+ 197:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Alternate = GPIO_AF12_SDIO;
+ 433              		.loc 1 197 27 is_stmt 0 view .LVU113
+ 434 00bc 0696     		str	r6, [sp, #24]
+ 198:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+ 435              		.loc 1 198 5 is_stmt 1 view .LVU114
+ 198:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+ 436              		.loc 1 198 31 is_stmt 0 view .LVU115
+ 437 00be 0797     		str	r7, [sp, #28]
+ 199:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 438              		.loc 1 199 5 is_stmt 1 view .LVU116
+ 439 00c0 0DEB0701 		add	r1, sp, r7
+ 440 00c4 2E48     		ldr	r0, .L28+4
+ 441 00c6 FFF7FEFF 		bl	HAL_GPIO_Init
+ 442              	.LVL15:
+ 203:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_rx.Init.Channel = DMA_CHANNEL_4;
+ 443              		.loc 1 203 5 view .LVU117
+ 203:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_rx.Init.Channel = DMA_CHANNEL_4;
+ 444              		.loc 1 203 27 is_stmt 0 view .LVU118
+ 445 00ca 2E48     		ldr	r0, .L28+8
+ 446 00cc 2E4B     		ldr	r3, .L28+12
+ 447 00ce 0360     		str	r3, [r0]
+ 204:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
+ 448              		.loc 1 204 5 is_stmt 1 view .LVU119
+ 204:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
+ 449              		.loc 1 204 31 is_stmt 0 view .LVU120
+ 450 00d0 4FF00063 		mov	r3, #134217728
+ 451 00d4 4360     		str	r3, [r0, #4]
+ 205:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_rx.Init.PeriphInc = DMA_PINC_DISABLE;
+ 452              		.loc 1 205 5 is_stmt 1 view .LVU121
+ 205:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_rx.Init.PeriphInc = DMA_PINC_DISABLE;
+ 453              		.loc 1 205 33 is_stmt 0 view .LVU122
+ 454 00d6 8560     		str	r5, [r0, #8]
+ 206:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_rx.Init.MemInc = DMA_MINC_ENABLE;
+ 455              		.loc 1 206 5 is_stmt 1 view .LVU123
+ 206:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_rx.Init.MemInc = DMA_MINC_ENABLE;
+ 456              		.loc 1 206 33 is_stmt 0 view .LVU124
+ 457 00d8 C560     		str	r5, [r0, #12]
+ 207:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_WORD;
+ 458              		.loc 1 207 5 is_stmt 1 view .LVU125
+ 207:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_WORD;
+ 459              		.loc 1 207 30 is_stmt 0 view .LVU126
+ 460 00da 4FF48063 		mov	r3, #1024
+ 461 00de 0361     		str	r3, [r0, #16]
+ 208:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_rx.Init.MemDataAlignment = DMA_MDATAALIGN_WORD;
+ 462              		.loc 1 208 5 is_stmt 1 view .LVU127
+ 208:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_rx.Init.MemDataAlignment = DMA_MDATAALIGN_WORD;
+ 463              		.loc 1 208 43 is_stmt 0 view .LVU128
+ 464 00e0 C0F814A0 		str	r10, [r0, #20]
+ARM GAS  /tmp/ccdiHilA.s 			page 15
+
+
+ 209:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_rx.Init.Mode = DMA_PFCTRL;
+ 465              		.loc 1 209 5 is_stmt 1 view .LVU129
+ 209:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_rx.Init.Mode = DMA_PFCTRL;
+ 466              		.loc 1 209 40 is_stmt 0 view .LVU130
+ 467 00e4 4FF48043 		mov	r3, #16384
+ 468 00e8 8361     		str	r3, [r0, #24]
+ 210:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_rx.Init.Priority = DMA_PRIORITY_LOW;
+ 469              		.loc 1 210 5 is_stmt 1 view .LVU131
+ 210:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_rx.Init.Priority = DMA_PRIORITY_LOW;
+ 470              		.loc 1 210 28 is_stmt 0 view .LVU132
+ 471 00ea 2023     		movs	r3, #32
+ 472 00ec C361     		str	r3, [r0, #28]
+ 211:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_rx.Init.FIFOMode = DMA_FIFOMODE_ENABLE;
+ 473              		.loc 1 211 5 is_stmt 1 view .LVU133
+ 211:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_rx.Init.FIFOMode = DMA_FIFOMODE_ENABLE;
+ 474              		.loc 1 211 32 is_stmt 0 view .LVU134
+ 475 00ee 0562     		str	r5, [r0, #32]
+ 212:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_rx.Init.FIFOThreshold = DMA_FIFO_THRESHOLD_FULL;
+ 476              		.loc 1 212 5 is_stmt 1 view .LVU135
+ 212:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_rx.Init.FIFOThreshold = DMA_FIFO_THRESHOLD_FULL;
+ 477              		.loc 1 212 32 is_stmt 0 view .LVU136
+ 478 00f0 C0F82490 		str	r9, [r0, #36]
+ 213:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_rx.Init.MemBurst = DMA_MBURST_INC4;
+ 479              		.loc 1 213 5 is_stmt 1 view .LVU137
+ 213:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_rx.Init.MemBurst = DMA_MBURST_INC4;
+ 480              		.loc 1 213 37 is_stmt 0 view .LVU138
+ 481 00f4 8662     		str	r6, [r0, #40]
+ 214:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_rx.Init.PeriphBurst = DMA_PBURST_INC4;
+ 482              		.loc 1 214 5 is_stmt 1 view .LVU139
+ 214:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_rx.Init.PeriphBurst = DMA_PBURST_INC4;
+ 483              		.loc 1 214 32 is_stmt 0 view .LVU140
+ 484 00f6 4FF40003 		mov	r3, #8388608
+ 485 00fa C362     		str	r3, [r0, #44]
+ 215:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     if (HAL_DMA_Init(&hdma_sdio_rx) != HAL_OK)
+ 486              		.loc 1 215 5 is_stmt 1 view .LVU141
+ 215:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     if (HAL_DMA_Init(&hdma_sdio_rx) != HAL_OK)
+ 487              		.loc 1 215 35 is_stmt 0 view .LVU142
+ 488 00fc 4FF40013 		mov	r3, #2097152
+ 489 0100 0363     		str	r3, [r0, #48]
+ 216:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     {
+ 490              		.loc 1 216 5 is_stmt 1 view .LVU143
+ 216:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     {
+ 491              		.loc 1 216 9 is_stmt 0 view .LVU144
+ 492 0102 FFF7FEFF 		bl	HAL_DMA_Init
+ 493              	.LVL16:
+ 216:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     {
+ 494              		.loc 1 216 8 discriminator 1 view .LVU145
+ 495 0106 0028     		cmp	r0, #0
+ 496 0108 31D1     		bne	.L26
+ 497              	.L22:
+ 221:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 498              		.loc 1 221 5 is_stmt 1 view .LVU146
+ 221:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 499              		.loc 1 221 5 view .LVU147
+ 500 010a 1E4B     		ldr	r3, .L28+8
+ 501 010c 2364     		str	r3, [r4, #64]
+ 221:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ARM GAS  /tmp/ccdiHilA.s 			page 16
+
+
+ 502              		.loc 1 221 5 view .LVU148
+ 503 010e 9C63     		str	r4, [r3, #56]
+ 221:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 504              		.loc 1 221 5 view .LVU149
+ 224:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_tx.Init.Channel = DMA_CHANNEL_4;
+ 505              		.loc 1 224 5 view .LVU150
+ 224:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_tx.Init.Channel = DMA_CHANNEL_4;
+ 506              		.loc 1 224 27 is_stmt 0 view .LVU151
+ 507 0110 1E48     		ldr	r0, .L28+16
+ 508 0112 1F4B     		ldr	r3, .L28+20
+ 509 0114 0360     		str	r3, [r0]
+ 225:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_tx.Init.Direction = DMA_MEMORY_TO_PERIPH;
+ 510              		.loc 1 225 5 is_stmt 1 view .LVU152
+ 225:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_tx.Init.Direction = DMA_MEMORY_TO_PERIPH;
+ 511              		.loc 1 225 31 is_stmt 0 view .LVU153
+ 512 0116 4FF00063 		mov	r3, #134217728
+ 513 011a 4360     		str	r3, [r0, #4]
+ 226:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_tx.Init.PeriphInc = DMA_PINC_DISABLE;
+ 514              		.loc 1 226 5 is_stmt 1 view .LVU154
+ 226:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_tx.Init.PeriphInc = DMA_PINC_DISABLE;
+ 515              		.loc 1 226 33 is_stmt 0 view .LVU155
+ 516 011c 4023     		movs	r3, #64
+ 517 011e 8360     		str	r3, [r0, #8]
+ 227:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_tx.Init.MemInc = DMA_MINC_ENABLE;
+ 518              		.loc 1 227 5 is_stmt 1 view .LVU156
+ 227:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_tx.Init.MemInc = DMA_MINC_ENABLE;
+ 519              		.loc 1 227 33 is_stmt 0 view .LVU157
+ 520 0120 0023     		movs	r3, #0
+ 521 0122 C360     		str	r3, [r0, #12]
+ 228:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_tx.Init.PeriphDataAlignment = DMA_PDATAALIGN_WORD;
+ 522              		.loc 1 228 5 is_stmt 1 view .LVU158
+ 228:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_tx.Init.PeriphDataAlignment = DMA_PDATAALIGN_WORD;
+ 523              		.loc 1 228 30 is_stmt 0 view .LVU159
+ 524 0124 4FF48062 		mov	r2, #1024
+ 525 0128 0261     		str	r2, [r0, #16]
+ 229:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_tx.Init.MemDataAlignment = DMA_MDATAALIGN_WORD;
+ 526              		.loc 1 229 5 is_stmt 1 view .LVU160
+ 229:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_tx.Init.MemDataAlignment = DMA_MDATAALIGN_WORD;
+ 527              		.loc 1 229 43 is_stmt 0 view .LVU161
+ 528 012a 4FF48052 		mov	r2, #4096
+ 529 012e 4261     		str	r2, [r0, #20]
+ 230:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_tx.Init.Mode = DMA_PFCTRL;
+ 530              		.loc 1 230 5 is_stmt 1 view .LVU162
+ 230:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_tx.Init.Mode = DMA_PFCTRL;
+ 531              		.loc 1 230 40 is_stmt 0 view .LVU163
+ 532 0130 4FF48042 		mov	r2, #16384
+ 533 0134 8261     		str	r2, [r0, #24]
+ 231:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_tx.Init.Priority = DMA_PRIORITY_LOW;
+ 534              		.loc 1 231 5 is_stmt 1 view .LVU164
+ 231:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_tx.Init.Priority = DMA_PRIORITY_LOW;
+ 535              		.loc 1 231 28 is_stmt 0 view .LVU165
+ 536 0136 2022     		movs	r2, #32
+ 537 0138 C261     		str	r2, [r0, #28]
+ 232:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_tx.Init.FIFOMode = DMA_FIFOMODE_ENABLE;
+ 538              		.loc 1 232 5 is_stmt 1 view .LVU166
+ 232:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_tx.Init.FIFOMode = DMA_FIFOMODE_ENABLE;
+ 539              		.loc 1 232 32 is_stmt 0 view .LVU167
+ARM GAS  /tmp/ccdiHilA.s 			page 17
+
+
+ 540 013a 0362     		str	r3, [r0, #32]
+ 233:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_tx.Init.FIFOThreshold = DMA_FIFO_THRESHOLD_FULL;
+ 541              		.loc 1 233 5 is_stmt 1 view .LVU168
+ 233:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_tx.Init.FIFOThreshold = DMA_FIFO_THRESHOLD_FULL;
+ 542              		.loc 1 233 32 is_stmt 0 view .LVU169
+ 543 013c 0423     		movs	r3, #4
+ 544 013e 4362     		str	r3, [r0, #36]
+ 234:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_tx.Init.MemBurst = DMA_MBURST_INC4;
+ 545              		.loc 1 234 5 is_stmt 1 view .LVU170
+ 234:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_tx.Init.MemBurst = DMA_MBURST_INC4;
+ 546              		.loc 1 234 37 is_stmt 0 view .LVU171
+ 547 0140 0323     		movs	r3, #3
+ 548 0142 8362     		str	r3, [r0, #40]
+ 235:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_tx.Init.PeriphBurst = DMA_PBURST_INC4;
+ 549              		.loc 1 235 5 is_stmt 1 view .LVU172
+ 235:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_sdio_tx.Init.PeriphBurst = DMA_PBURST_INC4;
+ 550              		.loc 1 235 32 is_stmt 0 view .LVU173
+ 551 0144 4FF40003 		mov	r3, #8388608
+ 552 0148 C362     		str	r3, [r0, #44]
+ 236:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     if (HAL_DMA_Init(&hdma_sdio_tx) != HAL_OK)
+ 553              		.loc 1 236 5 is_stmt 1 view .LVU174
+ 236:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     if (HAL_DMA_Init(&hdma_sdio_tx) != HAL_OK)
+ 554              		.loc 1 236 35 is_stmt 0 view .LVU175
+ 555 014a 4FF40013 		mov	r3, #2097152
+ 556 014e 0363     		str	r3, [r0, #48]
+ 237:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     {
+ 557              		.loc 1 237 5 is_stmt 1 view .LVU176
+ 237:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     {
+ 558              		.loc 1 237 9 is_stmt 0 view .LVU177
+ 559 0150 FFF7FEFF 		bl	HAL_DMA_Init
+ 560              	.LVL17:
+ 237:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     {
+ 561              		.loc 1 237 8 discriminator 1 view .LVU178
+ 562 0154 70B9     		cbnz	r0, .L27
+ 563              	.L23:
+ 242:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 564              		.loc 1 242 5 is_stmt 1 view .LVU179
+ 242:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 565              		.loc 1 242 5 view .LVU180
+ 566 0156 0D4B     		ldr	r3, .L28+16
+ 567 0158 E363     		str	r3, [r4, #60]
+ 242:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 568              		.loc 1 242 5 view .LVU181
+ 569 015a 9C63     		str	r4, [r3, #56]
+ 242:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 570              		.loc 1 242 5 view .LVU182
+ 245:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     HAL_NVIC_EnableIRQ(SDIO_IRQn);
+ 571              		.loc 1 245 5 view .LVU183
+ 572 015c 0022     		movs	r2, #0
+ 573 015e 1146     		mov	r1, r2
+ 574 0160 3120     		movs	r0, #49
+ 575 0162 FFF7FEFF 		bl	HAL_NVIC_SetPriority
+ 576              	.LVL18:
+ 246:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE BEGIN SDIO_MspInit 1 */
+ 577              		.loc 1 246 5 view .LVU184
+ 578 0166 3120     		movs	r0, #49
+ 579 0168 FFF7FEFF 		bl	HAL_NVIC_EnableIRQ
+ARM GAS  /tmp/ccdiHilA.s 			page 18
+
+
+ 580              	.LVL19:
+ 581              		.loc 1 253 1 is_stmt 0 view .LVU185
+ 582 016c 55E7     		b	.L20
+ 583              	.L26:
+ 584              	.LBB9:
+ 218:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     }
+ 585              		.loc 1 218 7 is_stmt 1 view .LVU186
+ 586 016e FFF7FEFF 		bl	Error_Handler
+ 587              	.LVL20:
+ 588 0172 CAE7     		b	.L22
+ 589              	.L27:
+ 218:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     }
+ 590              		.loc 1 218 7 is_stmt 0 view .LVU187
+ 591              	.LBE9:
+ 592              	.LBB10:
+ 239:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     }
+ 593              		.loc 1 239 7 is_stmt 1 view .LVU188
+ 594 0174 FFF7FEFF 		bl	Error_Handler
+ 595              	.LVL21:
+ 596 0178 EDE7     		b	.L23
+ 597              	.L29:
+ 598 017a 00BF     		.align	2
+ 599              	.L28:
+ 600 017c 002C0140 		.word	1073818624
+ 601 0180 000C0240 		.word	1073875968
+ 602 0184 00000000 		.word	hdma_sdio_rx
+ 603 0188 58640240 		.word	1073898584
+ 604 018c 00000000 		.word	hdma_sdio_tx
+ 605 0190 A0640240 		.word	1073898656
+ 606 0194 00080240 		.word	1073874944
+ 607              	.LBE10:
+ 608              		.cfi_endproc
+ 609              	.LFE137:
+ 611              		.section	.text.HAL_SD_MspDeInit,"ax",%progbits
+ 612              		.align	1
+ 613              		.global	HAL_SD_MspDeInit
+ 614              		.syntax unified
+ 615              		.thumb
+ 616              		.thumb_func
+ 618              	HAL_SD_MspDeInit:
+ 619              	.LVL22:
+ 620              	.LFB138:
+ 254:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 255:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** /**
+ 256:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** * @brief SD MSP De-Initialization
+ 257:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** * This function freeze the hardware resources used in this example
+ 258:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** * @param hsd: SD handle pointer
+ 259:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** * @retval None
+ 260:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** */
+ 261:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** void HAL_SD_MspDeInit(SD_HandleTypeDef* hsd)
+ 262:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** {
+ 621              		.loc 1 262 1 view -0
+ 622              		.cfi_startproc
+ 623              		@ args = 0, pretend = 0, frame = 0
+ 624              		@ frame_needed = 0, uses_anonymous_args = 0
+ 263:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   if(hsd->Instance==SDIO)
+ 625              		.loc 1 263 3 view .LVU190
+ARM GAS  /tmp/ccdiHilA.s 			page 19
+
+
+ 626              		.loc 1 263 9 is_stmt 0 view .LVU191
+ 627 0000 0268     		ldr	r2, [r0]
+ 628              		.loc 1 263 5 view .LVU192
+ 629 0002 0F4B     		ldr	r3, .L37
+ 630 0004 9A42     		cmp	r2, r3
+ 631 0006 00D0     		beq	.L36
+ 632 0008 7047     		bx	lr
+ 633              	.L36:
+ 262:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   if(hsd->Instance==SDIO)
+ 634              		.loc 1 262 1 view .LVU193
+ 635 000a 10B5     		push	{r4, lr}
+ 636              	.LCFI11:
+ 637              		.cfi_def_cfa_offset 8
+ 638              		.cfi_offset 4, -8
+ 639              		.cfi_offset 14, -4
+ 640 000c 0446     		mov	r4, r0
+ 264:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   {
+ 265:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE BEGIN SDIO_MspDeInit 0 */
+ 266:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 267:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE END SDIO_MspDeInit 0 */
+ 268:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /* Peripheral clock disable */
+ 269:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     __HAL_RCC_SDIO_CLK_DISABLE();
+ 641              		.loc 1 269 5 is_stmt 1 view .LVU194
+ 642 000e 0D4A     		ldr	r2, .L37+4
+ 643 0010 536C     		ldr	r3, [r2, #68]
+ 644 0012 23F40063 		bic	r3, r3, #2048
+ 645 0016 5364     		str	r3, [r2, #68]
+ 270:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 271:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /**SDIO GPIO Configuration
+ 272:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     PC8     ------> SDIO_D0
+ 273:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     PC12     ------> SDIO_CK
+ 274:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     PD2     ------> SDIO_CMD
+ 275:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     */
+ 276:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     HAL_GPIO_DeInit(GPIOC, GPIO_PIN_8|GPIO_PIN_12);
+ 646              		.loc 1 276 5 view .LVU195
+ 647 0018 4FF48851 		mov	r1, #4352
+ 648 001c 0A48     		ldr	r0, .L37+8
+ 649              	.LVL23:
+ 650              		.loc 1 276 5 is_stmt 0 view .LVU196
+ 651 001e FFF7FEFF 		bl	HAL_GPIO_DeInit
+ 652              	.LVL24:
+ 277:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 278:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     HAL_GPIO_DeInit(GPIOD, GPIO_PIN_2);
+ 653              		.loc 1 278 5 is_stmt 1 view .LVU197
+ 654 0022 0421     		movs	r1, #4
+ 655 0024 0948     		ldr	r0, .L37+12
+ 656 0026 FFF7FEFF 		bl	HAL_GPIO_DeInit
+ 657              	.LVL25:
+ 279:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 280:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /* SDIO DMA DeInit */
+ 281:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     HAL_DMA_DeInit(hsd->hdmarx);
+ 658              		.loc 1 281 5 view .LVU198
+ 659 002a 206C     		ldr	r0, [r4, #64]
+ 660 002c FFF7FEFF 		bl	HAL_DMA_DeInit
+ 661              	.LVL26:
+ 282:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     HAL_DMA_DeInit(hsd->hdmatx);
+ 662              		.loc 1 282 5 view .LVU199
+ARM GAS  /tmp/ccdiHilA.s 			page 20
+
+
+ 663 0030 E06B     		ldr	r0, [r4, #60]
+ 664 0032 FFF7FEFF 		bl	HAL_DMA_DeInit
+ 665              	.LVL27:
+ 283:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 284:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /* SDIO interrupt DeInit */
+ 285:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     HAL_NVIC_DisableIRQ(SDIO_IRQn);
+ 666              		.loc 1 285 5 view .LVU200
+ 667 0036 3120     		movs	r0, #49
+ 668 0038 FFF7FEFF 		bl	HAL_NVIC_DisableIRQ
+ 669              	.LVL28:
+ 286:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE BEGIN SDIO_MspDeInit 1 */
+ 287:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 288:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE END SDIO_MspDeInit 1 */
+ 289:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   }
+ 290:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 291:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** }
+ 670              		.loc 1 291 1 is_stmt 0 view .LVU201
+ 671 003c 10BD     		pop	{r4, pc}
+ 672              	.LVL29:
+ 673              	.L38:
+ 674              		.loc 1 291 1 view .LVU202
+ 675 003e 00BF     		.align	2
+ 676              	.L37:
+ 677 0040 002C0140 		.word	1073818624
+ 678 0044 00380240 		.word	1073887232
+ 679 0048 00080240 		.word	1073874944
+ 680 004c 000C0240 		.word	1073875968
+ 681              		.cfi_endproc
+ 682              	.LFE138:
+ 684              		.section	.text.HAL_SPI_MspInit,"ax",%progbits
+ 685              		.align	1
+ 686              		.global	HAL_SPI_MspInit
+ 687              		.syntax unified
+ 688              		.thumb
+ 689              		.thumb_func
+ 691              	HAL_SPI_MspInit:
+ 692              	.LVL30:
+ 693              	.LFB139:
+ 292:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 293:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** /**
+ 294:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** * @brief SPI MSP Initialization
+ 295:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** * This function configures the hardware resources used in this example
+ 296:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** * @param hspi: SPI handle pointer
+ 297:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** * @retval None
+ 298:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** */
+ 299:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** void HAL_SPI_MspInit(SPI_HandleTypeDef* hspi)
+ 300:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** {
+ 694              		.loc 1 300 1 is_stmt 1 view -0
+ 695              		.cfi_startproc
+ 696              		@ args = 0, pretend = 0, frame = 40
+ 697              		@ frame_needed = 0, uses_anonymous_args = 0
+ 698              		.loc 1 300 1 is_stmt 0 view .LVU204
+ 699 0000 00B5     		push	{lr}
+ 700              	.LCFI12:
+ 701              		.cfi_def_cfa_offset 4
+ 702              		.cfi_offset 14, -4
+ 703 0002 8BB0     		sub	sp, sp, #44
+ARM GAS  /tmp/ccdiHilA.s 			page 21
+
+
+ 704              	.LCFI13:
+ 705              		.cfi_def_cfa_offset 48
+ 301:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   GPIO_InitTypeDef GPIO_InitStruct = {0};
+ 706              		.loc 1 301 3 is_stmt 1 view .LVU205
+ 707              		.loc 1 301 20 is_stmt 0 view .LVU206
+ 708 0004 0023     		movs	r3, #0
+ 709 0006 0593     		str	r3, [sp, #20]
+ 710 0008 0693     		str	r3, [sp, #24]
+ 711 000a 0793     		str	r3, [sp, #28]
+ 712 000c 0893     		str	r3, [sp, #32]
+ 713 000e 0993     		str	r3, [sp, #36]
+ 302:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   if(hspi->Instance==SPI1)
+ 714              		.loc 1 302 3 is_stmt 1 view .LVU207
+ 715              		.loc 1 302 10 is_stmt 0 view .LVU208
+ 716 0010 0368     		ldr	r3, [r0]
+ 717              		.loc 1 302 5 view .LVU209
+ 718 0012 274A     		ldr	r2, .L45
+ 719 0014 9342     		cmp	r3, r2
+ 720 0016 05D0     		beq	.L43
+ 303:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   {
+ 304:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE BEGIN SPI1_MspInit 0 */
+ 305:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 306:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE END SPI1_MspInit 0 */
+ 307:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /* Peripheral clock enable */
+ 308:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     __HAL_RCC_SPI1_CLK_ENABLE();
+ 309:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 310:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     __HAL_RCC_GPIOA_CLK_ENABLE();
+ 311:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /**SPI1 GPIO Configuration
+ 312:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     PA5     ------> SPI1_SCK
+ 313:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     PA6     ------> SPI1_MISO
+ 314:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     PA7     ------> SPI1_MOSI
+ 315:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     */
+ 316:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Pin = GPIO_PIN_5|GPIO_PIN_6|GPIO_PIN_7;
+ 317:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 318:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 319:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 320:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Alternate = GPIO_AF5_SPI1;
+ 321:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+ 322:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 323:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE BEGIN SPI1_MspInit 1 */
+ 324:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 325:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE END SPI1_MspInit 1 */
+ 326:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   }
+ 327:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   else if(hspi->Instance==SPI3)
+ 721              		.loc 1 327 8 is_stmt 1 view .LVU210
+ 722              		.loc 1 327 10 is_stmt 0 view .LVU211
+ 723 0018 264A     		ldr	r2, .L45+4
+ 724 001a 9342     		cmp	r3, r2
+ 725 001c 25D0     		beq	.L44
+ 726              	.LVL31:
+ 727              	.L39:
+ 328:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   {
+ 329:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE BEGIN SPI3_MspInit 0 */
+ 330:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 331:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE END SPI3_MspInit 0 */
+ 332:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /* Peripheral clock enable */
+ 333:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     __HAL_RCC_SPI3_CLK_ENABLE();
+ARM GAS  /tmp/ccdiHilA.s 			page 22
+
+
+ 334:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 335:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     __HAL_RCC_GPIOB_CLK_ENABLE();
+ 336:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /**SPI3 GPIO Configuration
+ 337:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     PB3     ------> SPI3_SCK
+ 338:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     PB4     ------> SPI3_MISO
+ 339:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     PB5     ------> SPI3_MOSI
+ 340:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     */
+ 341:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Pin = GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5;
+ 342:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 343:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 344:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 345:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Alternate = GPIO_AF6_SPI3;
+ 346:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+ 347:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 348:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE BEGIN SPI3_MspInit 1 */
+ 349:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 350:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE END SPI3_MspInit 1 */
+ 351:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   }
+ 352:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 353:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** }
+ 728              		.loc 1 353 1 view .LVU212
+ 729 001e 0BB0     		add	sp, sp, #44
+ 730              	.LCFI14:
+ 731              		.cfi_remember_state
+ 732              		.cfi_def_cfa_offset 4
+ 733              		@ sp needed
+ 734 0020 5DF804FB 		ldr	pc, [sp], #4
+ 735              	.LVL32:
+ 736              	.L43:
+ 737              	.LCFI15:
+ 738              		.cfi_restore_state
+ 308:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 739              		.loc 1 308 5 is_stmt 1 view .LVU213
+ 740              	.LBB11:
+ 308:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 741              		.loc 1 308 5 view .LVU214
+ 742 0024 0021     		movs	r1, #0
+ 743 0026 0191     		str	r1, [sp, #4]
+ 308:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 744              		.loc 1 308 5 view .LVU215
+ 745 0028 234B     		ldr	r3, .L45+8
+ 746 002a 5A6C     		ldr	r2, [r3, #68]
+ 747 002c 42F48052 		orr	r2, r2, #4096
+ 748 0030 5A64     		str	r2, [r3, #68]
+ 308:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 749              		.loc 1 308 5 view .LVU216
+ 750 0032 5A6C     		ldr	r2, [r3, #68]
+ 751 0034 02F48052 		and	r2, r2, #4096
+ 752 0038 0192     		str	r2, [sp, #4]
+ 308:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 753              		.loc 1 308 5 view .LVU217
+ 754 003a 019A     		ldr	r2, [sp, #4]
+ 755              	.LBE11:
+ 308:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 756              		.loc 1 308 5 view .LVU218
+ 310:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /**SPI1 GPIO Configuration
+ 757              		.loc 1 310 5 view .LVU219
+ARM GAS  /tmp/ccdiHilA.s 			page 23
+
+
+ 758              	.LBB12:
+ 310:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /**SPI1 GPIO Configuration
+ 759              		.loc 1 310 5 view .LVU220
+ 760 003c 0291     		str	r1, [sp, #8]
+ 310:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /**SPI1 GPIO Configuration
+ 761              		.loc 1 310 5 view .LVU221
+ 762 003e 1A6B     		ldr	r2, [r3, #48]
+ 763 0040 42F00102 		orr	r2, r2, #1
+ 764 0044 1A63     		str	r2, [r3, #48]
+ 310:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /**SPI1 GPIO Configuration
+ 765              		.loc 1 310 5 view .LVU222
+ 766 0046 1B6B     		ldr	r3, [r3, #48]
+ 767 0048 03F00103 		and	r3, r3, #1
+ 768 004c 0293     		str	r3, [sp, #8]
+ 310:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /**SPI1 GPIO Configuration
+ 769              		.loc 1 310 5 view .LVU223
+ 770 004e 029B     		ldr	r3, [sp, #8]
+ 771              	.LBE12:
+ 310:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /**SPI1 GPIO Configuration
+ 772              		.loc 1 310 5 view .LVU224
+ 316:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 773              		.loc 1 316 5 view .LVU225
+ 316:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 774              		.loc 1 316 25 is_stmt 0 view .LVU226
+ 775 0050 E023     		movs	r3, #224
+ 776 0052 0593     		str	r3, [sp, #20]
+ 317:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 777              		.loc 1 317 5 is_stmt 1 view .LVU227
+ 317:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 778              		.loc 1 317 26 is_stmt 0 view .LVU228
+ 779 0054 0223     		movs	r3, #2
+ 780 0056 0693     		str	r3, [sp, #24]
+ 318:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 781              		.loc 1 318 5 is_stmt 1 view .LVU229
+ 319:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Alternate = GPIO_AF5_SPI1;
+ 782              		.loc 1 319 5 view .LVU230
+ 319:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Alternate = GPIO_AF5_SPI1;
+ 783              		.loc 1 319 27 is_stmt 0 view .LVU231
+ 784 0058 0323     		movs	r3, #3
+ 785 005a 0893     		str	r3, [sp, #32]
+ 320:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+ 786              		.loc 1 320 5 is_stmt 1 view .LVU232
+ 320:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+ 787              		.loc 1 320 31 is_stmt 0 view .LVU233
+ 788 005c 0523     		movs	r3, #5
+ 789 005e 0993     		str	r3, [sp, #36]
+ 321:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 790              		.loc 1 321 5 is_stmt 1 view .LVU234
+ 791 0060 05A9     		add	r1, sp, #20
+ 792 0062 1648     		ldr	r0, .L45+12
+ 793              	.LVL33:
+ 321:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 794              		.loc 1 321 5 is_stmt 0 view .LVU235
+ 795 0064 FFF7FEFF 		bl	HAL_GPIO_Init
+ 796              	.LVL34:
+ 797 0068 D9E7     		b	.L39
+ 798              	.LVL35:
+ARM GAS  /tmp/ccdiHilA.s 			page 24
+
+
+ 799              	.L44:
+ 333:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 800              		.loc 1 333 5 is_stmt 1 view .LVU236
+ 801              	.LBB13:
+ 333:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 802              		.loc 1 333 5 view .LVU237
+ 803 006a 0021     		movs	r1, #0
+ 804 006c 0391     		str	r1, [sp, #12]
+ 333:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 805              		.loc 1 333 5 view .LVU238
+ 806 006e 124B     		ldr	r3, .L45+8
+ 807 0070 1A6C     		ldr	r2, [r3, #64]
+ 808 0072 42F40042 		orr	r2, r2, #32768
+ 809 0076 1A64     		str	r2, [r3, #64]
+ 333:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 810              		.loc 1 333 5 view .LVU239
+ 811 0078 1A6C     		ldr	r2, [r3, #64]
+ 812 007a 02F40042 		and	r2, r2, #32768
+ 813 007e 0392     		str	r2, [sp, #12]
+ 333:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 814              		.loc 1 333 5 view .LVU240
+ 815 0080 039A     		ldr	r2, [sp, #12]
+ 816              	.LBE13:
+ 333:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 817              		.loc 1 333 5 view .LVU241
+ 335:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /**SPI3 GPIO Configuration
+ 818              		.loc 1 335 5 view .LVU242
+ 819              	.LBB14:
+ 335:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /**SPI3 GPIO Configuration
+ 820              		.loc 1 335 5 view .LVU243
+ 821 0082 0491     		str	r1, [sp, #16]
+ 335:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /**SPI3 GPIO Configuration
+ 822              		.loc 1 335 5 view .LVU244
+ 823 0084 1A6B     		ldr	r2, [r3, #48]
+ 824 0086 42F00202 		orr	r2, r2, #2
+ 825 008a 1A63     		str	r2, [r3, #48]
+ 335:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /**SPI3 GPIO Configuration
+ 826              		.loc 1 335 5 view .LVU245
+ 827 008c 1B6B     		ldr	r3, [r3, #48]
+ 828 008e 03F00203 		and	r3, r3, #2
+ 829 0092 0493     		str	r3, [sp, #16]
+ 335:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /**SPI3 GPIO Configuration
+ 830              		.loc 1 335 5 view .LVU246
+ 831 0094 049B     		ldr	r3, [sp, #16]
+ 832              	.LBE14:
+ 335:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /**SPI3 GPIO Configuration
+ 833              		.loc 1 335 5 view .LVU247
+ 341:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 834              		.loc 1 341 5 view .LVU248
+ 341:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 835              		.loc 1 341 25 is_stmt 0 view .LVU249
+ 836 0096 3823     		movs	r3, #56
+ 837 0098 0593     		str	r3, [sp, #20]
+ 342:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 838              		.loc 1 342 5 is_stmt 1 view .LVU250
+ 342:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 839              		.loc 1 342 26 is_stmt 0 view .LVU251
+ARM GAS  /tmp/ccdiHilA.s 			page 25
+
+
+ 840 009a 0223     		movs	r3, #2
+ 841 009c 0693     		str	r3, [sp, #24]
+ 343:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 842              		.loc 1 343 5 is_stmt 1 view .LVU252
+ 344:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Alternate = GPIO_AF6_SPI3;
+ 843              		.loc 1 344 5 view .LVU253
+ 344:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Alternate = GPIO_AF6_SPI3;
+ 844              		.loc 1 344 27 is_stmt 0 view .LVU254
+ 845 009e 0323     		movs	r3, #3
+ 846 00a0 0893     		str	r3, [sp, #32]
+ 345:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+ 847              		.loc 1 345 5 is_stmt 1 view .LVU255
+ 345:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+ 848              		.loc 1 345 31 is_stmt 0 view .LVU256
+ 849 00a2 0623     		movs	r3, #6
+ 850 00a4 0993     		str	r3, [sp, #36]
+ 346:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 851              		.loc 1 346 5 is_stmt 1 view .LVU257
+ 852 00a6 05A9     		add	r1, sp, #20
+ 853 00a8 0548     		ldr	r0, .L45+16
+ 854              	.LVL36:
+ 346:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 855              		.loc 1 346 5 is_stmt 0 view .LVU258
+ 856 00aa FFF7FEFF 		bl	HAL_GPIO_Init
+ 857              	.LVL37:
+ 858              		.loc 1 353 1 view .LVU259
+ 859 00ae B6E7     		b	.L39
+ 860              	.L46:
+ 861              		.align	2
+ 862              	.L45:
+ 863 00b0 00300140 		.word	1073819648
+ 864 00b4 003C0040 		.word	1073757184
+ 865 00b8 00380240 		.word	1073887232
+ 866 00bc 00000240 		.word	1073872896
+ 867 00c0 00040240 		.word	1073873920
+ 868              		.cfi_endproc
+ 869              	.LFE139:
+ 871              		.section	.text.HAL_SPI_MspDeInit,"ax",%progbits
+ 872              		.align	1
+ 873              		.global	HAL_SPI_MspDeInit
+ 874              		.syntax unified
+ 875              		.thumb
+ 876              		.thumb_func
+ 878              	HAL_SPI_MspDeInit:
+ 879              	.LVL38:
+ 880              	.LFB140:
+ 354:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 355:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** /**
+ 356:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** * @brief SPI MSP De-Initialization
+ 357:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** * This function freeze the hardware resources used in this example
+ 358:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** * @param hspi: SPI handle pointer
+ 359:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** * @retval None
+ 360:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** */
+ 361:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** void HAL_SPI_MspDeInit(SPI_HandleTypeDef* hspi)
+ 362:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** {
+ 881              		.loc 1 362 1 is_stmt 1 view -0
+ 882              		.cfi_startproc
+ARM GAS  /tmp/ccdiHilA.s 			page 26
+
+
+ 883              		@ args = 0, pretend = 0, frame = 0
+ 884              		@ frame_needed = 0, uses_anonymous_args = 0
+ 885              		.loc 1 362 1 is_stmt 0 view .LVU261
+ 886 0000 08B5     		push	{r3, lr}
+ 887              	.LCFI16:
+ 888              		.cfi_def_cfa_offset 8
+ 889              		.cfi_offset 3, -8
+ 890              		.cfi_offset 14, -4
+ 363:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   if(hspi->Instance==SPI1)
+ 891              		.loc 1 363 3 is_stmt 1 view .LVU262
+ 892              		.loc 1 363 10 is_stmt 0 view .LVU263
+ 893 0002 0368     		ldr	r3, [r0]
+ 894              		.loc 1 363 5 view .LVU264
+ 895 0004 0E4A     		ldr	r2, .L53
+ 896 0006 9342     		cmp	r3, r2
+ 897 0008 03D0     		beq	.L51
+ 364:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   {
+ 365:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE BEGIN SPI1_MspDeInit 0 */
+ 366:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 367:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE END SPI1_MspDeInit 0 */
+ 368:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /* Peripheral clock disable */
+ 369:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     __HAL_RCC_SPI1_CLK_DISABLE();
+ 370:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 371:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /**SPI1 GPIO Configuration
+ 372:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     PA5     ------> SPI1_SCK
+ 373:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     PA6     ------> SPI1_MISO
+ 374:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     PA7     ------> SPI1_MOSI
+ 375:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     */
+ 376:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     HAL_GPIO_DeInit(GPIOA, GPIO_PIN_5|GPIO_PIN_6|GPIO_PIN_7);
+ 377:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 378:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE BEGIN SPI1_MspDeInit 1 */
+ 379:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 380:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE END SPI1_MspDeInit 1 */
+ 381:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   }
+ 382:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   else if(hspi->Instance==SPI3)
+ 898              		.loc 1 382 8 is_stmt 1 view .LVU265
+ 899              		.loc 1 382 10 is_stmt 0 view .LVU266
+ 900 000a 0E4A     		ldr	r2, .L53+4
+ 901 000c 9342     		cmp	r3, r2
+ 902 000e 0BD0     		beq	.L52
+ 903              	.LVL39:
+ 904              	.L47:
+ 383:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   {
+ 384:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE BEGIN SPI3_MspDeInit 0 */
+ 385:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 386:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE END SPI3_MspDeInit 0 */
+ 387:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /* Peripheral clock disable */
+ 388:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     __HAL_RCC_SPI3_CLK_DISABLE();
+ 389:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 390:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /**SPI3 GPIO Configuration
+ 391:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     PB3     ------> SPI3_SCK
+ 392:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     PB4     ------> SPI3_MISO
+ 393:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     PB5     ------> SPI3_MOSI
+ 394:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     */
+ 395:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     HAL_GPIO_DeInit(GPIOB, GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5);
+ 396:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 397:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE BEGIN SPI3_MspDeInit 1 */
+ARM GAS  /tmp/ccdiHilA.s 			page 27
+
+
+ 398:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 399:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE END SPI3_MspDeInit 1 */
+ 400:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   }
+ 401:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 402:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** }
+ 905              		.loc 1 402 1 view .LVU267
+ 906 0010 08BD     		pop	{r3, pc}
+ 907              	.LVL40:
+ 908              	.L51:
+ 369:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 909              		.loc 1 369 5 is_stmt 1 view .LVU268
+ 910 0012 02F58432 		add	r2, r2, #67584
+ 911 0016 536C     		ldr	r3, [r2, #68]
+ 912 0018 23F48053 		bic	r3, r3, #4096
+ 913 001c 5364     		str	r3, [r2, #68]
+ 376:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 914              		.loc 1 376 5 view .LVU269
+ 915 001e E021     		movs	r1, #224
+ 916 0020 0948     		ldr	r0, .L53+8
+ 917              	.LVL41:
+ 376:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 918              		.loc 1 376 5 is_stmt 0 view .LVU270
+ 919 0022 FFF7FEFF 		bl	HAL_GPIO_DeInit
+ 920              	.LVL42:
+ 921 0026 F3E7     		b	.L47
+ 922              	.LVL43:
+ 923              	.L52:
+ 388:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 924              		.loc 1 388 5 is_stmt 1 view .LVU271
+ 925 0028 02F5FE32 		add	r2, r2, #130048
+ 926 002c 136C     		ldr	r3, [r2, #64]
+ 927 002e 23F40043 		bic	r3, r3, #32768
+ 928 0032 1364     		str	r3, [r2, #64]
+ 395:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 929              		.loc 1 395 5 view .LVU272
+ 930 0034 3821     		movs	r1, #56
+ 931 0036 0548     		ldr	r0, .L53+12
+ 932              	.LVL44:
+ 395:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 933              		.loc 1 395 5 is_stmt 0 view .LVU273
+ 934 0038 FFF7FEFF 		bl	HAL_GPIO_DeInit
+ 935              	.LVL45:
+ 936              		.loc 1 402 1 view .LVU274
+ 937 003c E8E7     		b	.L47
+ 938              	.L54:
+ 939 003e 00BF     		.align	2
+ 940              	.L53:
+ 941 0040 00300140 		.word	1073819648
+ 942 0044 003C0040 		.word	1073757184
+ 943 0048 00000240 		.word	1073872896
+ 944 004c 00040240 		.word	1073873920
+ 945              		.cfi_endproc
+ 946              	.LFE140:
+ 948              		.section	.text.HAL_UART_MspInit,"ax",%progbits
+ 949              		.align	1
+ 950              		.global	HAL_UART_MspInit
+ 951              		.syntax unified
+ARM GAS  /tmp/ccdiHilA.s 			page 28
+
+
+ 952              		.thumb
+ 953              		.thumb_func
+ 955              	HAL_UART_MspInit:
+ 956              	.LVL46:
+ 957              	.LFB141:
+ 403:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 404:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** /**
+ 405:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** * @brief UART MSP Initialization
+ 406:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** * This function configures the hardware resources used in this example
+ 407:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** * @param huart: UART handle pointer
+ 408:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** * @retval None
+ 409:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** */
+ 410:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** void HAL_UART_MspInit(UART_HandleTypeDef* huart)
+ 411:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** {
+ 958              		.loc 1 411 1 is_stmt 1 view -0
+ 959              		.cfi_startproc
+ 960              		@ args = 0, pretend = 0, frame = 40
+ 961              		@ frame_needed = 0, uses_anonymous_args = 0
+ 962              		.loc 1 411 1 is_stmt 0 view .LVU276
+ 963 0000 30B5     		push	{r4, r5, lr}
+ 964              	.LCFI17:
+ 965              		.cfi_def_cfa_offset 12
+ 966              		.cfi_offset 4, -12
+ 967              		.cfi_offset 5, -8
+ 968              		.cfi_offset 14, -4
+ 969 0002 8BB0     		sub	sp, sp, #44
+ 970              	.LCFI18:
+ 971              		.cfi_def_cfa_offset 56
+ 412:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   GPIO_InitTypeDef GPIO_InitStruct = {0};
+ 972              		.loc 1 412 3 is_stmt 1 view .LVU277
+ 973              		.loc 1 412 20 is_stmt 0 view .LVU278
+ 974 0004 0023     		movs	r3, #0
+ 975 0006 0593     		str	r3, [sp, #20]
+ 976 0008 0693     		str	r3, [sp, #24]
+ 977 000a 0793     		str	r3, [sp, #28]
+ 978 000c 0893     		str	r3, [sp, #32]
+ 979 000e 0993     		str	r3, [sp, #36]
+ 413:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   if(huart->Instance==USART1)
+ 980              		.loc 1 413 3 is_stmt 1 view .LVU279
+ 981              		.loc 1 413 11 is_stmt 0 view .LVU280
+ 982 0010 0368     		ldr	r3, [r0]
+ 983              		.loc 1 413 5 view .LVU281
+ 984 0012 424A     		ldr	r2, .L65
+ 985 0014 9342     		cmp	r3, r2
+ 986 0016 05D0     		beq	.L61
+ 987 0018 0446     		mov	r4, r0
+ 414:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   {
+ 415:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE BEGIN USART1_MspInit 0 */
+ 416:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 417:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE END USART1_MspInit 0 */
+ 418:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /* Peripheral clock enable */
+ 419:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     __HAL_RCC_USART1_CLK_ENABLE();
+ 420:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 421:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     __HAL_RCC_GPIOA_CLK_ENABLE();
+ 422:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /**USART1 GPIO Configuration
+ 423:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     PA9     ------> USART1_TX
+ 424:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     PA10     ------> USART1_RX
+ARM GAS  /tmp/ccdiHilA.s 			page 29
+
+
+ 425:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     */
+ 426:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Pin = GPIO_PIN_9|GPIO_PIN_10;
+ 427:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 428:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 429:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 430:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Alternate = GPIO_AF7_USART1;
+ 431:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+ 432:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 433:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE BEGIN USART1_MspInit 1 */
+ 434:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 435:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE END USART1_MspInit 1 */
+ 436:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   }
+ 437:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   else if(huart->Instance==USART2)
+ 988              		.loc 1 437 8 is_stmt 1 view .LVU282
+ 989              		.loc 1 437 10 is_stmt 0 view .LVU283
+ 990 001a 414A     		ldr	r2, .L65+4
+ 991 001c 9342     		cmp	r3, r2
+ 992 001e 25D0     		beq	.L62
+ 993              	.LVL47:
+ 994              	.L55:
+ 438:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   {
+ 439:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE BEGIN USART2_MspInit 0 */
+ 440:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 441:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE END USART2_MspInit 0 */
+ 442:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /* Peripheral clock enable */
+ 443:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     __HAL_RCC_USART2_CLK_ENABLE();
+ 444:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 445:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     __HAL_RCC_GPIOA_CLK_ENABLE();
+ 446:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /**USART2 GPIO Configuration
+ 447:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     PA2     ------> USART2_TX
+ 448:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     PA3     ------> USART2_RX
+ 449:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     */
+ 450:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Pin = GPIO_PIN_2|GPIO_PIN_3;
+ 451:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 452:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 453:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 454:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Alternate = GPIO_AF7_USART2;
+ 455:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+ 456:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 457:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /* USART2 DMA Init */
+ 458:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /* USART2_RX Init */
+ 459:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_rx.Instance = DMA1_Stream5;
+ 460:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_rx.Init.Channel = DMA_CHANNEL_4;
+ 461:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
+ 462:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_rx.Init.PeriphInc = DMA_PINC_DISABLE;
+ 463:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_rx.Init.MemInc = DMA_MINC_ENABLE;
+ 464:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+ 465:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_rx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+ 466:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_rx.Init.Mode = DMA_NORMAL;
+ 467:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_rx.Init.Priority = DMA_PRIORITY_LOW;
+ 468:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_rx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+ 469:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     if (HAL_DMA_Init(&hdma_usart2_rx) != HAL_OK)
+ 470:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     {
+ 471:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****       Error_Handler();
+ 472:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     }
+ 473:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 474:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     __HAL_LINKDMA(huart,hdmarx,hdma_usart2_rx);
+ARM GAS  /tmp/ccdiHilA.s 			page 30
+
+
+ 475:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 476:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /* USART2_TX Init */
+ 477:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_tx.Instance = DMA1_Stream6;
+ 478:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_tx.Init.Channel = DMA_CHANNEL_4;
+ 479:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_tx.Init.Direction = DMA_MEMORY_TO_PERIPH;
+ 480:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_tx.Init.PeriphInc = DMA_PINC_DISABLE;
+ 481:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_tx.Init.MemInc = DMA_MINC_ENABLE;
+ 482:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_tx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+ 483:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_tx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+ 484:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_tx.Init.Mode = DMA_NORMAL;
+ 485:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_tx.Init.Priority = DMA_PRIORITY_LOW;
+ 486:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_tx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+ 487:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     if (HAL_DMA_Init(&hdma_usart2_tx) != HAL_OK)
+ 488:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     {
+ 489:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****       Error_Handler();
+ 490:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     }
+ 491:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 492:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     __HAL_LINKDMA(huart,hdmatx,hdma_usart2_tx);
+ 493:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 494:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE BEGIN USART2_MspInit 1 */
+ 495:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 496:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE END USART2_MspInit 1 */
+ 497:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   }
+ 498:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 499:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** }
+ 995              		.loc 1 499 1 view .LVU284
+ 996 0020 0BB0     		add	sp, sp, #44
+ 997              	.LCFI19:
+ 998              		.cfi_remember_state
+ 999              		.cfi_def_cfa_offset 12
+ 1000              		@ sp needed
+ 1001 0022 30BD     		pop	{r4, r5, pc}
+ 1002              	.LVL48:
+ 1003              	.L61:
+ 1004              	.LCFI20:
+ 1005              		.cfi_restore_state
+ 419:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 1006              		.loc 1 419 5 is_stmt 1 view .LVU285
+ 1007              	.LBB15:
+ 419:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 1008              		.loc 1 419 5 view .LVU286
+ 1009 0024 0021     		movs	r1, #0
+ 1010 0026 0191     		str	r1, [sp, #4]
+ 419:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 1011              		.loc 1 419 5 view .LVU287
+ 1012 0028 3E4B     		ldr	r3, .L65+8
+ 1013 002a 5A6C     		ldr	r2, [r3, #68]
+ 1014 002c 42F01002 		orr	r2, r2, #16
+ 1015 0030 5A64     		str	r2, [r3, #68]
+ 419:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 1016              		.loc 1 419 5 view .LVU288
+ 1017 0032 5A6C     		ldr	r2, [r3, #68]
+ 1018 0034 02F01002 		and	r2, r2, #16
+ 1019 0038 0192     		str	r2, [sp, #4]
+ 419:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 1020              		.loc 1 419 5 view .LVU289
+ 1021 003a 019A     		ldr	r2, [sp, #4]
+ARM GAS  /tmp/ccdiHilA.s 			page 31
+
+
+ 1022              	.LBE15:
+ 419:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 1023              		.loc 1 419 5 view .LVU290
+ 421:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /**USART1 GPIO Configuration
+ 1024              		.loc 1 421 5 view .LVU291
+ 1025              	.LBB16:
+ 421:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /**USART1 GPIO Configuration
+ 1026              		.loc 1 421 5 view .LVU292
+ 1027 003c 0291     		str	r1, [sp, #8]
+ 421:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /**USART1 GPIO Configuration
+ 1028              		.loc 1 421 5 view .LVU293
+ 1029 003e 1A6B     		ldr	r2, [r3, #48]
+ 1030 0040 42F00102 		orr	r2, r2, #1
+ 1031 0044 1A63     		str	r2, [r3, #48]
+ 421:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /**USART1 GPIO Configuration
+ 1032              		.loc 1 421 5 view .LVU294
+ 1033 0046 1B6B     		ldr	r3, [r3, #48]
+ 1034 0048 03F00103 		and	r3, r3, #1
+ 1035 004c 0293     		str	r3, [sp, #8]
+ 421:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /**USART1 GPIO Configuration
+ 1036              		.loc 1 421 5 view .LVU295
+ 1037 004e 029B     		ldr	r3, [sp, #8]
+ 1038              	.LBE16:
+ 421:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /**USART1 GPIO Configuration
+ 1039              		.loc 1 421 5 view .LVU296
+ 426:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 1040              		.loc 1 426 5 view .LVU297
+ 426:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 1041              		.loc 1 426 25 is_stmt 0 view .LVU298
+ 1042 0050 4FF4C063 		mov	r3, #1536
+ 1043 0054 0593     		str	r3, [sp, #20]
+ 427:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 1044              		.loc 1 427 5 is_stmt 1 view .LVU299
+ 427:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 1045              		.loc 1 427 26 is_stmt 0 view .LVU300
+ 1046 0056 0223     		movs	r3, #2
+ 1047 0058 0693     		str	r3, [sp, #24]
+ 428:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 1048              		.loc 1 428 5 is_stmt 1 view .LVU301
+ 429:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Alternate = GPIO_AF7_USART1;
+ 1049              		.loc 1 429 5 view .LVU302
+ 429:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Alternate = GPIO_AF7_USART1;
+ 1050              		.loc 1 429 27 is_stmt 0 view .LVU303
+ 1051 005a 0323     		movs	r3, #3
+ 1052 005c 0893     		str	r3, [sp, #32]
+ 430:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+ 1053              		.loc 1 430 5 is_stmt 1 view .LVU304
+ 430:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+ 1054              		.loc 1 430 31 is_stmt 0 view .LVU305
+ 1055 005e 0723     		movs	r3, #7
+ 1056 0060 0993     		str	r3, [sp, #36]
+ 431:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 1057              		.loc 1 431 5 is_stmt 1 view .LVU306
+ 1058 0062 05A9     		add	r1, sp, #20
+ 1059 0064 3048     		ldr	r0, .L65+12
+ 1060              	.LVL49:
+ 431:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ARM GAS  /tmp/ccdiHilA.s 			page 32
+
+
+ 1061              		.loc 1 431 5 is_stmt 0 view .LVU307
+ 1062 0066 FFF7FEFF 		bl	HAL_GPIO_Init
+ 1063              	.LVL50:
+ 1064 006a D9E7     		b	.L55
+ 1065              	.LVL51:
+ 1066              	.L62:
+ 443:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 1067              		.loc 1 443 5 is_stmt 1 view .LVU308
+ 1068              	.LBB17:
+ 443:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 1069              		.loc 1 443 5 view .LVU309
+ 1070 006c 0025     		movs	r5, #0
+ 1071 006e 0395     		str	r5, [sp, #12]
+ 443:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 1072              		.loc 1 443 5 view .LVU310
+ 1073 0070 2C4B     		ldr	r3, .L65+8
+ 1074 0072 1A6C     		ldr	r2, [r3, #64]
+ 1075 0074 42F40032 		orr	r2, r2, #131072
+ 1076 0078 1A64     		str	r2, [r3, #64]
+ 443:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 1077              		.loc 1 443 5 view .LVU311
+ 1078 007a 1A6C     		ldr	r2, [r3, #64]
+ 1079 007c 02F40032 		and	r2, r2, #131072
+ 1080 0080 0392     		str	r2, [sp, #12]
+ 443:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 1081              		.loc 1 443 5 view .LVU312
+ 1082 0082 039A     		ldr	r2, [sp, #12]
+ 1083              	.LBE17:
+ 443:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 1084              		.loc 1 443 5 view .LVU313
+ 445:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /**USART2 GPIO Configuration
+ 1085              		.loc 1 445 5 view .LVU314
+ 1086              	.LBB18:
+ 445:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /**USART2 GPIO Configuration
+ 1087              		.loc 1 445 5 view .LVU315
+ 1088 0084 0495     		str	r5, [sp, #16]
+ 445:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /**USART2 GPIO Configuration
+ 1089              		.loc 1 445 5 view .LVU316
+ 1090 0086 1A6B     		ldr	r2, [r3, #48]
+ 1091 0088 42F00102 		orr	r2, r2, #1
+ 1092 008c 1A63     		str	r2, [r3, #48]
+ 445:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /**USART2 GPIO Configuration
+ 1093              		.loc 1 445 5 view .LVU317
+ 1094 008e 1B6B     		ldr	r3, [r3, #48]
+ 1095 0090 03F00103 		and	r3, r3, #1
+ 1096 0094 0493     		str	r3, [sp, #16]
+ 445:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /**USART2 GPIO Configuration
+ 1097              		.loc 1 445 5 view .LVU318
+ 1098 0096 049B     		ldr	r3, [sp, #16]
+ 1099              	.LBE18:
+ 445:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /**USART2 GPIO Configuration
+ 1100              		.loc 1 445 5 view .LVU319
+ 450:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 1101              		.loc 1 450 5 view .LVU320
+ 450:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 1102              		.loc 1 450 25 is_stmt 0 view .LVU321
+ 1103 0098 0C23     		movs	r3, #12
+ARM GAS  /tmp/ccdiHilA.s 			page 33
+
+
+ 1104 009a 0593     		str	r3, [sp, #20]
+ 451:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 1105              		.loc 1 451 5 is_stmt 1 view .LVU322
+ 451:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 1106              		.loc 1 451 26 is_stmt 0 view .LVU323
+ 1107 009c 0223     		movs	r3, #2
+ 1108 009e 0693     		str	r3, [sp, #24]
+ 452:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 1109              		.loc 1 452 5 is_stmt 1 view .LVU324
+ 453:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Alternate = GPIO_AF7_USART2;
+ 1110              		.loc 1 453 5 view .LVU325
+ 453:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     GPIO_InitStruct.Alternate = GPIO_AF7_USART2;
+ 1111              		.loc 1 453 27 is_stmt 0 view .LVU326
+ 1112 00a0 0323     		movs	r3, #3
+ 1113 00a2 0893     		str	r3, [sp, #32]
+ 454:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+ 1114              		.loc 1 454 5 is_stmt 1 view .LVU327
+ 454:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+ 1115              		.loc 1 454 31 is_stmt 0 view .LVU328
+ 1116 00a4 0723     		movs	r3, #7
+ 1117 00a6 0993     		str	r3, [sp, #36]
+ 455:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 1118              		.loc 1 455 5 is_stmt 1 view .LVU329
+ 1119 00a8 05A9     		add	r1, sp, #20
+ 1120 00aa 1F48     		ldr	r0, .L65+12
+ 1121              	.LVL52:
+ 455:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 1122              		.loc 1 455 5 is_stmt 0 view .LVU330
+ 1123 00ac FFF7FEFF 		bl	HAL_GPIO_Init
+ 1124              	.LVL53:
+ 459:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_rx.Init.Channel = DMA_CHANNEL_4;
+ 1125              		.loc 1 459 5 is_stmt 1 view .LVU331
+ 459:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_rx.Init.Channel = DMA_CHANNEL_4;
+ 1126              		.loc 1 459 29 is_stmt 0 view .LVU332
+ 1127 00b0 1E48     		ldr	r0, .L65+16
+ 1128 00b2 1F4B     		ldr	r3, .L65+20
+ 1129 00b4 0360     		str	r3, [r0]
+ 460:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
+ 1130              		.loc 1 460 5 is_stmt 1 view .LVU333
+ 460:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
+ 1131              		.loc 1 460 33 is_stmt 0 view .LVU334
+ 1132 00b6 4FF00063 		mov	r3, #134217728
+ 1133 00ba 4360     		str	r3, [r0, #4]
+ 461:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_rx.Init.PeriphInc = DMA_PINC_DISABLE;
+ 1134              		.loc 1 461 5 is_stmt 1 view .LVU335
+ 461:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_rx.Init.PeriphInc = DMA_PINC_DISABLE;
+ 1135              		.loc 1 461 35 is_stmt 0 view .LVU336
+ 1136 00bc 8560     		str	r5, [r0, #8]
+ 462:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_rx.Init.MemInc = DMA_MINC_ENABLE;
+ 1137              		.loc 1 462 5 is_stmt 1 view .LVU337
+ 462:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_rx.Init.MemInc = DMA_MINC_ENABLE;
+ 1138              		.loc 1 462 35 is_stmt 0 view .LVU338
+ 1139 00be C560     		str	r5, [r0, #12]
+ 463:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+ 1140              		.loc 1 463 5 is_stmt 1 view .LVU339
+ 463:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+ 1141              		.loc 1 463 32 is_stmt 0 view .LVU340
+ARM GAS  /tmp/ccdiHilA.s 			page 34
+
+
+ 1142 00c0 4FF48063 		mov	r3, #1024
+ 1143 00c4 0361     		str	r3, [r0, #16]
+ 464:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_rx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+ 1144              		.loc 1 464 5 is_stmt 1 view .LVU341
+ 464:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_rx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+ 1145              		.loc 1 464 45 is_stmt 0 view .LVU342
+ 1146 00c6 4561     		str	r5, [r0, #20]
+ 465:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_rx.Init.Mode = DMA_NORMAL;
+ 1147              		.loc 1 465 5 is_stmt 1 view .LVU343
+ 465:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_rx.Init.Mode = DMA_NORMAL;
+ 1148              		.loc 1 465 42 is_stmt 0 view .LVU344
+ 1149 00c8 8561     		str	r5, [r0, #24]
+ 466:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_rx.Init.Priority = DMA_PRIORITY_LOW;
+ 1150              		.loc 1 466 5 is_stmt 1 view .LVU345
+ 466:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_rx.Init.Priority = DMA_PRIORITY_LOW;
+ 1151              		.loc 1 466 30 is_stmt 0 view .LVU346
+ 1152 00ca C561     		str	r5, [r0, #28]
+ 467:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_rx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+ 1153              		.loc 1 467 5 is_stmt 1 view .LVU347
+ 467:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_rx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+ 1154              		.loc 1 467 34 is_stmt 0 view .LVU348
+ 1155 00cc 0562     		str	r5, [r0, #32]
+ 468:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     if (HAL_DMA_Init(&hdma_usart2_rx) != HAL_OK)
+ 1156              		.loc 1 468 5 is_stmt 1 view .LVU349
+ 468:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     if (HAL_DMA_Init(&hdma_usart2_rx) != HAL_OK)
+ 1157              		.loc 1 468 34 is_stmt 0 view .LVU350
+ 1158 00ce 4562     		str	r5, [r0, #36]
+ 469:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     {
+ 1159              		.loc 1 469 5 is_stmt 1 view .LVU351
+ 469:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     {
+ 1160              		.loc 1 469 9 is_stmt 0 view .LVU352
+ 1161 00d0 FFF7FEFF 		bl	HAL_DMA_Init
+ 1162              	.LVL54:
+ 469:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     {
+ 1163              		.loc 1 469 8 discriminator 1 view .LVU353
+ 1164 00d4 D8B9     		cbnz	r0, .L63
+ 1165              	.L58:
+ 474:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 1166              		.loc 1 474 5 is_stmt 1 view .LVU354
+ 474:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 1167              		.loc 1 474 5 view .LVU355
+ 1168 00d6 154B     		ldr	r3, .L65+16
+ 1169 00d8 E363     		str	r3, [r4, #60]
+ 474:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 1170              		.loc 1 474 5 view .LVU356
+ 1171 00da 9C63     		str	r4, [r3, #56]
+ 474:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 1172              		.loc 1 474 5 view .LVU357
+ 477:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_tx.Init.Channel = DMA_CHANNEL_4;
+ 1173              		.loc 1 477 5 view .LVU358
+ 477:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_tx.Init.Channel = DMA_CHANNEL_4;
+ 1174              		.loc 1 477 29 is_stmt 0 view .LVU359
+ 1175 00dc 1548     		ldr	r0, .L65+24
+ 1176 00de 164B     		ldr	r3, .L65+28
+ 1177 00e0 0360     		str	r3, [r0]
+ 478:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_tx.Init.Direction = DMA_MEMORY_TO_PERIPH;
+ 1178              		.loc 1 478 5 is_stmt 1 view .LVU360
+ARM GAS  /tmp/ccdiHilA.s 			page 35
+
+
+ 478:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_tx.Init.Direction = DMA_MEMORY_TO_PERIPH;
+ 1179              		.loc 1 478 33 is_stmt 0 view .LVU361
+ 1180 00e2 4FF00063 		mov	r3, #134217728
+ 1181 00e6 4360     		str	r3, [r0, #4]
+ 479:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_tx.Init.PeriphInc = DMA_PINC_DISABLE;
+ 1182              		.loc 1 479 5 is_stmt 1 view .LVU362
+ 479:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_tx.Init.PeriphInc = DMA_PINC_DISABLE;
+ 1183              		.loc 1 479 35 is_stmt 0 view .LVU363
+ 1184 00e8 4023     		movs	r3, #64
+ 1185 00ea 8360     		str	r3, [r0, #8]
+ 480:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_tx.Init.MemInc = DMA_MINC_ENABLE;
+ 1186              		.loc 1 480 5 is_stmt 1 view .LVU364
+ 480:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_tx.Init.MemInc = DMA_MINC_ENABLE;
+ 1187              		.loc 1 480 35 is_stmt 0 view .LVU365
+ 1188 00ec 0023     		movs	r3, #0
+ 1189 00ee C360     		str	r3, [r0, #12]
+ 481:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_tx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+ 1190              		.loc 1 481 5 is_stmt 1 view .LVU366
+ 481:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_tx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+ 1191              		.loc 1 481 32 is_stmt 0 view .LVU367
+ 1192 00f0 4FF48062 		mov	r2, #1024
+ 1193 00f4 0261     		str	r2, [r0, #16]
+ 482:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_tx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+ 1194              		.loc 1 482 5 is_stmt 1 view .LVU368
+ 482:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_tx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+ 1195              		.loc 1 482 45 is_stmt 0 view .LVU369
+ 1196 00f6 4361     		str	r3, [r0, #20]
+ 483:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_tx.Init.Mode = DMA_NORMAL;
+ 1197              		.loc 1 483 5 is_stmt 1 view .LVU370
+ 483:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_tx.Init.Mode = DMA_NORMAL;
+ 1198              		.loc 1 483 42 is_stmt 0 view .LVU371
+ 1199 00f8 8361     		str	r3, [r0, #24]
+ 484:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_tx.Init.Priority = DMA_PRIORITY_LOW;
+ 1200              		.loc 1 484 5 is_stmt 1 view .LVU372
+ 484:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_tx.Init.Priority = DMA_PRIORITY_LOW;
+ 1201              		.loc 1 484 30 is_stmt 0 view .LVU373
+ 1202 00fa C361     		str	r3, [r0, #28]
+ 485:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_tx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+ 1203              		.loc 1 485 5 is_stmt 1 view .LVU374
+ 485:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     hdma_usart2_tx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+ 1204              		.loc 1 485 34 is_stmt 0 view .LVU375
+ 1205 00fc 0362     		str	r3, [r0, #32]
+ 486:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     if (HAL_DMA_Init(&hdma_usart2_tx) != HAL_OK)
+ 1206              		.loc 1 486 5 is_stmt 1 view .LVU376
+ 486:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     if (HAL_DMA_Init(&hdma_usart2_tx) != HAL_OK)
+ 1207              		.loc 1 486 34 is_stmt 0 view .LVU377
+ 1208 00fe 4362     		str	r3, [r0, #36]
+ 487:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     {
+ 1209              		.loc 1 487 5 is_stmt 1 view .LVU378
+ 487:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     {
+ 1210              		.loc 1 487 9 is_stmt 0 view .LVU379
+ 1211 0100 FFF7FEFF 		bl	HAL_DMA_Init
+ 1212              	.LVL55:
+ 487:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     {
+ 1213              		.loc 1 487 8 discriminator 1 view .LVU380
+ 1214 0104 30B9     		cbnz	r0, .L64
+ 1215              	.L59:
+ARM GAS  /tmp/ccdiHilA.s 			page 36
+
+
+ 492:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 1216              		.loc 1 492 5 is_stmt 1 view .LVU381
+ 492:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 1217              		.loc 1 492 5 view .LVU382
+ 1218 0106 0B4B     		ldr	r3, .L65+24
+ 1219 0108 A363     		str	r3, [r4, #56]
+ 492:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 1220              		.loc 1 492 5 view .LVU383
+ 1221 010a 9C63     		str	r4, [r3, #56]
+ 492:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 1222              		.loc 1 492 5 discriminator 1 view .LVU384
+ 1223              		.loc 1 499 1 is_stmt 0 view .LVU385
+ 1224 010c 88E7     		b	.L55
+ 1225              	.L63:
+ 1226              	.LBB19:
+ 471:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     }
+ 1227              		.loc 1 471 7 is_stmt 1 view .LVU386
+ 1228 010e FFF7FEFF 		bl	Error_Handler
+ 1229              	.LVL56:
+ 1230 0112 E0E7     		b	.L58
+ 1231              	.L64:
+ 471:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     }
+ 1232              		.loc 1 471 7 is_stmt 0 view .LVU387
+ 1233              	.LBE19:
+ 1234              	.LBB20:
+ 489:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     }
+ 1235              		.loc 1 489 7 is_stmt 1 view .LVU388
+ 1236 0114 FFF7FEFF 		bl	Error_Handler
+ 1237              	.LVL57:
+ 1238 0118 F5E7     		b	.L59
+ 1239              	.L66:
+ 1240 011a 00BF     		.align	2
+ 1241              	.L65:
+ 1242 011c 00100140 		.word	1073811456
+ 1243 0120 00440040 		.word	1073759232
+ 1244 0124 00380240 		.word	1073887232
+ 1245 0128 00000240 		.word	1073872896
+ 1246 012c 00000000 		.word	hdma_usart2_rx
+ 1247 0130 88600240 		.word	1073897608
+ 1248 0134 00000000 		.word	hdma_usart2_tx
+ 1249 0138 A0600240 		.word	1073897632
+ 1250              	.LBE20:
+ 1251              		.cfi_endproc
+ 1252              	.LFE141:
+ 1254              		.section	.text.HAL_UART_MspDeInit,"ax",%progbits
+ 1255              		.align	1
+ 1256              		.global	HAL_UART_MspDeInit
+ 1257              		.syntax unified
+ 1258              		.thumb
+ 1259              		.thumb_func
+ 1261              	HAL_UART_MspDeInit:
+ 1262              	.LVL58:
+ 1263              	.LFB142:
+ 500:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 501:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** /**
+ 502:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** * @brief UART MSP De-Initialization
+ 503:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** * This function freeze the hardware resources used in this example
+ARM GAS  /tmp/ccdiHilA.s 			page 37
+
+
+ 504:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** * @param huart: UART handle pointer
+ 505:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** * @retval None
+ 506:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** */
+ 507:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
+ 508:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** {
+ 1264              		.loc 1 508 1 view -0
+ 1265              		.cfi_startproc
+ 1266              		@ args = 0, pretend = 0, frame = 0
+ 1267              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1268              		.loc 1 508 1 is_stmt 0 view .LVU390
+ 1269 0000 10B5     		push	{r4, lr}
+ 1270              	.LCFI21:
+ 1271              		.cfi_def_cfa_offset 8
+ 1272              		.cfi_offset 4, -8
+ 1273              		.cfi_offset 14, -4
+ 509:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   if(huart->Instance==USART1)
+ 1274              		.loc 1 509 3 is_stmt 1 view .LVU391
+ 1275              		.loc 1 509 11 is_stmt 0 view .LVU392
+ 1276 0002 0368     		ldr	r3, [r0]
+ 1277              		.loc 1 509 5 view .LVU393
+ 1278 0004 124A     		ldr	r2, .L73
+ 1279 0006 9342     		cmp	r3, r2
+ 1280 0008 04D0     		beq	.L71
+ 1281 000a 0446     		mov	r4, r0
+ 510:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   {
+ 511:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE BEGIN USART1_MspDeInit 0 */
+ 512:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 513:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE END USART1_MspDeInit 0 */
+ 514:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /* Peripheral clock disable */
+ 515:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     __HAL_RCC_USART1_CLK_DISABLE();
+ 516:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 517:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /**USART1 GPIO Configuration
+ 518:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     PA9     ------> USART1_TX
+ 519:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     PA10     ------> USART1_RX
+ 520:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     */
+ 521:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     HAL_GPIO_DeInit(GPIOA, GPIO_PIN_9|GPIO_PIN_10);
+ 522:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 523:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE BEGIN USART1_MspDeInit 1 */
+ 524:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 525:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE END USART1_MspDeInit 1 */
+ 526:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   }
+ 527:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   else if(huart->Instance==USART2)
+ 1282              		.loc 1 527 8 is_stmt 1 view .LVU394
+ 1283              		.loc 1 527 10 is_stmt 0 view .LVU395
+ 1284 000c 114A     		ldr	r2, .L73+4
+ 1285 000e 9342     		cmp	r3, r2
+ 1286 0010 0CD0     		beq	.L72
+ 1287              	.LVL59:
+ 1288              	.L67:
+ 528:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   {
+ 529:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE BEGIN USART2_MspDeInit 0 */
+ 530:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 531:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE END USART2_MspDeInit 0 */
+ 532:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /* Peripheral clock disable */
+ 533:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     __HAL_RCC_USART2_CLK_DISABLE();
+ 534:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 535:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /**USART2 GPIO Configuration
+ARM GAS  /tmp/ccdiHilA.s 			page 38
+
+
+ 536:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     PA2     ------> USART2_TX
+ 537:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     PA3     ------> USART2_RX
+ 538:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     */
+ 539:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     HAL_GPIO_DeInit(GPIOA, GPIO_PIN_2|GPIO_PIN_3);
+ 540:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 541:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     /* USART2 DMA DeInit */
+ 542:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     HAL_DMA_DeInit(huart->hdmarx);
+ 543:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     HAL_DMA_DeInit(huart->hdmatx);
+ 544:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE BEGIN USART2_MspDeInit 1 */
+ 545:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 546:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE END USART2_MspDeInit 1 */
+ 547:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   }
+ 548:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 549:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** }
+ 1289              		.loc 1 549 1 view .LVU396
+ 1290 0012 10BD     		pop	{r4, pc}
+ 1291              	.LVL60:
+ 1292              	.L71:
+ 515:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 1293              		.loc 1 515 5 is_stmt 1 view .LVU397
+ 1294 0014 02F59432 		add	r2, r2, #75776
+ 1295 0018 536C     		ldr	r3, [r2, #68]
+ 1296 001a 23F01003 		bic	r3, r3, #16
+ 1297 001e 5364     		str	r3, [r2, #68]
+ 521:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 1298              		.loc 1 521 5 view .LVU398
+ 1299 0020 4FF4C061 		mov	r1, #1536
+ 1300 0024 0C48     		ldr	r0, .L73+8
+ 1301              	.LVL61:
+ 521:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 1302              		.loc 1 521 5 is_stmt 0 view .LVU399
+ 1303 0026 FFF7FEFF 		bl	HAL_GPIO_DeInit
+ 1304              	.LVL62:
+ 1305 002a F2E7     		b	.L67
+ 1306              	.LVL63:
+ 1307              	.L72:
+ 533:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 1308              		.loc 1 533 5 is_stmt 1 view .LVU400
+ 1309 002c 02F5FA32 		add	r2, r2, #128000
+ 1310 0030 136C     		ldr	r3, [r2, #64]
+ 1311 0032 23F40033 		bic	r3, r3, #131072
+ 1312 0036 1364     		str	r3, [r2, #64]
+ 539:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 1313              		.loc 1 539 5 view .LVU401
+ 1314 0038 0C21     		movs	r1, #12
+ 1315 003a 0748     		ldr	r0, .L73+8
+ 1316              	.LVL64:
+ 539:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c **** 
+ 1317              		.loc 1 539 5 is_stmt 0 view .LVU402
+ 1318 003c FFF7FEFF 		bl	HAL_GPIO_DeInit
+ 1319              	.LVL65:
+ 542:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****     HAL_DMA_DeInit(huart->hdmatx);
+ 1320              		.loc 1 542 5 is_stmt 1 view .LVU403
+ 1321 0040 E06B     		ldr	r0, [r4, #60]
+ 1322 0042 FFF7FEFF 		bl	HAL_DMA_DeInit
+ 1323              	.LVL66:
+ 543:/home/dat/Documents/colir_one/rocket_code/Module/Src/stm32f4xx_hal_msp.c ****   /* USER CODE BEGIN USART2_MspDeInit 1 */
+ARM GAS  /tmp/ccdiHilA.s 			page 39
+
+
+ 1324              		.loc 1 543 5 view .LVU404
+ 1325 0046 A06B     		ldr	r0, [r4, #56]
+ 1326 0048 FFF7FEFF 		bl	HAL_DMA_DeInit
+ 1327              	.LVL67:
+ 1328              		.loc 1 549 1 is_stmt 0 view .LVU405
+ 1329 004c E1E7     		b	.L67
+ 1330              	.L74:
+ 1331 004e 00BF     		.align	2
+ 1332              	.L73:
+ 1333 0050 00100140 		.word	1073811456
+ 1334 0054 00440040 		.word	1073759232
+ 1335 0058 00000240 		.word	1073872896
+ 1336              		.cfi_endproc
+ 1337              	.LFE142:
+ 1339              		.text
+ 1340              	.Letext0:
+ 1341              		.file 2 "/home/dat/Documents/colir_one/rocket_code/Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32
+ 1342              		.file 3 "/home/dat/.config/Code/User/globalStorage/litaitech.stm32-colir-one/@xpack-dev-tools/arm-
+ 1343              		.file 4 "/home/dat/.config/Code/User/globalStorage/litaitech.stm32-colir-one/@xpack-dev-tools/arm-
+ 1344              		.file 5 "/home/dat/Documents/colir_one/rocket_code/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_
+ 1345              		.file 6 "/home/dat/Documents/colir_one/rocket_code/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_
+ 1346              		.file 7 "/home/dat/Documents/colir_one/rocket_code/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_
+ 1347              		.file 8 "/home/dat/Documents/colir_one/rocket_code/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_
+ 1348              		.file 9 "/home/dat/Documents/colir_one/rocket_code/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_s
+ 1349              		.file 10 "/home/dat/Documents/colir_one/rocket_code/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal
+ 1350              		.file 11 "/home/dat/Documents/colir_one/rocket_code/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal
+ 1351              		.file 12 "/home/dat/Documents/colir_one/rocket_code/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal
+ 1352              		.file 13 "/home/dat/Documents/colir_one/rocket_code/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal
+ARM GAS  /tmp/ccdiHilA.s 			page 40
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 stm32f4xx_hal_msp.c
+     /tmp/ccdiHilA.s:21     .text.HAL_MspInit:00000000 $t
+     /tmp/ccdiHilA.s:27     .text.HAL_MspInit:00000000 HAL_MspInit
+     /tmp/ccdiHilA.s:80     .text.HAL_MspInit:00000034 $d
+     /tmp/ccdiHilA.s:85     .text.HAL_I2C_MspInit:00000000 $t
+     /tmp/ccdiHilA.s:91     .text.HAL_I2C_MspInit:00000000 HAL_I2C_MspInit
+     /tmp/ccdiHilA.s:199    .text.HAL_I2C_MspInit:00000064 $d
+     /tmp/ccdiHilA.s:206    .text.HAL_I2C_MspDeInit:00000000 $t
+     /tmp/ccdiHilA.s:212    .text.HAL_I2C_MspDeInit:00000000 HAL_I2C_MspDeInit
+     /tmp/ccdiHilA.s:257    .text.HAL_I2C_MspDeInit:00000030 $d
+     /tmp/ccdiHilA.s:264    .text.HAL_SD_MspInit:00000000 $t
+     /tmp/ccdiHilA.s:270    .text.HAL_SD_MspInit:00000000 HAL_SD_MspInit
+     /tmp/ccdiHilA.s:600    .text.HAL_SD_MspInit:0000017c $d
+     /tmp/ccdiHilA.s:612    .text.HAL_SD_MspDeInit:00000000 $t
+     /tmp/ccdiHilA.s:618    .text.HAL_SD_MspDeInit:00000000 HAL_SD_MspDeInit
+     /tmp/ccdiHilA.s:677    .text.HAL_SD_MspDeInit:00000040 $d
+     /tmp/ccdiHilA.s:685    .text.HAL_SPI_MspInit:00000000 $t
+     /tmp/ccdiHilA.s:691    .text.HAL_SPI_MspInit:00000000 HAL_SPI_MspInit
+     /tmp/ccdiHilA.s:863    .text.HAL_SPI_MspInit:000000b0 $d
+     /tmp/ccdiHilA.s:872    .text.HAL_SPI_MspDeInit:00000000 $t
+     /tmp/ccdiHilA.s:878    .text.HAL_SPI_MspDeInit:00000000 HAL_SPI_MspDeInit
+     /tmp/ccdiHilA.s:941    .text.HAL_SPI_MspDeInit:00000040 $d
+     /tmp/ccdiHilA.s:949    .text.HAL_UART_MspInit:00000000 $t
+     /tmp/ccdiHilA.s:955    .text.HAL_UART_MspInit:00000000 HAL_UART_MspInit
+     /tmp/ccdiHilA.s:1242   .text.HAL_UART_MspInit:0000011c $d
+     /tmp/ccdiHilA.s:1255   .text.HAL_UART_MspDeInit:00000000 $t
+     /tmp/ccdiHilA.s:1261   .text.HAL_UART_MspDeInit:00000000 HAL_UART_MspDeInit
+     /tmp/ccdiHilA.s:1333   .text.HAL_UART_MspDeInit:00000050 $d
+
+UNDEFINED SYMBOLS
+HAL_GPIO_Init
+HAL_GPIO_DeInit
+HAL_DMA_Init
+HAL_NVIC_SetPriority
+HAL_NVIC_EnableIRQ
+Error_Handler
+hdma_sdio_rx
+hdma_sdio_tx
+HAL_DMA_DeInit
+HAL_NVIC_DisableIRQ
+hdma_usart2_rx
+hdma_usart2_tx

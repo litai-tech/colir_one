@@ -1,0 +1,3910 @@
+ARM GAS  /tmp/ccAYsZDq.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"nrf24.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c"
+  20              		.section	.text.csn_high,"ax",%progbits
+  21              		.align	1
+  22              		.global	csn_high
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	csn_high:
+  28              	.LFB137:
+   1:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** /*
+   2:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c ****  * 25-JUL-2024
+   3:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c ****  * STM32 HAL NRF24 LIBRARY
+   4:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c ****  */
+   5:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+   6:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** #include <stdio.h>
+   7:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** #include "stm32f4xx_hal.h"
+   8:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** #include "nrf24_conf.h"
+   9:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** #include "nrf24_reg_addresses.h"
+  10:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** #include "nrf24.h"
+  11:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+  12:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** extern SPI_HandleTypeDef hspiX;
+  13:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+  14:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+  15:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** void csn_high(void){
+  29              		.loc 1 15 20 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33 0000 08B5     		push	{r3, lr}
+  34              	.LCFI0:
+  35              		.cfi_def_cfa_offset 8
+  36              		.cfi_offset 3, -8
+  37              		.cfi_offset 14, -4
+  16:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	HAL_GPIO_WritePin(csn_gpio_port, csn_gpio_pin, 1);
+  38              		.loc 1 16 2 view .LVU1
+  39 0002 0122     		movs	r2, #1
+  40 0004 8021     		movs	r1, #128
+  41 0006 0248     		ldr	r0, .L3
+  42 0008 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ARM GAS  /tmp/ccAYsZDq.s 			page 2
+
+
+  43              	.LVL0:
+  17:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** }
+  44              		.loc 1 17 1 is_stmt 0 view .LVU2
+  45 000c 08BD     		pop	{r3, pc}
+  46              	.L4:
+  47 000e 00BF     		.align	2
+  48              	.L3:
+  49 0010 00040240 		.word	1073873920
+  50              		.cfi_endproc
+  51              	.LFE137:
+  53              		.section	.text.csn_low,"ax",%progbits
+  54              		.align	1
+  55              		.global	csn_low
+  56              		.syntax unified
+  57              		.thumb
+  58              		.thumb_func
+  60              	csn_low:
+  61              	.LFB138:
+  18:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+  19:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** void csn_low(void){
+  62              		.loc 1 19 19 is_stmt 1 view -0
+  63              		.cfi_startproc
+  64              		@ args = 0, pretend = 0, frame = 0
+  65              		@ frame_needed = 0, uses_anonymous_args = 0
+  66 0000 08B5     		push	{r3, lr}
+  67              	.LCFI1:
+  68              		.cfi_def_cfa_offset 8
+  69              		.cfi_offset 3, -8
+  70              		.cfi_offset 14, -4
+  20:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	HAL_GPIO_WritePin(csn_gpio_port, csn_gpio_pin, 0);
+  71              		.loc 1 20 2 view .LVU4
+  72 0002 0022     		movs	r2, #0
+  73 0004 8021     		movs	r1, #128
+  74 0006 0248     		ldr	r0, .L7
+  75 0008 FFF7FEFF 		bl	HAL_GPIO_WritePin
+  76              	.LVL1:
+  21:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** }
+  77              		.loc 1 21 1 is_stmt 0 view .LVU5
+  78 000c 08BD     		pop	{r3, pc}
+  79              	.L8:
+  80 000e 00BF     		.align	2
+  81              	.L7:
+  82 0010 00040240 		.word	1073873920
+  83              		.cfi_endproc
+  84              	.LFE138:
+  86              		.section	.text.ce_high,"ax",%progbits
+  87              		.align	1
+  88              		.global	ce_high
+  89              		.syntax unified
+  90              		.thumb
+  91              		.thumb_func
+  93              	ce_high:
+  94              	.LFB139:
+  22:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+  23:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** void ce_high(void){
+  95              		.loc 1 23 19 is_stmt 1 view -0
+  96              		.cfi_startproc
+ARM GAS  /tmp/ccAYsZDq.s 			page 3
+
+
+  97              		@ args = 0, pretend = 0, frame = 0
+  98              		@ frame_needed = 0, uses_anonymous_args = 0
+  99 0000 08B5     		push	{r3, lr}
+ 100              	.LCFI2:
+ 101              		.cfi_def_cfa_offset 8
+ 102              		.cfi_offset 3, -8
+ 103              		.cfi_offset 14, -4
+  24:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	HAL_GPIO_WritePin(ce_gpio_port, ce_gpio_pin, 1);
+ 104              		.loc 1 24 2 view .LVU7
+ 105 0002 0122     		movs	r2, #1
+ 106 0004 4021     		movs	r1, #64
+ 107 0006 0248     		ldr	r0, .L11
+ 108 0008 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 109              	.LVL2:
+  25:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** }
+ 110              		.loc 1 25 1 is_stmt 0 view .LVU8
+ 111 000c 08BD     		pop	{r3, pc}
+ 112              	.L12:
+ 113 000e 00BF     		.align	2
+ 114              	.L11:
+ 115 0010 00040240 		.word	1073873920
+ 116              		.cfi_endproc
+ 117              	.LFE139:
+ 119              		.section	.text.ce_low,"ax",%progbits
+ 120              		.align	1
+ 121              		.global	ce_low
+ 122              		.syntax unified
+ 123              		.thumb
+ 124              		.thumb_func
+ 126              	ce_low:
+ 127              	.LFB140:
+  26:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+  27:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** void ce_low(void){
+ 128              		.loc 1 27 18 is_stmt 1 view -0
+ 129              		.cfi_startproc
+ 130              		@ args = 0, pretend = 0, frame = 0
+ 131              		@ frame_needed = 0, uses_anonymous_args = 0
+ 132 0000 08B5     		push	{r3, lr}
+ 133              	.LCFI3:
+ 134              		.cfi_def_cfa_offset 8
+ 135              		.cfi_offset 3, -8
+ 136              		.cfi_offset 14, -4
+  28:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	HAL_GPIO_WritePin(ce_gpio_port, ce_gpio_pin, 0);
+ 137              		.loc 1 28 2 view .LVU10
+ 138 0002 0022     		movs	r2, #0
+ 139 0004 4021     		movs	r1, #64
+ 140 0006 0248     		ldr	r0, .L15
+ 141 0008 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 142              	.LVL3:
+  29:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** }
+ 143              		.loc 1 29 1 is_stmt 0 view .LVU11
+ 144 000c 08BD     		pop	{r3, pc}
+ 145              	.L16:
+ 146 000e 00BF     		.align	2
+ 147              	.L15:
+ 148 0010 00040240 		.word	1073873920
+ 149              		.cfi_endproc
+ARM GAS  /tmp/ccAYsZDq.s 			page 4
+
+
+ 150              	.LFE140:
+ 152              		.section	.text.nrf24_w_reg,"ax",%progbits
+ 153              		.align	1
+ 154              		.global	nrf24_w_reg
+ 155              		.syntax unified
+ 156              		.thumb
+ 157              		.thumb_func
+ 159              	nrf24_w_reg:
+ 160              	.LVL4:
+ 161              	.LFB141:
+  30:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+  31:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** void nrf24_w_reg(uint8_t reg, uint8_t *data, uint8_t size){
+ 162              		.loc 1 31 59 is_stmt 1 view -0
+ 163              		.cfi_startproc
+ 164              		@ args = 0, pretend = 0, frame = 8
+ 165              		@ frame_needed = 0, uses_anonymous_args = 0
+ 166              		.loc 1 31 59 is_stmt 0 view .LVU13
+ 167 0000 70B5     		push	{r4, r5, r6, lr}
+ 168              	.LCFI4:
+ 169              		.cfi_def_cfa_offset 16
+ 170              		.cfi_offset 4, -16
+ 171              		.cfi_offset 5, -12
+ 172              		.cfi_offset 6, -8
+ 173              		.cfi_offset 14, -4
+ 174 0002 82B0     		sub	sp, sp, #8
+ 175              	.LCFI5:
+ 176              		.cfi_def_cfa_offset 24
+ 177 0004 0C46     		mov	r4, r1
+ 178 0006 1546     		mov	r5, r2
+  32:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+  33:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	uint8_t cmd = W_REGISTER | reg;
+ 179              		.loc 1 33 2 is_stmt 1 view .LVU14
+ 180              		.loc 1 33 10 is_stmt 0 view .LVU15
+ 181 0008 40F02000 		orr	r0, r0, #32
+ 182              	.LVL5:
+ 183              		.loc 1 33 10 view .LVU16
+ 184 000c 8DF80700 		strb	r0, [sp, #7]
+  34:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+  35:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	csn_low();
+ 185              		.loc 1 35 2 is_stmt 1 view .LVU17
+ 186 0010 FFF7FEFF 		bl	csn_low
+ 187              	.LVL6:
+  36:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+  37:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	HAL_SPI_Transmit(&hspiX, &cmd, 1, spi_w_timeout);
+ 188              		.loc 1 37 2 view .LVU18
+ 189 0014 094E     		ldr	r6, .L19
+ 190 0016 4FF47A73 		mov	r3, #1000
+ 191 001a 0122     		movs	r2, #1
+ 192 001c 0DF10701 		add	r1, sp, #7
+ 193 0020 3046     		mov	r0, r6
+ 194 0022 FFF7FEFF 		bl	HAL_SPI_Transmit
+ 195              	.LVL7:
+  38:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	HAL_SPI_Transmit(&hspiX, data, size, spi_w_timeout);
+ 196              		.loc 1 38 2 view .LVU19
+ 197 0026 4FF47A73 		mov	r3, #1000
+ 198 002a 2A46     		mov	r2, r5
+ 199 002c 2146     		mov	r1, r4
+ARM GAS  /tmp/ccAYsZDq.s 			page 5
+
+
+ 200 002e 3046     		mov	r0, r6
+ 201 0030 FFF7FEFF 		bl	HAL_SPI_Transmit
+ 202              	.LVL8:
+  39:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+  40:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	csn_high();
+ 203              		.loc 1 40 2 view .LVU20
+ 204 0034 FFF7FEFF 		bl	csn_high
+ 205              	.LVL9:
+  41:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** }
+ 206              		.loc 1 41 1 is_stmt 0 view .LVU21
+ 207 0038 02B0     		add	sp, sp, #8
+ 208              	.LCFI6:
+ 209              		.cfi_def_cfa_offset 16
+ 210              		@ sp needed
+ 211 003a 70BD     		pop	{r4, r5, r6, pc}
+ 212              	.LVL10:
+ 213              	.L20:
+ 214              		.loc 1 41 1 view .LVU22
+ 215              		.align	2
+ 216              	.L19:
+ 217 003c 00000000 		.word	hspi3
+ 218              		.cfi_endproc
+ 219              	.LFE141:
+ 221              		.section	.text.nrf24_r_reg,"ax",%progbits
+ 222              		.align	1
+ 223              		.global	nrf24_r_reg
+ 224              		.syntax unified
+ 225              		.thumb
+ 226              		.thumb_func
+ 228              	nrf24_r_reg:
+ 229              	.LVL11:
+ 230              	.LFB142:
+  42:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+  43:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** uint8_t nrf24_r_reg(uint8_t reg, uint8_t size){
+ 231              		.loc 1 43 47 is_stmt 1 view -0
+ 232              		.cfi_startproc
+ 233              		@ args = 0, pretend = 0, frame = 8
+ 234              		@ frame_needed = 0, uses_anonymous_args = 0
+ 235              		.loc 1 43 47 is_stmt 0 view .LVU24
+ 236 0000 30B5     		push	{r4, r5, lr}
+ 237              	.LCFI7:
+ 238              		.cfi_def_cfa_offset 12
+ 239              		.cfi_offset 4, -12
+ 240              		.cfi_offset 5, -8
+ 241              		.cfi_offset 14, -4
+ 242 0002 83B0     		sub	sp, sp, #12
+ 243              	.LCFI8:
+ 244              		.cfi_def_cfa_offset 24
+ 245 0004 0C46     		mov	r4, r1
+  44:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	uint8_t cmd = R_REGISTER | reg;
+ 246              		.loc 1 44 2 is_stmt 1 view .LVU25
+ 247              		.loc 1 44 10 is_stmt 0 view .LVU26
+ 248 0006 8DF80700 		strb	r0, [sp, #7]
+  45:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	uint8_t data = 0;
+ 249              		.loc 1 45 2 is_stmt 1 view .LVU27
+ 250              		.loc 1 45 10 is_stmt 0 view .LVU28
+ 251 000a 0023     		movs	r3, #0
+ARM GAS  /tmp/ccAYsZDq.s 			page 6
+
+
+ 252 000c 8DF80630 		strb	r3, [sp, #6]
+  46:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+  47:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	csn_low();
+ 253              		.loc 1 47 2 is_stmt 1 view .LVU29
+ 254 0010 FFF7FEFF 		bl	csn_low
+ 255              	.LVL12:
+  48:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+  49:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	HAL_SPI_Transmit(&hspiX, &cmd, 1, spi_w_timeout);
+ 256              		.loc 1 49 2 view .LVU30
+ 257 0014 0B4D     		ldr	r5, .L23
+ 258 0016 4FF47A73 		mov	r3, #1000
+ 259 001a 0122     		movs	r2, #1
+ 260 001c 0DF10701 		add	r1, sp, #7
+ 261 0020 2846     		mov	r0, r5
+ 262 0022 FFF7FEFF 		bl	HAL_SPI_Transmit
+ 263              	.LVL13:
+  50:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	HAL_SPI_Receive(&hspiX, &data, size, spi_r_timeout);
+ 264              		.loc 1 50 2 view .LVU31
+ 265 0026 4FF47A73 		mov	r3, #1000
+ 266 002a 2246     		mov	r2, r4
+ 267 002c 0DF10601 		add	r1, sp, #6
+ 268 0030 2846     		mov	r0, r5
+ 269 0032 FFF7FEFF 		bl	HAL_SPI_Receive
+ 270              	.LVL14:
+  51:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+  52:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	csn_high();
+ 271              		.loc 1 52 2 view .LVU32
+ 272 0036 FFF7FEFF 		bl	csn_high
+ 273              	.LVL15:
+  53:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+  54:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	return data;
+ 274              		.loc 1 54 2 view .LVU33
+  55:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** }
+ 275              		.loc 1 55 1 is_stmt 0 view .LVU34
+ 276 003a 9DF80600 		ldrb	r0, [sp, #6]	@ zero_extendqisi2
+ 277 003e 03B0     		add	sp, sp, #12
+ 278              	.LCFI9:
+ 279              		.cfi_def_cfa_offset 12
+ 280              		@ sp needed
+ 281 0040 30BD     		pop	{r4, r5, pc}
+ 282              	.LVL16:
+ 283              	.L24:
+ 284              		.loc 1 55 1 view .LVU35
+ 285 0042 00BF     		.align	2
+ 286              	.L23:
+ 287 0044 00000000 		.word	hspi3
+ 288              		.cfi_endproc
+ 289              	.LFE142:
+ 291              		.section	.text.nrf24_w_spec_cmd,"ax",%progbits
+ 292              		.align	1
+ 293              		.global	nrf24_w_spec_cmd
+ 294              		.syntax unified
+ 295              		.thumb
+ 296              		.thumb_func
+ 298              	nrf24_w_spec_cmd:
+ 299              	.LVL17:
+ 300              	.LFB143:
+ARM GAS  /tmp/ccAYsZDq.s 			page 7
+
+
+  56:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+  57:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** void nrf24_w_spec_cmd(uint8_t cmd){
+ 301              		.loc 1 57 35 is_stmt 1 view -0
+ 302              		.cfi_startproc
+ 303              		@ args = 0, pretend = 0, frame = 8
+ 304              		@ frame_needed = 0, uses_anonymous_args = 0
+ 305              		.loc 1 57 35 is_stmt 0 view .LVU37
+ 306 0000 00B5     		push	{lr}
+ 307              	.LCFI10:
+ 308              		.cfi_def_cfa_offset 4
+ 309              		.cfi_offset 14, -4
+ 310 0002 83B0     		sub	sp, sp, #12
+ 311              	.LCFI11:
+ 312              		.cfi_def_cfa_offset 16
+ 313 0004 8DF80700 		strb	r0, [sp, #7]
+  58:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	HAL_SPI_Transmit(&hspiX, &cmd, 1, spi_w_timeout);
+ 314              		.loc 1 58 2 is_stmt 1 view .LVU38
+ 315 0008 4FF47A73 		mov	r3, #1000
+ 316 000c 0122     		movs	r2, #1
+ 317 000e 0DF10701 		add	r1, sp, #7
+ 318 0012 0348     		ldr	r0, .L27
+ 319              	.LVL18:
+ 320              		.loc 1 58 2 is_stmt 0 view .LVU39
+ 321 0014 FFF7FEFF 		bl	HAL_SPI_Transmit
+ 322              	.LVL19:
+  59:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** }
+ 323              		.loc 1 59 1 view .LVU40
+ 324 0018 03B0     		add	sp, sp, #12
+ 325              	.LCFI12:
+ 326              		.cfi_def_cfa_offset 4
+ 327              		@ sp needed
+ 328 001a 5DF804FB 		ldr	pc, [sp], #4
+ 329              	.L28:
+ 330 001e 00BF     		.align	2
+ 331              	.L27:
+ 332 0020 00000000 		.word	hspi3
+ 333              		.cfi_endproc
+ 334              	.LFE143:
+ 336              		.section	.text.nrf24_w_spec_reg,"ax",%progbits
+ 337              		.align	1
+ 338              		.global	nrf24_w_spec_reg
+ 339              		.syntax unified
+ 340              		.thumb
+ 341              		.thumb_func
+ 343              	nrf24_w_spec_reg:
+ 344              	.LVL20:
+ 345              	.LFB144:
+  60:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+  61:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** void nrf24_w_spec_reg(uint8_t *data, uint8_t size){
+ 346              		.loc 1 61 51 is_stmt 1 view -0
+ 347              		.cfi_startproc
+ 348              		@ args = 0, pretend = 0, frame = 0
+ 349              		@ frame_needed = 0, uses_anonymous_args = 0
+ 350              		.loc 1 61 51 is_stmt 0 view .LVU42
+ 351 0000 08B5     		push	{r3, lr}
+ 352              	.LCFI13:
+ 353              		.cfi_def_cfa_offset 8
+ARM GAS  /tmp/ccAYsZDq.s 			page 8
+
+
+ 354              		.cfi_offset 3, -8
+ 355              		.cfi_offset 14, -4
+ 356 0002 0A46     		mov	r2, r1
+  62:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	HAL_SPI_Transmit(&hspiX, data, size, spi_w_timeout);
+ 357              		.loc 1 62 2 is_stmt 1 view .LVU43
+ 358 0004 4FF47A73 		mov	r3, #1000
+ 359 0008 0146     		mov	r1, r0
+ 360              	.LVL21:
+ 361              		.loc 1 62 2 is_stmt 0 view .LVU44
+ 362 000a 0248     		ldr	r0, .L31
+ 363              	.LVL22:
+ 364              		.loc 1 62 2 view .LVU45
+ 365 000c FFF7FEFF 		bl	HAL_SPI_Transmit
+ 366              	.LVL23:
+  63:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** }
+ 367              		.loc 1 63 1 view .LVU46
+ 368 0010 08BD     		pop	{r3, pc}
+ 369              	.L32:
+ 370 0012 00BF     		.align	2
+ 371              	.L31:
+ 372 0014 00000000 		.word	hspi3
+ 373              		.cfi_endproc
+ 374              	.LFE144:
+ 376              		.section	.text.nrf24_r_spec_reg,"ax",%progbits
+ 377              		.align	1
+ 378              		.global	nrf24_r_spec_reg
+ 379              		.syntax unified
+ 380              		.thumb
+ 381              		.thumb_func
+ 383              	nrf24_r_spec_reg:
+ 384              	.LVL24:
+ 385              	.LFB145:
+  64:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+  65:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** void nrf24_r_spec_reg(uint8_t *data, uint8_t size){
+ 386              		.loc 1 65 51 is_stmt 1 view -0
+ 387              		.cfi_startproc
+ 388              		@ args = 0, pretend = 0, frame = 0
+ 389              		@ frame_needed = 0, uses_anonymous_args = 0
+ 390              		.loc 1 65 51 is_stmt 0 view .LVU48
+ 391 0000 08B5     		push	{r3, lr}
+ 392              	.LCFI14:
+ 393              		.cfi_def_cfa_offset 8
+ 394              		.cfi_offset 3, -8
+ 395              		.cfi_offset 14, -4
+ 396 0002 0A46     		mov	r2, r1
+  66:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	HAL_SPI_Receive(&hspiX, data, size, spi_r_timeout);
+ 397              		.loc 1 66 2 is_stmt 1 view .LVU49
+ 398 0004 4FF47A73 		mov	r3, #1000
+ 399 0008 0146     		mov	r1, r0
+ 400              	.LVL25:
+ 401              		.loc 1 66 2 is_stmt 0 view .LVU50
+ 402 000a 0248     		ldr	r0, .L35
+ 403              	.LVL26:
+ 404              		.loc 1 66 2 view .LVU51
+ 405 000c FFF7FEFF 		bl	HAL_SPI_Receive
+ 406              	.LVL27:
+  67:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** }
+ARM GAS  /tmp/ccAYsZDq.s 			page 9
+
+
+ 407              		.loc 1 67 1 view .LVU52
+ 408 0010 08BD     		pop	{r3, pc}
+ 409              	.L36:
+ 410 0012 00BF     		.align	2
+ 411              	.L35:
+ 412 0014 00000000 		.word	hspi3
+ 413              		.cfi_endproc
+ 414              	.LFE145:
+ 416              		.section	.text.nrf24_pwr_up,"ax",%progbits
+ 417              		.align	1
+ 418              		.global	nrf24_pwr_up
+ 419              		.syntax unified
+ 420              		.thumb
+ 421              		.thumb_func
+ 423              	nrf24_pwr_up:
+ 424              	.LFB146:
+  68:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+  69:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** void nrf24_pwr_up(void){
+ 425              		.loc 1 69 24 is_stmt 1 view -0
+ 426              		.cfi_startproc
+ 427              		@ args = 0, pretend = 0, frame = 8
+ 428              		@ frame_needed = 0, uses_anonymous_args = 0
+ 429 0000 10B5     		push	{r4, lr}
+ 430              	.LCFI15:
+ 431              		.cfi_def_cfa_offset 8
+ 432              		.cfi_offset 4, -8
+ 433              		.cfi_offset 14, -4
+ 434 0002 82B0     		sub	sp, sp, #8
+ 435              	.LCFI16:
+ 436              		.cfi_def_cfa_offset 16
+  70:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	uint8_t data = 0;
+ 437              		.loc 1 70 2 view .LVU54
+ 438              		.loc 1 70 10 is_stmt 0 view .LVU55
+ 439 0004 0024     		movs	r4, #0
+ 440 0006 8DF80740 		strb	r4, [sp, #7]
+  71:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+  72:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	data = nrf24_r_reg(CONFIG, 1);
+ 441              		.loc 1 72 2 is_stmt 1 view .LVU56
+ 442              		.loc 1 72 9 is_stmt 0 view .LVU57
+ 443 000a 0121     		movs	r1, #1
+ 444 000c 2046     		mov	r0, r4
+ 445 000e FFF7FEFF 		bl	nrf24_r_reg
+ 446              	.LVL28:
+ 447              		.loc 1 72 7 discriminator 1 view .LVU58
+ 448 0012 8DF80700 		strb	r0, [sp, #7]
+  73:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+  74:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	data |= (1 << PWR_UP);
+ 449              		.loc 1 74 2 is_stmt 1 view .LVU59
+ 450              		.loc 1 74 7 is_stmt 0 view .LVU60
+ 451 0016 40F00200 		orr	r0, r0, #2
+ 452 001a 8DF80700 		strb	r0, [sp, #7]
+  75:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+  76:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	nrf24_w_reg(CONFIG, &data, 1);
+ 453              		.loc 1 76 2 is_stmt 1 view .LVU61
+ 454 001e 0122     		movs	r2, #1
+ 455 0020 0DF10701 		add	r1, sp, #7
+ 456 0024 2046     		mov	r0, r4
+ARM GAS  /tmp/ccAYsZDq.s 			page 10
+
+
+ 457 0026 FFF7FEFF 		bl	nrf24_w_reg
+ 458              	.LVL29:
+  77:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** }
+ 459              		.loc 1 77 1 is_stmt 0 view .LVU62
+ 460 002a 02B0     		add	sp, sp, #8
+ 461              	.LCFI17:
+ 462              		.cfi_def_cfa_offset 8
+ 463              		@ sp needed
+ 464 002c 10BD     		pop	{r4, pc}
+ 465              		.cfi_endproc
+ 466              	.LFE146:
+ 468              		.section	.text.nrf24_pwr_dwn,"ax",%progbits
+ 469              		.align	1
+ 470              		.global	nrf24_pwr_dwn
+ 471              		.syntax unified
+ 472              		.thumb
+ 473              		.thumb_func
+ 475              	nrf24_pwr_dwn:
+ 476              	.LFB147:
+  78:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+  79:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** void nrf24_pwr_dwn(void){
+ 477              		.loc 1 79 25 is_stmt 1 view -0
+ 478              		.cfi_startproc
+ 479              		@ args = 0, pretend = 0, frame = 8
+ 480              		@ frame_needed = 0, uses_anonymous_args = 0
+ 481 0000 10B5     		push	{r4, lr}
+ 482              	.LCFI18:
+ 483              		.cfi_def_cfa_offset 8
+ 484              		.cfi_offset 4, -8
+ 485              		.cfi_offset 14, -4
+ 486 0002 82B0     		sub	sp, sp, #8
+ 487              	.LCFI19:
+ 488              		.cfi_def_cfa_offset 16
+  80:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	uint8_t data = 0;
+ 489              		.loc 1 80 2 view .LVU64
+ 490              		.loc 1 80 10 is_stmt 0 view .LVU65
+ 491 0004 0024     		movs	r4, #0
+ 492 0006 8DF80740 		strb	r4, [sp, #7]
+  81:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+  82:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	data = nrf24_r_reg(CONFIG, 1);
+ 493              		.loc 1 82 2 is_stmt 1 view .LVU66
+ 494              		.loc 1 82 9 is_stmt 0 view .LVU67
+ 495 000a 0121     		movs	r1, #1
+ 496 000c 2046     		mov	r0, r4
+ 497 000e FFF7FEFF 		bl	nrf24_r_reg
+ 498              	.LVL30:
+ 499              		.loc 1 82 7 discriminator 1 view .LVU68
+ 500 0012 8DF80700 		strb	r0, [sp, #7]
+  83:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+  84:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	data &= ~(1 << PWR_UP);
+ 501              		.loc 1 84 2 is_stmt 1 view .LVU69
+ 502              		.loc 1 84 7 is_stmt 0 view .LVU70
+ 503 0016 20F00200 		bic	r0, r0, #2
+ 504 001a 8DF80700 		strb	r0, [sp, #7]
+  85:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+  86:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	nrf24_w_reg(CONFIG, &data, 1);
+ 505              		.loc 1 86 2 is_stmt 1 view .LVU71
+ARM GAS  /tmp/ccAYsZDq.s 			page 11
+
+
+ 506 001e 0122     		movs	r2, #1
+ 507 0020 0DF10701 		add	r1, sp, #7
+ 508 0024 2046     		mov	r0, r4
+ 509 0026 FFF7FEFF 		bl	nrf24_w_reg
+ 510              	.LVL31:
+  87:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** }
+ 511              		.loc 1 87 1 is_stmt 0 view .LVU72
+ 512 002a 02B0     		add	sp, sp, #8
+ 513              	.LCFI20:
+ 514              		.cfi_def_cfa_offset 8
+ 515              		@ sp needed
+ 516 002c 10BD     		pop	{r4, pc}
+ 517              		.cfi_endproc
+ 518              	.LFE147:
+ 520              		.section	.text.nrf24_tx_pwr,"ax",%progbits
+ 521              		.align	1
+ 522              		.global	nrf24_tx_pwr
+ 523              		.syntax unified
+ 524              		.thumb
+ 525              		.thumb_func
+ 527              	nrf24_tx_pwr:
+ 528              	.LVL32:
+ 529              	.LFB148:
+  88:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+  89:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** void nrf24_tx_pwr(uint8_t pwr){
+ 530              		.loc 1 89 31 is_stmt 1 view -0
+ 531              		.cfi_startproc
+ 532              		@ args = 0, pretend = 0, frame = 8
+ 533              		@ frame_needed = 0, uses_anonymous_args = 0
+ 534              		.loc 1 89 31 is_stmt 0 view .LVU74
+ 535 0000 10B5     		push	{r4, lr}
+ 536              	.LCFI21:
+ 537              		.cfi_def_cfa_offset 8
+ 538              		.cfi_offset 4, -8
+ 539              		.cfi_offset 14, -4
+ 540 0002 82B0     		sub	sp, sp, #8
+ 541              	.LCFI22:
+ 542              		.cfi_def_cfa_offset 16
+ 543 0004 0446     		mov	r4, r0
+  90:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	uint8_t data = 0;
+ 544              		.loc 1 90 2 is_stmt 1 view .LVU75
+ 545              		.loc 1 90 10 is_stmt 0 view .LVU76
+ 546 0006 0023     		movs	r3, #0
+ 547 0008 8DF80730 		strb	r3, [sp, #7]
+  91:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+  92:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	data = nrf24_r_reg(RF_SETUP, 1);
+ 548              		.loc 1 92 2 is_stmt 1 view .LVU77
+ 549              		.loc 1 92 9 is_stmt 0 view .LVU78
+ 550 000c 0121     		movs	r1, #1
+ 551 000e 0620     		movs	r0, #6
+ 552              	.LVL33:
+ 553              		.loc 1 92 9 view .LVU79
+ 554 0010 FFF7FEFF 		bl	nrf24_r_reg
+ 555              	.LVL34:
+ 556              		.loc 1 92 7 discriminator 1 view .LVU80
+ 557 0014 8DF80700 		strb	r0, [sp, #7]
+  93:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ARM GAS  /tmp/ccAYsZDq.s 			page 12
+
+
+  94:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	data &= 184;
+ 558              		.loc 1 94 2 is_stmt 1 view .LVU81
+ 559              		.loc 1 94 7 is_stmt 0 view .LVU82
+ 560 0018 00F0B803 		and	r3, r0, #184
+ 561 001c 8DF80730 		strb	r3, [sp, #7]
+  95:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+  96:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	data |= (pwr << RF_PWR);
+ 562              		.loc 1 96 2 is_stmt 1 view .LVU83
+ 563              		.loc 1 96 7 is_stmt 0 view .LVU84
+ 564 0020 43EA4403 		orr	r3, r3, r4, lsl #1
+ 565 0024 8DF80730 		strb	r3, [sp, #7]
+  97:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+  98:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	nrf24_w_reg(RF_SETUP, &data, 1);
+ 566              		.loc 1 98 2 is_stmt 1 view .LVU85
+ 567 0028 0122     		movs	r2, #1
+ 568 002a 0DF10701 		add	r1, sp, #7
+ 569 002e 0620     		movs	r0, #6
+ 570 0030 FFF7FEFF 		bl	nrf24_w_reg
+ 571              	.LVL35:
+  99:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** }
+ 572              		.loc 1 99 1 is_stmt 0 view .LVU86
+ 573 0034 02B0     		add	sp, sp, #8
+ 574              	.LCFI23:
+ 575              		.cfi_def_cfa_offset 8
+ 576              		@ sp needed
+ 577 0036 10BD     		pop	{r4, pc}
+ 578              		.loc 1 99 1 view .LVU87
+ 579              		.cfi_endproc
+ 580              	.LFE148:
+ 582              		.section	.text.nrf24_data_rate,"ax",%progbits
+ 583              		.align	1
+ 584              		.global	nrf24_data_rate
+ 585              		.syntax unified
+ 586              		.thumb
+ 587              		.thumb_func
+ 589              	nrf24_data_rate:
+ 590              	.LVL36:
+ 591              	.LFB149:
+ 100:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 101:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** void nrf24_data_rate(uint8_t bps){
+ 592              		.loc 1 101 34 is_stmt 1 view -0
+ 593              		.cfi_startproc
+ 594              		@ args = 0, pretend = 0, frame = 8
+ 595              		@ frame_needed = 0, uses_anonymous_args = 0
+ 596              		.loc 1 101 34 is_stmt 0 view .LVU89
+ 597 0000 10B5     		push	{r4, lr}
+ 598              	.LCFI24:
+ 599              		.cfi_def_cfa_offset 8
+ 600              		.cfi_offset 4, -8
+ 601              		.cfi_offset 14, -4
+ 602 0002 82B0     		sub	sp, sp, #8
+ 603              	.LCFI25:
+ 604              		.cfi_def_cfa_offset 16
+ 605 0004 0446     		mov	r4, r0
+ 102:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	uint8_t data = 0;
+ 606              		.loc 1 102 2 is_stmt 1 view .LVU90
+ 607              		.loc 1 102 10 is_stmt 0 view .LVU91
+ARM GAS  /tmp/ccAYsZDq.s 			page 13
+
+
+ 608 0006 0023     		movs	r3, #0
+ 609 0008 8DF80730 		strb	r3, [sp, #7]
+ 103:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 104:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	data = nrf24_r_reg(RF_SETUP, 1);
+ 610              		.loc 1 104 2 is_stmt 1 view .LVU92
+ 611              		.loc 1 104 9 is_stmt 0 view .LVU93
+ 612 000c 0121     		movs	r1, #1
+ 613 000e 0620     		movs	r0, #6
+ 614              	.LVL37:
+ 615              		.loc 1 104 9 view .LVU94
+ 616 0010 FFF7FEFF 		bl	nrf24_r_reg
+ 617              	.LVL38:
+ 618              		.loc 1 104 7 discriminator 1 view .LVU95
+ 619 0014 8DF80700 		strb	r0, [sp, #7]
+ 105:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 106:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	data &= ~(1 << RF_DR_LOW) & ~(1 << RF_DR_HIGH);
+ 620              		.loc 1 106 2 is_stmt 1 view .LVU96
+ 621              		.loc 1 106 7 is_stmt 0 view .LVU97
+ 622 0018 00F0D703 		and	r3, r0, #215
+ 623 001c 8DF80730 		strb	r3, [sp, #7]
+ 107:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 108:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	if(bps == _2mbps){
+ 624              		.loc 1 108 2 is_stmt 1 view .LVU98
+ 625              		.loc 1 108 4 is_stmt 0 view .LVU99
+ 626 0020 012C     		cmp	r4, #1
+ 627 0022 09D0     		beq	.L47
+ 109:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		data |= (1 << RF_DR_HIGH);
+ 110:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	}else if(bps == _250kbps){
+ 628              		.loc 1 110 8 is_stmt 1 view .LVU100
+ 629              		.loc 1 110 10 is_stmt 0 view .LVU101
+ 630 0024 022C     		cmp	r4, #2
+ 631 0026 0CD0     		beq	.L48
+ 632              	.L45:
+ 111:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		data |= (1 << RF_DR_LOW);
+ 112:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	}
+ 113:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 114:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	nrf24_w_reg(RF_SETUP, &data, 1);
+ 633              		.loc 1 114 2 is_stmt 1 view .LVU102
+ 634 0028 0122     		movs	r2, #1
+ 635 002a 0DF10701 		add	r1, sp, #7
+ 636 002e 0620     		movs	r0, #6
+ 637 0030 FFF7FEFF 		bl	nrf24_w_reg
+ 638              	.LVL39:
+ 115:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** }
+ 639              		.loc 1 115 1 is_stmt 0 view .LVU103
+ 640 0034 02B0     		add	sp, sp, #8
+ 641              	.LCFI26:
+ 642              		.cfi_remember_state
+ 643              		.cfi_def_cfa_offset 8
+ 644              		@ sp needed
+ 645 0036 10BD     		pop	{r4, pc}
+ 646              	.LVL40:
+ 647              	.L47:
+ 648              	.LCFI27:
+ 649              		.cfi_restore_state
+ 109:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		data |= (1 << RF_DR_HIGH);
+ 650              		.loc 1 109 3 is_stmt 1 view .LVU104
+ARM GAS  /tmp/ccAYsZDq.s 			page 14
+
+
+ 109:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		data |= (1 << RF_DR_HIGH);
+ 651              		.loc 1 109 8 is_stmt 0 view .LVU105
+ 652 0038 43F00800 		orr	r0, r3, #8
+ 653 003c 8DF80700 		strb	r0, [sp, #7]
+ 654 0040 F2E7     		b	.L45
+ 655              	.L48:
+ 111:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		data |= (1 << RF_DR_LOW);
+ 656              		.loc 1 111 3 is_stmt 1 view .LVU106
+ 111:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		data |= (1 << RF_DR_LOW);
+ 657              		.loc 1 111 8 is_stmt 0 view .LVU107
+ 658 0042 43F02000 		orr	r0, r3, #32
+ 659 0046 8DF80700 		strb	r0, [sp, #7]
+ 660 004a EDE7     		b	.L45
+ 661              		.cfi_endproc
+ 662              	.LFE149:
+ 664              		.section	.text.nrf24_set_channel,"ax",%progbits
+ 665              		.align	1
+ 666              		.global	nrf24_set_channel
+ 667              		.syntax unified
+ 668              		.thumb
+ 669              		.thumb_func
+ 671              	nrf24_set_channel:
+ 672              	.LVL41:
+ 673              	.LFB150:
+ 116:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 117:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** void nrf24_set_channel(uint8_t ch){
+ 674              		.loc 1 117 35 is_stmt 1 view -0
+ 675              		.cfi_startproc
+ 676              		@ args = 0, pretend = 0, frame = 8
+ 677              		@ frame_needed = 0, uses_anonymous_args = 0
+ 678              		.loc 1 117 35 is_stmt 0 view .LVU109
+ 679 0000 00B5     		push	{lr}
+ 680              	.LCFI28:
+ 681              		.cfi_def_cfa_offset 4
+ 682              		.cfi_offset 14, -4
+ 683 0002 83B0     		sub	sp, sp, #12
+ 684              	.LCFI29:
+ 685              		.cfi_def_cfa_offset 16
+ 686 0004 8DF80700 		strb	r0, [sp, #7]
+ 118:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	nrf24_w_reg(RF_CH, &ch, 1);
+ 687              		.loc 1 118 2 is_stmt 1 view .LVU110
+ 688 0008 0122     		movs	r2, #1
+ 689 000a 0DF10701 		add	r1, sp, #7
+ 690 000e 0520     		movs	r0, #5
+ 691              	.LVL42:
+ 692              		.loc 1 118 2 is_stmt 0 view .LVU111
+ 693 0010 FFF7FEFF 		bl	nrf24_w_reg
+ 694              	.LVL43:
+ 119:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** }
+ 695              		.loc 1 119 1 view .LVU112
+ 696 0014 03B0     		add	sp, sp, #12
+ 697              	.LCFI30:
+ 698              		.cfi_def_cfa_offset 4
+ 699              		@ sp needed
+ 700 0016 5DF804FB 		ldr	pc, [sp], #4
+ 701              		.cfi_endproc
+ 702              	.LFE150:
+ARM GAS  /tmp/ccAYsZDq.s 			page 15
+
+
+ 704              		.section	.text.nrf24_open_tx_pipe,"ax",%progbits
+ 705              		.align	1
+ 706              		.global	nrf24_open_tx_pipe
+ 707              		.syntax unified
+ 708              		.thumb
+ 709              		.thumb_func
+ 711              	nrf24_open_tx_pipe:
+ 712              	.LVL44:
+ 713              	.LFB151:
+ 120:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 121:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** void nrf24_open_tx_pipe(uint8_t *addr){
+ 714              		.loc 1 121 39 is_stmt 1 view -0
+ 715              		.cfi_startproc
+ 716              		@ args = 0, pretend = 0, frame = 0
+ 717              		@ frame_needed = 0, uses_anonymous_args = 0
+ 718              		.loc 1 121 39 is_stmt 0 view .LVU114
+ 719 0000 08B5     		push	{r3, lr}
+ 720              	.LCFI31:
+ 721              		.cfi_def_cfa_offset 8
+ 722              		.cfi_offset 3, -8
+ 723              		.cfi_offset 14, -4
+ 724 0002 0146     		mov	r1, r0
+ 122:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	nrf24_w_reg(TX_ADDR, addr, 5);
+ 725              		.loc 1 122 2 is_stmt 1 view .LVU115
+ 726 0004 0522     		movs	r2, #5
+ 727 0006 1020     		movs	r0, #16
+ 728              	.LVL45:
+ 729              		.loc 1 122 2 is_stmt 0 view .LVU116
+ 730 0008 FFF7FEFF 		bl	nrf24_w_reg
+ 731              	.LVL46:
+ 123:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** }
+ 732              		.loc 1 123 1 view .LVU117
+ 733 000c 08BD     		pop	{r3, pc}
+ 734              		.cfi_endproc
+ 735              	.LFE151:
+ 737              		.section	.text.nrf24_pipe_pld_size,"ax",%progbits
+ 738              		.align	1
+ 739              		.global	nrf24_pipe_pld_size
+ 740              		.syntax unified
+ 741              		.thumb
+ 742              		.thumb_func
+ 744              	nrf24_pipe_pld_size:
+ 745              	.LVL47:
+ 746              	.LFB152:
+ 124:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 125:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** void nrf24_pipe_pld_size(uint8_t pipe, uint8_t size){
+ 747              		.loc 1 125 53 is_stmt 1 view -0
+ 748              		.cfi_startproc
+ 749              		@ args = 0, pretend = 0, frame = 8
+ 750              		@ frame_needed = 0, uses_anonymous_args = 0
+ 751              		.loc 1 125 53 is_stmt 0 view .LVU119
+ 752 0000 00B5     		push	{lr}
+ 753              	.LCFI32:
+ 754              		.cfi_def_cfa_offset 4
+ 755              		.cfi_offset 14, -4
+ 756 0002 83B0     		sub	sp, sp, #12
+ 757              	.LCFI33:
+ARM GAS  /tmp/ccAYsZDq.s 			page 16
+
+
+ 758              		.cfi_def_cfa_offset 16
+ 759 0004 8DF80710 		strb	r1, [sp, #7]
+ 126:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	if(size > 32){
+ 760              		.loc 1 126 2 is_stmt 1 view .LVU120
+ 761              		.loc 1 126 10 is_stmt 0 view .LVU121
+ 762 0008 CBB2     		uxtb	r3, r1
+ 763              		.loc 1 126 4 view .LVU122
+ 764 000a 202B     		cmp	r3, #32
+ 765 000c 02D9     		bls	.L54
+ 127:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		size = 32;
+ 766              		.loc 1 127 3 is_stmt 1 view .LVU123
+ 767              		.loc 1 127 8 is_stmt 0 view .LVU124
+ 768 000e 2023     		movs	r3, #32
+ 769 0010 8DF80730 		strb	r3, [sp, #7]
+ 770              	.L54:
+ 128:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	}
+ 129:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 130:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	switch(pipe){
+ 771              		.loc 1 130 2 is_stmt 1 view .LVU125
+ 772 0014 0528     		cmp	r0, #5
+ 773 0016 0AD8     		bhi	.L53
+ 774 0018 DFE800F0 		tbb	[pc, r0]
+ 775              	.L57:
+ 776 001c 03       		.byte	(.L62-.L57)/2
+ 777 001d 0C       		.byte	(.L61-.L57)/2
+ 778 001e 13       		.byte	(.L60-.L57)/2
+ 779 001f 1A       		.byte	(.L59-.L57)/2
+ 780 0020 21       		.byte	(.L58-.L57)/2
+ 781 0021 28       		.byte	(.L56-.L57)/2
+ 782              		.p2align 1
+ 783              	.L62:
+ 131:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	case 0:
+ 132:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		nrf24_w_reg(RX_PW_P0, &size, 1);
+ 784              		.loc 1 132 3 view .LVU126
+ 785 0022 0122     		movs	r2, #1
+ 786 0024 0DF10701 		add	r1, sp, #7
+ 787              	.LVL48:
+ 788              		.loc 1 132 3 is_stmt 0 view .LVU127
+ 789 0028 1120     		movs	r0, #17
+ 790              	.LVL49:
+ 791              		.loc 1 132 3 view .LVU128
+ 792 002a FFF7FEFF 		bl	nrf24_w_reg
+ 793              	.LVL50:
+ 133:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 134:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		break;
+ 794              		.loc 1 134 3 is_stmt 1 view .LVU129
+ 795              	.L53:
+ 135:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	case 1:
+ 136:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		nrf24_w_reg(RX_PW_P1, &size, 1);
+ 137:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 138:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		break;
+ 139:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	case 2:
+ 140:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		nrf24_w_reg(RX_PW_P2, &size, 1);
+ 141:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 142:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		break;
+ 143:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	case 3:
+ 144:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		nrf24_w_reg(RX_PW_P3, &size, 1);
+ARM GAS  /tmp/ccAYsZDq.s 			page 17
+
+
+ 145:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 146:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		break;
+ 147:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	case 4:
+ 148:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		nrf24_w_reg(RX_PW_P4, &size, 1);
+ 149:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 150:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		break;
+ 151:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	case 5:
+ 152:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		nrf24_w_reg(RX_PW_P5, &size, 1);
+ 153:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 154:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		break;
+ 155:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	}
+ 156:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** }
+ 796              		.loc 1 156 1 is_stmt 0 view .LVU130
+ 797 002e 03B0     		add	sp, sp, #12
+ 798              	.LCFI34:
+ 799              		.cfi_remember_state
+ 800              		.cfi_def_cfa_offset 4
+ 801              		@ sp needed
+ 802 0030 5DF804FB 		ldr	pc, [sp], #4
+ 803              	.LVL51:
+ 804              	.L61:
+ 805              	.LCFI35:
+ 806              		.cfi_restore_state
+ 136:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 807              		.loc 1 136 3 is_stmt 1 view .LVU131
+ 808 0034 0122     		movs	r2, #1
+ 809 0036 0DF10701 		add	r1, sp, #7
+ 810              	.LVL52:
+ 136:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 811              		.loc 1 136 3 is_stmt 0 view .LVU132
+ 812 003a 1220     		movs	r0, #18
+ 813              	.LVL53:
+ 136:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 814              		.loc 1 136 3 view .LVU133
+ 815 003c FFF7FEFF 		bl	nrf24_w_reg
+ 816              	.LVL54:
+ 138:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	case 2:
+ 817              		.loc 1 138 3 is_stmt 1 view .LVU134
+ 818 0040 F5E7     		b	.L53
+ 819              	.LVL55:
+ 820              	.L60:
+ 140:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 821              		.loc 1 140 3 view .LVU135
+ 822 0042 0122     		movs	r2, #1
+ 823 0044 0DF10701 		add	r1, sp, #7
+ 824              	.LVL56:
+ 140:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 825              		.loc 1 140 3 is_stmt 0 view .LVU136
+ 826 0048 1320     		movs	r0, #19
+ 827              	.LVL57:
+ 140:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 828              		.loc 1 140 3 view .LVU137
+ 829 004a FFF7FEFF 		bl	nrf24_w_reg
+ 830              	.LVL58:
+ 142:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	case 3:
+ 831              		.loc 1 142 3 is_stmt 1 view .LVU138
+ 832 004e EEE7     		b	.L53
+ARM GAS  /tmp/ccAYsZDq.s 			page 18
+
+
+ 833              	.LVL59:
+ 834              	.L59:
+ 144:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 835              		.loc 1 144 3 view .LVU139
+ 836 0050 0122     		movs	r2, #1
+ 837 0052 0DF10701 		add	r1, sp, #7
+ 838              	.LVL60:
+ 144:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 839              		.loc 1 144 3 is_stmt 0 view .LVU140
+ 840 0056 1420     		movs	r0, #20
+ 841              	.LVL61:
+ 144:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 842              		.loc 1 144 3 view .LVU141
+ 843 0058 FFF7FEFF 		bl	nrf24_w_reg
+ 844              	.LVL62:
+ 146:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	case 4:
+ 845              		.loc 1 146 3 is_stmt 1 view .LVU142
+ 846 005c E7E7     		b	.L53
+ 847              	.LVL63:
+ 848              	.L58:
+ 148:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 849              		.loc 1 148 3 view .LVU143
+ 850 005e 0122     		movs	r2, #1
+ 851 0060 0DF10701 		add	r1, sp, #7
+ 852              	.LVL64:
+ 148:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 853              		.loc 1 148 3 is_stmt 0 view .LVU144
+ 854 0064 1520     		movs	r0, #21
+ 855              	.LVL65:
+ 148:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 856              		.loc 1 148 3 view .LVU145
+ 857 0066 FFF7FEFF 		bl	nrf24_w_reg
+ 858              	.LVL66:
+ 150:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	case 5:
+ 859              		.loc 1 150 3 is_stmt 1 view .LVU146
+ 860 006a E0E7     		b	.L53
+ 861              	.LVL67:
+ 862              	.L56:
+ 152:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 863              		.loc 1 152 3 view .LVU147
+ 864 006c 0122     		movs	r2, #1
+ 865 006e 0DF10701 		add	r1, sp, #7
+ 866              	.LVL68:
+ 152:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 867              		.loc 1 152 3 is_stmt 0 view .LVU148
+ 868 0072 1620     		movs	r0, #22
+ 869              	.LVL69:
+ 152:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 870              		.loc 1 152 3 view .LVU149
+ 871 0074 FFF7FEFF 		bl	nrf24_w_reg
+ 872              	.LVL70:
+ 154:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	}
+ 873              		.loc 1 154 3 is_stmt 1 view .LVU150
+ 874              		.loc 1 156 1 is_stmt 0 view .LVU151
+ 875 0078 D9E7     		b	.L53
+ 876              		.cfi_endproc
+ 877              	.LFE152:
+ARM GAS  /tmp/ccAYsZDq.s 			page 19
+
+
+ 879              		.section	.text.nrf24_open_rx_pipe,"ax",%progbits
+ 880              		.align	1
+ 881              		.global	nrf24_open_rx_pipe
+ 882              		.syntax unified
+ 883              		.thumb
+ 884              		.thumb_func
+ 886              	nrf24_open_rx_pipe:
+ 887              	.LVL71:
+ 888              	.LFB153:
+ 157:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 158:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** void nrf24_open_rx_pipe(uint8_t pipe, uint8_t *addr){
+ 889              		.loc 1 158 53 is_stmt 1 view -0
+ 890              		.cfi_startproc
+ 891              		@ args = 0, pretend = 0, frame = 8
+ 892              		@ frame_needed = 0, uses_anonymous_args = 0
+ 893              		.loc 1 158 53 is_stmt 0 view .LVU153
+ 894 0000 30B5     		push	{r4, r5, lr}
+ 895              	.LCFI36:
+ 896              		.cfi_def_cfa_offset 12
+ 897              		.cfi_offset 4, -12
+ 898              		.cfi_offset 5, -8
+ 899              		.cfi_offset 14, -4
+ 900 0002 83B0     		sub	sp, sp, #12
+ 901              	.LCFI37:
+ 902              		.cfi_def_cfa_offset 24
+ 903 0004 0446     		mov	r4, r0
+ 904 0006 0D46     		mov	r5, r1
+ 159:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 160:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	uint8_t data = 0;
+ 905              		.loc 1 160 2 is_stmt 1 view .LVU154
+ 906              		.loc 1 160 10 is_stmt 0 view .LVU155
+ 907 0008 0023     		movs	r3, #0
+ 908 000a 8DF80730 		strb	r3, [sp, #7]
+ 161:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 162:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	data = nrf24_r_reg(EN_RXADDR, 1);
+ 909              		.loc 1 162 2 is_stmt 1 view .LVU156
+ 910              		.loc 1 162 9 is_stmt 0 view .LVU157
+ 911 000e 0121     		movs	r1, #1
+ 912              	.LVL72:
+ 913              		.loc 1 162 9 view .LVU158
+ 914 0010 0220     		movs	r0, #2
+ 915              	.LVL73:
+ 916              		.loc 1 162 9 view .LVU159
+ 917 0012 FFF7FEFF 		bl	nrf24_r_reg
+ 918              	.LVL74:
+ 919              		.loc 1 162 7 discriminator 1 view .LVU160
+ 920 0016 8DF80700 		strb	r0, [sp, #7]
+ 163:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 164:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	switch(pipe){
+ 921              		.loc 1 164 2 is_stmt 1 view .LVU161
+ 922 001a 052C     		cmp	r4, #5
+ 923 001c 0FD8     		bhi	.L66
+ 924 001e DFE804F0 		tbb	[pc, r4]
+ 925              	.L68:
+ 926 0022 03       		.byte	(.L73-.L68)/2
+ 927 0023 16       		.byte	(.L72-.L68)/2
+ 928 0024 22       		.byte	(.L71-.L68)/2
+ARM GAS  /tmp/ccAYsZDq.s 			page 20
+
+
+ 929 0025 2E       		.byte	(.L70-.L68)/2
+ 930 0026 3A       		.byte	(.L69-.L68)/2
+ 931 0027 46       		.byte	(.L67-.L68)/2
+ 932              		.p2align 1
+ 933              	.L73:
+ 165:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	case 0:
+ 166:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		nrf24_w_reg(RX_ADDR_P0, addr, 5);
+ 934              		.loc 1 166 3 view .LVU162
+ 935 0028 0522     		movs	r2, #5
+ 936 002a 2946     		mov	r1, r5
+ 937 002c 0A20     		movs	r0, #10
+ 938 002e FFF7FEFF 		bl	nrf24_w_reg
+ 939              	.LVL75:
+ 167:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 168:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		data |= (1 << ERX_P0);
+ 940              		.loc 1 168 3 view .LVU163
+ 941              		.loc 1 168 8 is_stmt 0 view .LVU164
+ 942 0032 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 943 0036 43F00103 		orr	r3, r3, #1
+ 944 003a 8DF80730 		strb	r3, [sp, #7]
+ 169:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		break;
+ 945              		.loc 1 169 3 is_stmt 1 view .LVU165
+ 946              	.L66:
+ 170:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	case 1:
+ 171:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		nrf24_w_reg(RX_ADDR_P1, addr, 5);
+ 172:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 173:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		data |= (1 << ERX_P1);
+ 174:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		break;
+ 175:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	case 2:
+ 176:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		nrf24_w_reg(RX_ADDR_P2, addr, 1);
+ 177:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 178:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		data |= (1 << ERX_P2);
+ 179:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		break;
+ 180:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	case 3:
+ 181:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		nrf24_w_reg(RX_ADDR_P3, addr, 1);
+ 182:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 183:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		data |= (1 << ERX_P3);
+ 184:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		break;
+ 185:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	case 4:
+ 186:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		nrf24_w_reg(RX_ADDR_P4, addr, 1);
+ 187:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 188:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		data |= (1 << ERX_P4);
+ 189:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		break;
+ 190:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	case 5:
+ 191:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		nrf24_w_reg(RX_ADDR_P5, addr, 1);
+ 192:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 193:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		data |= (1 << ERX_P5);
+ 194:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		break;
+ 195:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	}
+ 196:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 197:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	nrf24_w_reg(EN_RXADDR, &data, 1);
+ 947              		.loc 1 197 2 view .LVU166
+ 948 003e 0122     		movs	r2, #1
+ 949 0040 0DF10701 		add	r1, sp, #7
+ 950 0044 0220     		movs	r0, #2
+ 951 0046 FFF7FEFF 		bl	nrf24_w_reg
+ 952              	.LVL76:
+ARM GAS  /tmp/ccAYsZDq.s 			page 21
+
+
+ 198:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** }
+ 953              		.loc 1 198 1 is_stmt 0 view .LVU167
+ 954 004a 03B0     		add	sp, sp, #12
+ 955              	.LCFI38:
+ 956              		.cfi_remember_state
+ 957              		.cfi_def_cfa_offset 12
+ 958              		@ sp needed
+ 959 004c 30BD     		pop	{r4, r5, pc}
+ 960              	.LVL77:
+ 961              	.L72:
+ 962              	.LCFI39:
+ 963              		.cfi_restore_state
+ 171:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 964              		.loc 1 171 3 is_stmt 1 view .LVU168
+ 965 004e 0522     		movs	r2, #5
+ 966 0050 2946     		mov	r1, r5
+ 967 0052 0B20     		movs	r0, #11
+ 968 0054 FFF7FEFF 		bl	nrf24_w_reg
+ 969              	.LVL78:
+ 173:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		break;
+ 970              		.loc 1 173 3 view .LVU169
+ 173:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		break;
+ 971              		.loc 1 173 8 is_stmt 0 view .LVU170
+ 972 0058 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 973 005c 43F00203 		orr	r3, r3, #2
+ 974 0060 8DF80730 		strb	r3, [sp, #7]
+ 174:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	case 2:
+ 975              		.loc 1 174 3 is_stmt 1 view .LVU171
+ 976 0064 EBE7     		b	.L66
+ 977              	.L71:
+ 176:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 978              		.loc 1 176 3 view .LVU172
+ 979 0066 0122     		movs	r2, #1
+ 980 0068 2946     		mov	r1, r5
+ 981 006a 0C20     		movs	r0, #12
+ 982 006c FFF7FEFF 		bl	nrf24_w_reg
+ 983              	.LVL79:
+ 178:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		break;
+ 984              		.loc 1 178 3 view .LVU173
+ 178:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		break;
+ 985              		.loc 1 178 8 is_stmt 0 view .LVU174
+ 986 0070 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 987 0074 43F00403 		orr	r3, r3, #4
+ 988 0078 8DF80730 		strb	r3, [sp, #7]
+ 179:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	case 3:
+ 989              		.loc 1 179 3 is_stmt 1 view .LVU175
+ 990 007c DFE7     		b	.L66
+ 991              	.L70:
+ 181:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 992              		.loc 1 181 3 view .LVU176
+ 993 007e 0122     		movs	r2, #1
+ 994 0080 2946     		mov	r1, r5
+ 995 0082 0D20     		movs	r0, #13
+ 996 0084 FFF7FEFF 		bl	nrf24_w_reg
+ 997              	.LVL80:
+ 183:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		break;
+ 998              		.loc 1 183 3 view .LVU177
+ARM GAS  /tmp/ccAYsZDq.s 			page 22
+
+
+ 183:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		break;
+ 999              		.loc 1 183 8 is_stmt 0 view .LVU178
+ 1000 0088 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 1001 008c 43F00803 		orr	r3, r3, #8
+ 1002 0090 8DF80730 		strb	r3, [sp, #7]
+ 184:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	case 4:
+ 1003              		.loc 1 184 3 is_stmt 1 view .LVU179
+ 1004 0094 D3E7     		b	.L66
+ 1005              	.L69:
+ 186:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 1006              		.loc 1 186 3 view .LVU180
+ 1007 0096 0122     		movs	r2, #1
+ 1008 0098 2946     		mov	r1, r5
+ 1009 009a 0E20     		movs	r0, #14
+ 1010 009c FFF7FEFF 		bl	nrf24_w_reg
+ 1011              	.LVL81:
+ 188:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		break;
+ 1012              		.loc 1 188 3 view .LVU181
+ 188:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		break;
+ 1013              		.loc 1 188 8 is_stmt 0 view .LVU182
+ 1014 00a0 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 1015 00a4 43F01003 		orr	r3, r3, #16
+ 1016 00a8 8DF80730 		strb	r3, [sp, #7]
+ 189:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	case 5:
+ 1017              		.loc 1 189 3 is_stmt 1 view .LVU183
+ 1018 00ac C7E7     		b	.L66
+ 1019              	.L67:
+ 191:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 1020              		.loc 1 191 3 view .LVU184
+ 1021 00ae 0122     		movs	r2, #1
+ 1022 00b0 2946     		mov	r1, r5
+ 1023 00b2 0F20     		movs	r0, #15
+ 1024 00b4 FFF7FEFF 		bl	nrf24_w_reg
+ 1025              	.LVL82:
+ 193:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		break;
+ 1026              		.loc 1 193 3 view .LVU185
+ 193:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		break;
+ 1027              		.loc 1 193 8 is_stmt 0 view .LVU186
+ 1028 00b8 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 1029 00bc 43F02003 		orr	r3, r3, #32
+ 1030 00c0 8DF80730 		strb	r3, [sp, #7]
+ 194:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	}
+ 1031              		.loc 1 194 3 is_stmt 1 view .LVU187
+ 1032 00c4 BBE7     		b	.L66
+ 1033              		.cfi_endproc
+ 1034              	.LFE153:
+ 1036              		.section	.text.nrf24_cls_rx_pipe,"ax",%progbits
+ 1037              		.align	1
+ 1038              		.global	nrf24_cls_rx_pipe
+ 1039              		.syntax unified
+ 1040              		.thumb
+ 1041              		.thumb_func
+ 1043              	nrf24_cls_rx_pipe:
+ 1044              	.LVL83:
+ 1045              	.LFB154:
+ 199:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 200:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** void nrf24_cls_rx_pipe(uint8_t pipe){
+ARM GAS  /tmp/ccAYsZDq.s 			page 23
+
+
+ 1046              		.loc 1 200 37 view -0
+ 1047              		.cfi_startproc
+ 1048              		@ args = 0, pretend = 0, frame = 8
+ 1049              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1050              		.loc 1 200 37 is_stmt 0 view .LVU189
+ 1051 0000 10B5     		push	{r4, lr}
+ 1052              	.LCFI40:
+ 1053              		.cfi_def_cfa_offset 8
+ 1054              		.cfi_offset 4, -8
+ 1055              		.cfi_offset 14, -4
+ 1056 0002 82B0     		sub	sp, sp, #8
+ 1057              	.LCFI41:
+ 1058              		.cfi_def_cfa_offset 16
+ 1059 0004 0446     		mov	r4, r0
+ 201:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	uint8_t data = nrf24_r_reg(EN_RXADDR, 1);
+ 1060              		.loc 1 201 2 is_stmt 1 view .LVU190
+ 1061              		.loc 1 201 17 is_stmt 0 view .LVU191
+ 1062 0006 0121     		movs	r1, #1
+ 1063 0008 0220     		movs	r0, #2
+ 1064              	.LVL84:
+ 1065              		.loc 1 201 17 view .LVU192
+ 1066 000a FFF7FEFF 		bl	nrf24_r_reg
+ 1067              	.LVL85:
+ 1068              		.loc 1 201 10 discriminator 1 view .LVU193
+ 1069 000e 8DF80700 		strb	r0, [sp, #7]
+ 202:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 203:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	data &= ~(1 << pipe);
+ 1070              		.loc 1 203 2 is_stmt 1 view .LVU194
+ 1071              		.loc 1 203 14 is_stmt 0 view .LVU195
+ 1072 0012 0122     		movs	r2, #1
+ 1073 0014 02FA04F4 		lsl	r4, r2, r4
+ 1074              	.LVL86:
+ 1075              		.loc 1 203 7 view .LVU196
+ 1076 0018 E443     		mvns	r4, r4
+ 1077 001a 64B2     		sxtb	r4, r4
+ 1078 001c 2040     		ands	r0, r0, r4
+ 1079 001e 8DF80700 		strb	r0, [sp, #7]
+ 204:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 205:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	nrf24_w_reg(EN_RXADDR, &data, 1);
+ 1080              		.loc 1 205 2 is_stmt 1 view .LVU197
+ 1081 0022 0DF10701 		add	r1, sp, #7
+ 1082 0026 0220     		movs	r0, #2
+ 1083 0028 FFF7FEFF 		bl	nrf24_w_reg
+ 1084              	.LVL87:
+ 206:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** }
+ 1085              		.loc 1 206 1 is_stmt 0 view .LVU198
+ 1086 002c 02B0     		add	sp, sp, #8
+ 1087              	.LCFI42:
+ 1088              		.cfi_def_cfa_offset 8
+ 1089              		@ sp needed
+ 1090 002e 10BD     		pop	{r4, pc}
+ 1091              		.cfi_endproc
+ 1092              	.LFE154:
+ 1094              		.section	.text.nrf24_set_crc,"ax",%progbits
+ 1095              		.align	1
+ 1096              		.global	nrf24_set_crc
+ 1097              		.syntax unified
+ARM GAS  /tmp/ccAYsZDq.s 			page 24
+
+
+ 1098              		.thumb
+ 1099              		.thumb_func
+ 1101              	nrf24_set_crc:
+ 1102              	.LVL88:
+ 1103              	.LFB155:
+ 207:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 208:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** void nrf24_set_crc(uint8_t en_crc, uint8_t crc0){
+ 1104              		.loc 1 208 49 is_stmt 1 view -0
+ 1105              		.cfi_startproc
+ 1106              		@ args = 0, pretend = 0, frame = 8
+ 1107              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1108              		.loc 1 208 49 is_stmt 0 view .LVU200
+ 1109 0000 30B5     		push	{r4, r5, lr}
+ 1110              	.LCFI43:
+ 1111              		.cfi_def_cfa_offset 12
+ 1112              		.cfi_offset 4, -12
+ 1113              		.cfi_offset 5, -8
+ 1114              		.cfi_offset 14, -4
+ 1115 0002 83B0     		sub	sp, sp, #12
+ 1116              	.LCFI44:
+ 1117              		.cfi_def_cfa_offset 24
+ 1118 0004 0546     		mov	r5, r0
+ 1119 0006 0C46     		mov	r4, r1
+ 209:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	uint8_t data = nrf24_r_reg(CONFIG, 1);
+ 1120              		.loc 1 209 2 is_stmt 1 view .LVU201
+ 1121              		.loc 1 209 17 is_stmt 0 view .LVU202
+ 1122 0008 0121     		movs	r1, #1
+ 1123              	.LVL89:
+ 1124              		.loc 1 209 17 view .LVU203
+ 1125 000a 0020     		movs	r0, #0
+ 1126              	.LVL90:
+ 1127              		.loc 1 209 17 view .LVU204
+ 1128 000c FFF7FEFF 		bl	nrf24_r_reg
+ 1129              	.LVL91:
+ 1130              		.loc 1 209 10 discriminator 1 view .LVU205
+ 1131 0010 8DF80700 		strb	r0, [sp, #7]
+ 210:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 211:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	data &= ~(1 << EN_CRC) & ~(1 << CRCO);
+ 1132              		.loc 1 211 2 is_stmt 1 view .LVU206
+ 1133              		.loc 1 211 7 is_stmt 0 view .LVU207
+ 1134 0014 00F0F303 		and	r3, r0, #243
+ 1135 0018 8DF80730 		strb	r3, [sp, #7]
+ 212:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 213:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	data |= (en_crc << EN_CRC) | (crc0 << CRCO);
+ 1136              		.loc 1 213 2 is_stmt 1 view .LVU208
+ 1137              		.loc 1 213 29 is_stmt 0 view .LVU209
+ 1138 001c A400     		lsls	r4, r4, #2
+ 1139              	.LVL92:
+ 1140              		.loc 1 213 29 view .LVU210
+ 1141 001e 44EAC504 		orr	r4, r4, r5, lsl #3
+ 1142 0022 64B2     		sxtb	r4, r4
+ 1143              		.loc 1 213 7 view .LVU211
+ 1144 0024 2343     		orrs	r3, r3, r4
+ 1145 0026 8DF80730 		strb	r3, [sp, #7]
+ 214:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 215:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	nrf24_w_reg(CONFIG, &data, 1);
+ 1146              		.loc 1 215 2 is_stmt 1 view .LVU212
+ARM GAS  /tmp/ccAYsZDq.s 			page 25
+
+
+ 1147 002a 0122     		movs	r2, #1
+ 1148 002c 0DF10701 		add	r1, sp, #7
+ 1149 0030 0020     		movs	r0, #0
+ 1150 0032 FFF7FEFF 		bl	nrf24_w_reg
+ 1151              	.LVL93:
+ 216:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** }
+ 1152              		.loc 1 216 1 is_stmt 0 view .LVU213
+ 1153 0036 03B0     		add	sp, sp, #12
+ 1154              	.LCFI45:
+ 1155              		.cfi_def_cfa_offset 12
+ 1156              		@ sp needed
+ 1157 0038 30BD     		pop	{r4, r5, pc}
+ 1158              		.loc 1 216 1 view .LVU214
+ 1159              		.cfi_endproc
+ 1160              	.LFE155:
+ 1162              		.section	.text.nrf24_set_addr_width,"ax",%progbits
+ 1163              		.align	1
+ 1164              		.global	nrf24_set_addr_width
+ 1165              		.syntax unified
+ 1166              		.thumb
+ 1167              		.thumb_func
+ 1169              	nrf24_set_addr_width:
+ 1170              	.LVL94:
+ 1171              	.LFB156:
+ 217:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 218:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** void nrf24_set_addr_width(uint8_t bytes){
+ 1172              		.loc 1 218 41 is_stmt 1 view -0
+ 1173              		.cfi_startproc
+ 1174              		@ args = 0, pretend = 0, frame = 8
+ 1175              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1176              		.loc 1 218 41 is_stmt 0 view .LVU216
+ 1177 0000 00B5     		push	{lr}
+ 1178              	.LCFI46:
+ 1179              		.cfi_def_cfa_offset 4
+ 1180              		.cfi_offset 14, -4
+ 1181 0002 83B0     		sub	sp, sp, #12
+ 1182              	.LCFI47:
+ 1183              		.cfi_def_cfa_offset 16
+ 1184 0004 8DF80700 		strb	r0, [sp, #7]
+ 219:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	bytes -= 2;
+ 1185              		.loc 1 219 2 is_stmt 1 view .LVU217
+ 1186              		.loc 1 219 8 is_stmt 0 view .LVU218
+ 1187 0008 C3B2     		uxtb	r3, r0
+ 1188 000a 023B     		subs	r3, r3, #2
+ 1189 000c 8DF80730 		strb	r3, [sp, #7]
+ 220:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	nrf24_w_reg(SETUP_AW, &bytes, 1);
+ 1190              		.loc 1 220 2 is_stmt 1 view .LVU219
+ 1191 0010 0122     		movs	r2, #1
+ 1192 0012 0DF10701 		add	r1, sp, #7
+ 1193 0016 0320     		movs	r0, #3
+ 1194              	.LVL95:
+ 1195              		.loc 1 220 2 is_stmt 0 view .LVU220
+ 1196 0018 FFF7FEFF 		bl	nrf24_w_reg
+ 1197              	.LVL96:
+ 221:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** }
+ 1198              		.loc 1 221 1 view .LVU221
+ 1199 001c 03B0     		add	sp, sp, #12
+ARM GAS  /tmp/ccAYsZDq.s 			page 26
+
+
+ 1200              	.LCFI48:
+ 1201              		.cfi_def_cfa_offset 4
+ 1202              		@ sp needed
+ 1203 001e 5DF804FB 		ldr	pc, [sp], #4
+ 1204              		.cfi_endproc
+ 1205              	.LFE156:
+ 1207              		.section	.text.nrf24_flush_tx,"ax",%progbits
+ 1208              		.align	1
+ 1209              		.global	nrf24_flush_tx
+ 1210              		.syntax unified
+ 1211              		.thumb
+ 1212              		.thumb_func
+ 1214              	nrf24_flush_tx:
+ 1215              	.LFB157:
+ 222:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 223:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** void nrf24_flush_tx(void){
+ 1216              		.loc 1 223 26 is_stmt 1 view -0
+ 1217              		.cfi_startproc
+ 1218              		@ args = 0, pretend = 0, frame = 0
+ 1219              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1220 0000 08B5     		push	{r3, lr}
+ 1221              	.LCFI49:
+ 1222              		.cfi_def_cfa_offset 8
+ 1223              		.cfi_offset 3, -8
+ 1224              		.cfi_offset 14, -4
+ 224:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	csn_low();
+ 1225              		.loc 1 224 2 view .LVU223
+ 1226 0002 FFF7FEFF 		bl	csn_low
+ 1227              	.LVL97:
+ 225:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	nrf24_w_spec_cmd(FLUSH_TX);
+ 1228              		.loc 1 225 2 view .LVU224
+ 1229 0006 E120     		movs	r0, #225
+ 1230 0008 FFF7FEFF 		bl	nrf24_w_spec_cmd
+ 1231              	.LVL98:
+ 226:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	csn_high();
+ 1232              		.loc 1 226 2 view .LVU225
+ 1233 000c FFF7FEFF 		bl	csn_high
+ 1234              	.LVL99:
+ 227:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** }
+ 1235              		.loc 1 227 1 is_stmt 0 view .LVU226
+ 1236 0010 08BD     		pop	{r3, pc}
+ 1237              		.cfi_endproc
+ 1238              	.LFE157:
+ 1240              		.section	.text.nrf24_flush_rx,"ax",%progbits
+ 1241              		.align	1
+ 1242              		.global	nrf24_flush_rx
+ 1243              		.syntax unified
+ 1244              		.thumb
+ 1245              		.thumb_func
+ 1247              	nrf24_flush_rx:
+ 1248              	.LFB158:
+ 228:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 229:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** void nrf24_flush_rx(void){
+ 1249              		.loc 1 229 26 is_stmt 1 view -0
+ 1250              		.cfi_startproc
+ 1251              		@ args = 0, pretend = 0, frame = 0
+ 1252              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  /tmp/ccAYsZDq.s 			page 27
+
+
+ 1253 0000 08B5     		push	{r3, lr}
+ 1254              	.LCFI50:
+ 1255              		.cfi_def_cfa_offset 8
+ 1256              		.cfi_offset 3, -8
+ 1257              		.cfi_offset 14, -4
+ 230:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	csn_low();
+ 1258              		.loc 1 230 2 view .LVU228
+ 1259 0002 FFF7FEFF 		bl	csn_low
+ 1260              	.LVL100:
+ 231:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	nrf24_w_spec_cmd(FLUSH_RX);
+ 1261              		.loc 1 231 2 view .LVU229
+ 1262 0006 E220     		movs	r0, #226
+ 1263 0008 FFF7FEFF 		bl	nrf24_w_spec_cmd
+ 1264              	.LVL101:
+ 232:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	csn_high();
+ 1265              		.loc 1 232 2 view .LVU230
+ 1266 000c FFF7FEFF 		bl	csn_high
+ 1267              	.LVL102:
+ 233:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** }
+ 1268              		.loc 1 233 1 is_stmt 0 view .LVU231
+ 1269 0010 08BD     		pop	{r3, pc}
+ 1270              		.cfi_endproc
+ 1271              	.LFE158:
+ 1273              		.section	.text.nrf24_r_status,"ax",%progbits
+ 1274              		.align	1
+ 1275              		.global	nrf24_r_status
+ 1276              		.syntax unified
+ 1277              		.thumb
+ 1278              		.thumb_func
+ 1280              	nrf24_r_status:
+ 1281              	.LFB159:
+ 234:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 235:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** uint8_t nrf24_r_status(void){
+ 1282              		.loc 1 235 29 is_stmt 1 view -0
+ 1283              		.cfi_startproc
+ 1284              		@ args = 0, pretend = 0, frame = 8
+ 1285              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1286 0000 00B5     		push	{lr}
+ 1287              	.LCFI51:
+ 1288              		.cfi_def_cfa_offset 4
+ 1289              		.cfi_offset 14, -4
+ 1290 0002 85B0     		sub	sp, sp, #20
+ 1291              	.LCFI52:
+ 1292              		.cfi_def_cfa_offset 24
+ 236:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	uint8_t data = 0;
+ 1293              		.loc 1 236 2 view .LVU233
+ 1294              		.loc 1 236 10 is_stmt 0 view .LVU234
+ 1295 0004 0023     		movs	r3, #0
+ 1296 0006 8DF80F30 		strb	r3, [sp, #15]
+ 237:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	uint8_t cmd = NOP_CMD;
+ 1297              		.loc 1 237 2 is_stmt 1 view .LVU235
+ 1298              		.loc 1 237 10 is_stmt 0 view .LVU236
+ 1299 000a FF23     		movs	r3, #255
+ 1300 000c 8DF80E30 		strb	r3, [sp, #14]
+ 238:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 239:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	csn_low();
+ 1301              		.loc 1 239 2 is_stmt 1 view .LVU237
+ARM GAS  /tmp/ccAYsZDq.s 			page 28
+
+
+ 1302 0010 FFF7FEFF 		bl	csn_low
+ 1303              	.LVL103:
+ 240:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	HAL_SPI_TransmitReceive(&hspiX, &cmd, &data, 1, spi_rw_timeout);
+ 1304              		.loc 1 240 2 view .LVU238
+ 1305 0014 4FF47A73 		mov	r3, #1000
+ 1306 0018 0093     		str	r3, [sp]
+ 1307 001a 0123     		movs	r3, #1
+ 1308 001c 0DF10F02 		add	r2, sp, #15
+ 1309 0020 0DF10E01 		add	r1, sp, #14
+ 1310 0024 0448     		ldr	r0, .L88
+ 1311 0026 FFF7FEFF 		bl	HAL_SPI_TransmitReceive
+ 1312              	.LVL104:
+ 241:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	csn_high();
+ 1313              		.loc 1 241 2 view .LVU239
+ 1314 002a FFF7FEFF 		bl	csn_high
+ 1315              	.LVL105:
+ 242:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 243:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	return data;
+ 1316              		.loc 1 243 2 view .LVU240
+ 244:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** }
+ 1317              		.loc 1 244 1 is_stmt 0 view .LVU241
+ 1318 002e 9DF80F00 		ldrb	r0, [sp, #15]	@ zero_extendqisi2
+ 1319 0032 05B0     		add	sp, sp, #20
+ 1320              	.LCFI53:
+ 1321              		.cfi_def_cfa_offset 4
+ 1322              		@ sp needed
+ 1323 0034 5DF804FB 		ldr	pc, [sp], #4
+ 1324              	.L89:
+ 1325              		.align	2
+ 1326              	.L88:
+ 1327 0038 00000000 		.word	hspi3
+ 1328              		.cfi_endproc
+ 1329              	.LFE159:
+ 1331              		.section	.text.nrf24_clear_rx_dr,"ax",%progbits
+ 1332              		.align	1
+ 1333              		.global	nrf24_clear_rx_dr
+ 1334              		.syntax unified
+ 1335              		.thumb
+ 1336              		.thumb_func
+ 1338              	nrf24_clear_rx_dr:
+ 1339              	.LFB160:
+ 245:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 246:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** void nrf24_clear_rx_dr(void){
+ 1340              		.loc 1 246 29 is_stmt 1 view -0
+ 1341              		.cfi_startproc
+ 1342              		@ args = 0, pretend = 0, frame = 8
+ 1343              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1344 0000 00B5     		push	{lr}
+ 1345              	.LCFI54:
+ 1346              		.cfi_def_cfa_offset 4
+ 1347              		.cfi_offset 14, -4
+ 1348 0002 83B0     		sub	sp, sp, #12
+ 1349              	.LCFI55:
+ 1350              		.cfi_def_cfa_offset 16
+ 247:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	uint8_t data = 0;
+ 1351              		.loc 1 247 2 view .LVU243
+ 1352              		.loc 1 247 10 is_stmt 0 view .LVU244
+ARM GAS  /tmp/ccAYsZDq.s 			page 29
+
+
+ 1353 0004 0023     		movs	r3, #0
+ 1354 0006 8DF80730 		strb	r3, [sp, #7]
+ 248:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 249:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	data = nrf24_r_status();
+ 1355              		.loc 1 249 2 is_stmt 1 view .LVU245
+ 1356              		.loc 1 249 9 is_stmt 0 view .LVU246
+ 1357 000a FFF7FEFF 		bl	nrf24_r_status
+ 1358              	.LVL106:
+ 1359              		.loc 1 249 7 discriminator 1 view .LVU247
+ 1360 000e 8DF80700 		strb	r0, [sp, #7]
+ 250:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 251:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	data |= (1 << RX_DR);
+ 1361              		.loc 1 251 2 is_stmt 1 view .LVU248
+ 1362              		.loc 1 251 7 is_stmt 0 view .LVU249
+ 1363 0012 40F04000 		orr	r0, r0, #64
+ 1364 0016 8DF80700 		strb	r0, [sp, #7]
+ 252:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 253:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	nrf24_w_reg(STATUS, &data, 1);
+ 1365              		.loc 1 253 2 is_stmt 1 view .LVU250
+ 1366 001a 0122     		movs	r2, #1
+ 1367 001c 0DF10701 		add	r1, sp, #7
+ 1368 0020 0720     		movs	r0, #7
+ 1369 0022 FFF7FEFF 		bl	nrf24_w_reg
+ 1370              	.LVL107:
+ 254:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** }
+ 1371              		.loc 1 254 1 is_stmt 0 view .LVU251
+ 1372 0026 03B0     		add	sp, sp, #12
+ 1373              	.LCFI56:
+ 1374              		.cfi_def_cfa_offset 4
+ 1375              		@ sp needed
+ 1376 0028 5DF804FB 		ldr	pc, [sp], #4
+ 1377              		.cfi_endproc
+ 1378              	.LFE160:
+ 1380              		.section	.text.nrf24_clear_tx_ds,"ax",%progbits
+ 1381              		.align	1
+ 1382              		.global	nrf24_clear_tx_ds
+ 1383              		.syntax unified
+ 1384              		.thumb
+ 1385              		.thumb_func
+ 1387              	nrf24_clear_tx_ds:
+ 1388              	.LFB161:
+ 255:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 256:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** void nrf24_clear_tx_ds(void){
+ 1389              		.loc 1 256 29 is_stmt 1 view -0
+ 1390              		.cfi_startproc
+ 1391              		@ args = 0, pretend = 0, frame = 8
+ 1392              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1393 0000 00B5     		push	{lr}
+ 1394              	.LCFI57:
+ 1395              		.cfi_def_cfa_offset 4
+ 1396              		.cfi_offset 14, -4
+ 1397 0002 83B0     		sub	sp, sp, #12
+ 1398              	.LCFI58:
+ 1399              		.cfi_def_cfa_offset 16
+ 257:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	uint8_t data = 0;
+ 1400              		.loc 1 257 2 view .LVU253
+ 1401              		.loc 1 257 10 is_stmt 0 view .LVU254
+ARM GAS  /tmp/ccAYsZDq.s 			page 30
+
+
+ 1402 0004 0023     		movs	r3, #0
+ 1403 0006 8DF80730 		strb	r3, [sp, #7]
+ 258:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 259:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	data = nrf24_r_status();
+ 1404              		.loc 1 259 2 is_stmt 1 view .LVU255
+ 1405              		.loc 1 259 9 is_stmt 0 view .LVU256
+ 1406 000a FFF7FEFF 		bl	nrf24_r_status
+ 1407              	.LVL108:
+ 1408              		.loc 1 259 7 discriminator 1 view .LVU257
+ 1409 000e 8DF80700 		strb	r0, [sp, #7]
+ 260:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 261:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	data |= (1 << TX_DS);
+ 1410              		.loc 1 261 2 is_stmt 1 view .LVU258
+ 1411              		.loc 1 261 7 is_stmt 0 view .LVU259
+ 1412 0012 40F02000 		orr	r0, r0, #32
+ 1413 0016 8DF80700 		strb	r0, [sp, #7]
+ 262:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 263:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c ****     nrf24_w_reg(STATUS, &data, 1);
+ 1414              		.loc 1 263 5 is_stmt 1 view .LVU260
+ 1415 001a 0122     		movs	r2, #1
+ 1416 001c 0DF10701 		add	r1, sp, #7
+ 1417 0020 0720     		movs	r0, #7
+ 1418 0022 FFF7FEFF 		bl	nrf24_w_reg
+ 1419              	.LVL109:
+ 264:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** }
+ 1420              		.loc 1 264 1 is_stmt 0 view .LVU261
+ 1421 0026 03B0     		add	sp, sp, #12
+ 1422              	.LCFI59:
+ 1423              		.cfi_def_cfa_offset 4
+ 1424              		@ sp needed
+ 1425 0028 5DF804FB 		ldr	pc, [sp], #4
+ 1426              		.cfi_endproc
+ 1427              	.LFE161:
+ 1429              		.section	.text.nrf24_clear_max_rt,"ax",%progbits
+ 1430              		.align	1
+ 1431              		.global	nrf24_clear_max_rt
+ 1432              		.syntax unified
+ 1433              		.thumb
+ 1434              		.thumb_func
+ 1436              	nrf24_clear_max_rt:
+ 1437              	.LFB162:
+ 265:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 266:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** void nrf24_clear_max_rt(void){
+ 1438              		.loc 1 266 30 is_stmt 1 view -0
+ 1439              		.cfi_startproc
+ 1440              		@ args = 0, pretend = 0, frame = 8
+ 1441              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1442 0000 00B5     		push	{lr}
+ 1443              	.LCFI60:
+ 1444              		.cfi_def_cfa_offset 4
+ 1445              		.cfi_offset 14, -4
+ 1446 0002 83B0     		sub	sp, sp, #12
+ 1447              	.LCFI61:
+ 1448              		.cfi_def_cfa_offset 16
+ 267:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	uint8_t data = 0;
+ 1449              		.loc 1 267 2 view .LVU263
+ 1450              		.loc 1 267 10 is_stmt 0 view .LVU264
+ARM GAS  /tmp/ccAYsZDq.s 			page 31
+
+
+ 1451 0004 0023     		movs	r3, #0
+ 1452 0006 8DF80730 		strb	r3, [sp, #7]
+ 268:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 269:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	data = nrf24_r_status();
+ 1453              		.loc 1 269 2 is_stmt 1 view .LVU265
+ 1454              		.loc 1 269 9 is_stmt 0 view .LVU266
+ 1455 000a FFF7FEFF 		bl	nrf24_r_status
+ 1456              	.LVL110:
+ 1457              		.loc 1 269 7 discriminator 1 view .LVU267
+ 1458 000e 8DF80700 		strb	r0, [sp, #7]
+ 270:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 271:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	data |= (1 << MAX_RT);
+ 1459              		.loc 1 271 2 is_stmt 1 view .LVU268
+ 1460              		.loc 1 271 7 is_stmt 0 view .LVU269
+ 1461 0012 40F01000 		orr	r0, r0, #16
+ 1462 0016 8DF80700 		strb	r0, [sp, #7]
+ 272:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 273:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c ****     nrf24_w_reg(STATUS, &data, 1);
+ 1463              		.loc 1 273 5 is_stmt 1 view .LVU270
+ 1464 001a 0122     		movs	r2, #1
+ 1465 001c 0DF10701 		add	r1, sp, #7
+ 1466 0020 0720     		movs	r0, #7
+ 1467 0022 FFF7FEFF 		bl	nrf24_w_reg
+ 1468              	.LVL111:
+ 274:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** }
+ 1469              		.loc 1 274 1 is_stmt 0 view .LVU271
+ 1470 0026 03B0     		add	sp, sp, #12
+ 1471              	.LCFI62:
+ 1472              		.cfi_def_cfa_offset 4
+ 1473              		@ sp needed
+ 1474 0028 5DF804FB 		ldr	pc, [sp], #4
+ 1475              		.cfi_endproc
+ 1476              	.LFE162:
+ 1478              		.section	.text.nrf24_read_bit,"ax",%progbits
+ 1479              		.align	1
+ 1480              		.global	nrf24_read_bit
+ 1481              		.syntax unified
+ 1482              		.thumb
+ 1483              		.thumb_func
+ 1485              	nrf24_read_bit:
+ 1486              	.LVL112:
+ 1487              	.LFB163:
+ 275:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 276:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** uint8_t nrf24_read_bit(uint8_t reg, uint8_t bit){
+ 1488              		.loc 1 276 49 is_stmt 1 view -0
+ 1489              		.cfi_startproc
+ 1490              		@ args = 0, pretend = 0, frame = 0
+ 1491              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1492              		.loc 1 276 49 is_stmt 0 view .LVU273
+ 1493 0000 10B5     		push	{r4, lr}
+ 1494              	.LCFI63:
+ 1495              		.cfi_def_cfa_offset 8
+ 1496              		.cfi_offset 4, -8
+ 1497              		.cfi_offset 14, -4
+ 1498 0002 0C46     		mov	r4, r1
+ 277:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 278:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	if(nrf24_r_reg(reg, 1) & (1 << bit)){
+ARM GAS  /tmp/ccAYsZDq.s 			page 32
+
+
+ 1499              		.loc 1 278 2 is_stmt 1 view .LVU274
+ 1500              		.loc 1 278 5 is_stmt 0 view .LVU275
+ 1501 0004 0121     		movs	r1, #1
+ 1502              	.LVL113:
+ 1503              		.loc 1 278 5 view .LVU276
+ 1504 0006 FFF7FEFF 		bl	nrf24_r_reg
+ 1505              	.LVL114:
+ 1506              		.loc 1 278 5 discriminator 1 view .LVU277
+ 1507 000a 40FA04F1 		asr	r1, r0, r4
+ 1508              		.loc 1 278 4 discriminator 1 view .LVU278
+ 1509 000e 11F0010F 		tst	r1, #1
+ 1510 0012 01D1     		bne	.L98
+ 279:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		return 1;
+ 280:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	}
+ 281:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 282:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	return 0;
+ 1511              		.loc 1 282 9 view .LVU279
+ 1512 0014 0020     		movs	r0, #0
+ 1513              	.L97:
+ 283:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** }
+ 1514              		.loc 1 283 1 view .LVU280
+ 1515 0016 10BD     		pop	{r4, pc}
+ 1516              	.LVL115:
+ 1517              	.L98:
+ 279:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		return 1;
+ 1518              		.loc 1 279 10 view .LVU281
+ 1519 0018 0120     		movs	r0, #1
+ 1520 001a FCE7     		b	.L97
+ 1521              		.cfi_endproc
+ 1522              	.LFE163:
+ 1524              		.section	.text.nrf24_set_bit,"ax",%progbits
+ 1525              		.align	1
+ 1526              		.global	nrf24_set_bit
+ 1527              		.syntax unified
+ 1528              		.thumb
+ 1529              		.thumb_func
+ 1531              	nrf24_set_bit:
+ 1532              	.LVL116:
+ 1533              	.LFB164:
+ 284:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 285:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** void nrf24_set_bit(uint8_t reg, uint8_t bit, uint8_t val){
+ 1534              		.loc 1 285 58 is_stmt 1 view -0
+ 1535              		.cfi_startproc
+ 1536              		@ args = 0, pretend = 0, frame = 8
+ 1537              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1538              		.loc 1 285 58 is_stmt 0 view .LVU283
+ 1539 0000 70B5     		push	{r4, r5, r6, lr}
+ 1540              	.LCFI64:
+ 1541              		.cfi_def_cfa_offset 16
+ 1542              		.cfi_offset 4, -16
+ 1543              		.cfi_offset 5, -12
+ 1544              		.cfi_offset 6, -8
+ 1545              		.cfi_offset 14, -4
+ 1546 0002 82B0     		sub	sp, sp, #8
+ 1547              	.LCFI65:
+ 1548              		.cfi_def_cfa_offset 24
+ 1549 0004 0446     		mov	r4, r0
+ARM GAS  /tmp/ccAYsZDq.s 			page 33
+
+
+ 1550 0006 0D46     		mov	r5, r1
+ 1551 0008 1646     		mov	r6, r2
+ 286:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	uint8_t data = 0;
+ 1552              		.loc 1 286 2 is_stmt 1 view .LVU284
+ 1553              		.loc 1 286 10 is_stmt 0 view .LVU285
+ 1554 000a 0023     		movs	r3, #0
+ 1555 000c 8DF80730 		strb	r3, [sp, #7]
+ 287:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 288:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	data = nrf24_r_reg(reg, 1);
+ 1556              		.loc 1 288 2 is_stmt 1 view .LVU286
+ 1557              		.loc 1 288 9 is_stmt 0 view .LVU287
+ 1558 0010 0121     		movs	r1, #1
+ 1559              	.LVL117:
+ 1560              		.loc 1 288 9 view .LVU288
+ 1561 0012 FFF7FEFF 		bl	nrf24_r_reg
+ 1562              	.LVL118:
+ 1563              		.loc 1 288 7 discriminator 1 view .LVU289
+ 1564 0016 8DF80700 		strb	r0, [sp, #7]
+ 289:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 290:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	if(val){
+ 1565              		.loc 1 290 2 is_stmt 1 view .LVU290
+ 1566              		.loc 1 290 4 is_stmt 0 view .LVU291
+ 1567 001a 6EB1     		cbz	r6, .L101
+ 291:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		data |= (1 << bit);
+ 1568              		.loc 1 291 3 is_stmt 1 view .LVU292
+ 1569              		.loc 1 291 14 is_stmt 0 view .LVU293
+ 1570 001c 0123     		movs	r3, #1
+ 1571 001e AB40     		lsls	r3, r3, r5
+ 1572              		.loc 1 291 8 view .LVU294
+ 1573 0020 40EA0301 		orr	r1, r0, r3
+ 1574 0024 8DF80710 		strb	r1, [sp, #7]
+ 1575              	.L102:
+ 292:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	}else{
+ 293:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		data &= ~(1 << bit);
+ 294:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	}
+ 295:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 296:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c ****     nrf24_w_reg(reg, &data, 1);
+ 1576              		.loc 1 296 5 is_stmt 1 view .LVU295
+ 1577 0028 0122     		movs	r2, #1
+ 1578 002a 0DF10701 		add	r1, sp, #7
+ 1579 002e 2046     		mov	r0, r4
+ 1580 0030 FFF7FEFF 		bl	nrf24_w_reg
+ 1581              	.LVL119:
+ 297:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** }
+ 1582              		.loc 1 297 1 is_stmt 0 view .LVU296
+ 1583 0034 02B0     		add	sp, sp, #8
+ 1584              	.LCFI66:
+ 1585              		.cfi_remember_state
+ 1586              		.cfi_def_cfa_offset 16
+ 1587              		@ sp needed
+ 1588 0036 70BD     		pop	{r4, r5, r6, pc}
+ 1589              	.LVL120:
+ 1590              	.L101:
+ 1591              	.LCFI67:
+ 1592              		.cfi_restore_state
+ 293:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	}
+ 1593              		.loc 1 293 3 is_stmt 1 view .LVU297
+ARM GAS  /tmp/ccAYsZDq.s 			page 34
+
+
+ 293:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	}
+ 1594              		.loc 1 293 15 is_stmt 0 view .LVU298
+ 1595 0038 0123     		movs	r3, #1
+ 1596 003a 03FA05F1 		lsl	r1, r3, r5
+ 293:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	}
+ 1597              		.loc 1 293 8 view .LVU299
+ 1598 003e C943     		mvns	r1, r1
+ 1599 0040 49B2     		sxtb	r1, r1
+ 1600 0042 0140     		ands	r1, r1, r0
+ 1601 0044 8DF80710 		strb	r1, [sp, #7]
+ 1602 0048 EEE7     		b	.L102
+ 1603              		.cfi_endproc
+ 1604              	.LFE164:
+ 1606              		.section	.text.nrf24_r_pld_wid,"ax",%progbits
+ 1607              		.align	1
+ 1608              		.global	nrf24_r_pld_wid
+ 1609              		.syntax unified
+ 1610              		.thumb
+ 1611              		.thumb_func
+ 1613              	nrf24_r_pld_wid:
+ 1614              	.LFB165:
+ 298:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 299:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** uint8_t nrf24_r_pld_wid(void){
+ 1615              		.loc 1 299 30 is_stmt 1 view -0
+ 1616              		.cfi_startproc
+ 1617              		@ args = 0, pretend = 0, frame = 8
+ 1618              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1619 0000 00B5     		push	{lr}
+ 1620              	.LCFI68:
+ 1621              		.cfi_def_cfa_offset 4
+ 1622              		.cfi_offset 14, -4
+ 1623 0002 83B0     		sub	sp, sp, #12
+ 1624              	.LCFI69:
+ 1625              		.cfi_def_cfa_offset 16
+ 300:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	uint8_t width = 0;
+ 1626              		.loc 1 300 2 view .LVU301
+ 1627              		.loc 1 300 10 is_stmt 0 view .LVU302
+ 1628 0004 0023     		movs	r3, #0
+ 1629 0006 8DF80730 		strb	r3, [sp, #7]
+ 301:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 302:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	csn_low();
+ 1630              		.loc 1 302 2 is_stmt 1 view .LVU303
+ 1631 000a FFF7FEFF 		bl	csn_low
+ 1632              	.LVL121:
+ 303:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	nrf24_w_spec_cmd(R_RX_PL_WID);
+ 1633              		.loc 1 303 2 view .LVU304
+ 1634 000e 6020     		movs	r0, #96
+ 1635 0010 FFF7FEFF 		bl	nrf24_w_spec_cmd
+ 1636              	.LVL122:
+ 304:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	nrf24_r_spec_reg(&width, 1);
+ 1637              		.loc 1 304 2 view .LVU305
+ 1638 0014 0121     		movs	r1, #1
+ 1639 0016 0DF10700 		add	r0, sp, #7
+ 1640 001a FFF7FEFF 		bl	nrf24_r_spec_reg
+ 1641              	.LVL123:
+ 305:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	csn_high();
+ 1642              		.loc 1 305 2 view .LVU306
+ARM GAS  /tmp/ccAYsZDq.s 			page 35
+
+
+ 1643 001e FFF7FEFF 		bl	csn_high
+ 1644              	.LVL124:
+ 306:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 307:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	return width;
+ 1645              		.loc 1 307 2 view .LVU307
+ 308:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** }
+ 1646              		.loc 1 308 1 is_stmt 0 view .LVU308
+ 1647 0022 9DF80700 		ldrb	r0, [sp, #7]	@ zero_extendqisi2
+ 1648 0026 03B0     		add	sp, sp, #12
+ 1649              	.LCFI70:
+ 1650              		.cfi_def_cfa_offset 4
+ 1651              		@ sp needed
+ 1652 0028 5DF804FB 		ldr	pc, [sp], #4
+ 1653              		.cfi_endproc
+ 1654              	.LFE165:
+ 1656              		.section	.text.nrf24_listen,"ax",%progbits
+ 1657              		.align	1
+ 1658              		.global	nrf24_listen
+ 1659              		.syntax unified
+ 1660              		.thumb
+ 1661              		.thumb_func
+ 1663              	nrf24_listen:
+ 1664              	.LFB166:
+ 309:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 310:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** void nrf24_listen(void){
+ 1665              		.loc 1 310 24 is_stmt 1 view -0
+ 1666              		.cfi_startproc
+ 1667              		@ args = 0, pretend = 0, frame = 8
+ 1668              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1669 0000 10B5     		push	{r4, lr}
+ 1670              	.LCFI71:
+ 1671              		.cfi_def_cfa_offset 8
+ 1672              		.cfi_offset 4, -8
+ 1673              		.cfi_offset 14, -4
+ 1674 0002 82B0     		sub	sp, sp, #8
+ 1675              	.LCFI72:
+ 1676              		.cfi_def_cfa_offset 16
+ 311:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	uint8_t data = 0;
+ 1677              		.loc 1 311 2 view .LVU310
+ 1678              		.loc 1 311 10 is_stmt 0 view .LVU311
+ 1679 0004 0024     		movs	r4, #0
+ 1680 0006 8DF80740 		strb	r4, [sp, #7]
+ 312:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 313:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	data = nrf24_r_reg(CONFIG, 1);
+ 1681              		.loc 1 313 2 is_stmt 1 view .LVU312
+ 1682              		.loc 1 313 9 is_stmt 0 view .LVU313
+ 1683 000a 0121     		movs	r1, #1
+ 1684 000c 2046     		mov	r0, r4
+ 1685 000e FFF7FEFF 		bl	nrf24_r_reg
+ 1686              	.LVL125:
+ 1687              		.loc 1 313 7 discriminator 1 view .LVU314
+ 1688 0012 8DF80700 		strb	r0, [sp, #7]
+ 314:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 315:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	data |= (1 << PRIM_RX);
+ 1689              		.loc 1 315 2 is_stmt 1 view .LVU315
+ 1690              		.loc 1 315 7 is_stmt 0 view .LVU316
+ 1691 0016 40F00100 		orr	r0, r0, #1
+ARM GAS  /tmp/ccAYsZDq.s 			page 36
+
+
+ 1692 001a 8DF80700 		strb	r0, [sp, #7]
+ 316:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 317:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	nrf24_w_reg(CONFIG, &data, 1);
+ 1693              		.loc 1 317 2 is_stmt 1 view .LVU317
+ 1694 001e 0122     		movs	r2, #1
+ 1695 0020 0DF10701 		add	r1, sp, #7
+ 1696 0024 2046     		mov	r0, r4
+ 1697 0026 FFF7FEFF 		bl	nrf24_w_reg
+ 1698              	.LVL126:
+ 318:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 319:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	ce_high();
+ 1699              		.loc 1 319 2 view .LVU318
+ 1700 002a FFF7FEFF 		bl	ce_high
+ 1701              	.LVL127:
+ 320:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** }
+ 1702              		.loc 1 320 1 is_stmt 0 view .LVU319
+ 1703 002e 02B0     		add	sp, sp, #8
+ 1704              	.LCFI73:
+ 1705              		.cfi_def_cfa_offset 8
+ 1706              		@ sp needed
+ 1707 0030 10BD     		pop	{r4, pc}
+ 1708              		.cfi_endproc
+ 1709              	.LFE166:
+ 1711              		.section	.text.nrf24_stop_listen,"ax",%progbits
+ 1712              		.align	1
+ 1713              		.global	nrf24_stop_listen
+ 1714              		.syntax unified
+ 1715              		.thumb
+ 1716              		.thumb_func
+ 1718              	nrf24_stop_listen:
+ 1719              	.LFB167:
+ 321:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 322:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** void nrf24_stop_listen(void){
+ 1720              		.loc 1 322 29 is_stmt 1 view -0
+ 1721              		.cfi_startproc
+ 1722              		@ args = 0, pretend = 0, frame = 8
+ 1723              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1724 0000 10B5     		push	{r4, lr}
+ 1725              	.LCFI74:
+ 1726              		.cfi_def_cfa_offset 8
+ 1727              		.cfi_offset 4, -8
+ 1728              		.cfi_offset 14, -4
+ 1729 0002 82B0     		sub	sp, sp, #8
+ 1730              	.LCFI75:
+ 1731              		.cfi_def_cfa_offset 16
+ 323:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	uint8_t data = 0;
+ 1732              		.loc 1 323 2 view .LVU321
+ 1733              		.loc 1 323 10 is_stmt 0 view .LVU322
+ 1734 0004 0024     		movs	r4, #0
+ 1735 0006 8DF80740 		strb	r4, [sp, #7]
+ 324:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 325:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	data = nrf24_r_reg(CONFIG, 1);
+ 1736              		.loc 1 325 2 is_stmt 1 view .LVU323
+ 1737              		.loc 1 325 9 is_stmt 0 view .LVU324
+ 1738 000a 0121     		movs	r1, #1
+ 1739 000c 2046     		mov	r0, r4
+ 1740 000e FFF7FEFF 		bl	nrf24_r_reg
+ARM GAS  /tmp/ccAYsZDq.s 			page 37
+
+
+ 1741              	.LVL128:
+ 1742              		.loc 1 325 7 discriminator 1 view .LVU325
+ 1743 0012 8DF80700 		strb	r0, [sp, #7]
+ 326:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 327:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	data &= ~(1 << PRIM_RX);
+ 1744              		.loc 1 327 2 is_stmt 1 view .LVU326
+ 1745              		.loc 1 327 7 is_stmt 0 view .LVU327
+ 1746 0016 20F00100 		bic	r0, r0, #1
+ 1747 001a 8DF80700 		strb	r0, [sp, #7]
+ 328:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 329:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	nrf24_w_reg(CONFIG, &data, 1);
+ 1748              		.loc 1 329 2 is_stmt 1 view .LVU328
+ 1749 001e 0122     		movs	r2, #1
+ 1750 0020 0DF10701 		add	r1, sp, #7
+ 1751 0024 2046     		mov	r0, r4
+ 1752 0026 FFF7FEFF 		bl	nrf24_w_reg
+ 1753              	.LVL129:
+ 330:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** }
+ 1754              		.loc 1 330 1 is_stmt 0 view .LVU329
+ 1755 002a 02B0     		add	sp, sp, #8
+ 1756              	.LCFI76:
+ 1757              		.cfi_def_cfa_offset 8
+ 1758              		@ sp needed
+ 1759 002c 10BD     		pop	{r4, pc}
+ 1760              		.cfi_endproc
+ 1761              	.LFE167:
+ 1763              		.section	.text.nrf24_dpl,"ax",%progbits
+ 1764              		.align	1
+ 1765              		.global	nrf24_dpl
+ 1766              		.syntax unified
+ 1767              		.thumb
+ 1768              		.thumb_func
+ 1770              	nrf24_dpl:
+ 1771              	.LVL130:
+ 1772              	.LFB168:
+ 331:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 332:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** void nrf24_dpl(uint8_t en){
+ 1773              		.loc 1 332 27 is_stmt 1 view -0
+ 1774              		.cfi_startproc
+ 1775              		@ args = 0, pretend = 0, frame = 8
+ 1776              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1777              		.loc 1 332 27 is_stmt 0 view .LVU331
+ 1778 0000 10B5     		push	{r4, lr}
+ 1779              	.LCFI77:
+ 1780              		.cfi_def_cfa_offset 8
+ 1781              		.cfi_offset 4, -8
+ 1782              		.cfi_offset 14, -4
+ 1783 0002 82B0     		sub	sp, sp, #8
+ 1784              	.LCFI78:
+ 1785              		.cfi_def_cfa_offset 16
+ 1786 0004 0446     		mov	r4, r0
+ 333:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	uint8_t feature = nrf24_r_reg(FEATURE, 1);
+ 1787              		.loc 1 333 2 is_stmt 1 view .LVU332
+ 1788              		.loc 1 333 20 is_stmt 0 view .LVU333
+ 1789 0006 0121     		movs	r1, #1
+ 1790 0008 1D20     		movs	r0, #29
+ 1791              	.LVL131:
+ARM GAS  /tmp/ccAYsZDq.s 			page 38
+
+
+ 1792              		.loc 1 333 20 view .LVU334
+ 1793 000a FFF7FEFF 		bl	nrf24_r_reg
+ 1794              	.LVL132:
+ 1795              		.loc 1 333 10 discriminator 1 view .LVU335
+ 1796 000e 8DF80700 		strb	r0, [sp, #7]
+ 334:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 335:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	if(en == enable){
+ 1797              		.loc 1 335 2 is_stmt 1 view .LVU336
+ 1798              		.loc 1 335 4 is_stmt 0 view .LVU337
+ 1799 0012 012C     		cmp	r4, #1
+ 1800 0014 0BD0     		beq	.L114
+ 336:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		feature |= (1 << EN_DPL);
+ 337:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	}else{
+ 338:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		feature &= ~(1 << EN_DPL);
+ 1801              		.loc 1 338 3 is_stmt 1 view .LVU338
+ 1802              		.loc 1 338 11 is_stmt 0 view .LVU339
+ 1803 0016 20F00400 		bic	r0, r0, #4
+ 1804 001a 8DF80700 		strb	r0, [sp, #7]
+ 1805              	.L112:
+ 339:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	}
+ 340:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 341:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	nrf24_w_reg(FEATURE, &feature, 1);
+ 1806              		.loc 1 341 2 is_stmt 1 view .LVU340
+ 1807 001e 0122     		movs	r2, #1
+ 1808 0020 0DF10701 		add	r1, sp, #7
+ 1809 0024 1D20     		movs	r0, #29
+ 1810 0026 FFF7FEFF 		bl	nrf24_w_reg
+ 1811              	.LVL133:
+ 342:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** }
+ 1812              		.loc 1 342 1 is_stmt 0 view .LVU341
+ 1813 002a 02B0     		add	sp, sp, #8
+ 1814              	.LCFI79:
+ 1815              		.cfi_remember_state
+ 1816              		.cfi_def_cfa_offset 8
+ 1817              		@ sp needed
+ 1818 002c 10BD     		pop	{r4, pc}
+ 1819              	.LVL134:
+ 1820              	.L114:
+ 1821              	.LCFI80:
+ 1822              		.cfi_restore_state
+ 336:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		feature |= (1 << EN_DPL);
+ 1823              		.loc 1 336 3 is_stmt 1 view .LVU342
+ 336:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		feature |= (1 << EN_DPL);
+ 1824              		.loc 1 336 11 is_stmt 0 view .LVU343
+ 1825 002e 40F00400 		orr	r0, r0, #4
+ 1826 0032 8DF80700 		strb	r0, [sp, #7]
+ 1827 0036 F2E7     		b	.L112
+ 1828              		.cfi_endproc
+ 1829              	.LFE168:
+ 1831              		.section	.text.nrf24_set_rx_dpl,"ax",%progbits
+ 1832              		.align	1
+ 1833              		.global	nrf24_set_rx_dpl
+ 1834              		.syntax unified
+ 1835              		.thumb
+ 1836              		.thumb_func
+ 1838              	nrf24_set_rx_dpl:
+ 1839              	.LVL135:
+ARM GAS  /tmp/ccAYsZDq.s 			page 39
+
+
+ 1840              	.LFB169:
+ 343:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 344:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** void nrf24_set_rx_dpl(uint8_t pipe, uint8_t en){
+ 1841              		.loc 1 344 48 is_stmt 1 view -0
+ 1842              		.cfi_startproc
+ 1843              		@ args = 0, pretend = 0, frame = 8
+ 1844              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1845              		.loc 1 344 48 is_stmt 0 view .LVU345
+ 1846 0000 30B5     		push	{r4, r5, lr}
+ 1847              	.LCFI81:
+ 1848              		.cfi_def_cfa_offset 12
+ 1849              		.cfi_offset 4, -12
+ 1850              		.cfi_offset 5, -8
+ 1851              		.cfi_offset 14, -4
+ 1852 0002 83B0     		sub	sp, sp, #12
+ 1853              	.LCFI82:
+ 1854              		.cfi_def_cfa_offset 24
+ 1855 0004 0446     		mov	r4, r0
+ 1856 0006 0D46     		mov	r5, r1
+ 345:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 346:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	uint8_t dynpd = nrf24_r_reg(DYNPD, 1);
+ 1857              		.loc 1 346 2 is_stmt 1 view .LVU346
+ 1858              		.loc 1 346 18 is_stmt 0 view .LVU347
+ 1859 0008 0121     		movs	r1, #1
+ 1860              	.LVL136:
+ 1861              		.loc 1 346 18 view .LVU348
+ 1862 000a 1C20     		movs	r0, #28
+ 1863              	.LVL137:
+ 1864              		.loc 1 346 18 view .LVU349
+ 1865 000c FFF7FEFF 		bl	nrf24_r_reg
+ 1866              	.LVL138:
+ 1867              		.loc 1 346 10 discriminator 1 view .LVU350
+ 1868 0010 8DF80700 		strb	r0, [sp, #7]
+ 347:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 348:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	if(pipe > 5){
+ 1869              		.loc 1 348 2 is_stmt 1 view .LVU351
+ 1870              		.loc 1 348 4 is_stmt 0 view .LVU352
+ 1871 0014 052C     		cmp	r4, #5
+ 1872 0016 00D9     		bls	.L116
+ 349:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		pipe = 5;
+ 1873              		.loc 1 349 8 view .LVU353
+ 1874 0018 0524     		movs	r4, #5
+ 1875              	.LVL139:
+ 1876              	.L116:
+ 350:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	}
+ 351:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 352:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	if(en){
+ 1877              		.loc 1 352 2 is_stmt 1 view .LVU354
+ 1878              		.loc 1 352 4 is_stmt 0 view .LVU355
+ 1879 001a 65B1     		cbz	r5, .L117
+ 353:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		dynpd |= (1 << pipe);
+ 1880              		.loc 1 353 3 is_stmt 1 view .LVU356
+ 1881              		.loc 1 353 15 is_stmt 0 view .LVU357
+ 1882 001c 0123     		movs	r3, #1
+ 1883 001e A340     		lsls	r3, r3, r4
+ 1884              		.loc 1 353 9 view .LVU358
+ 1885 0020 1843     		orrs	r0, r0, r3
+ARM GAS  /tmp/ccAYsZDq.s 			page 40
+
+
+ 1886 0022 8DF80700 		strb	r0, [sp, #7]
+ 1887              	.L118:
+ 354:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	}else{
+ 355:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		dynpd &= ~(1 << pipe);
+ 356:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	}
+ 357:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 358:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	nrf24_w_reg(DYNPD, &dynpd, 1);
+ 1888              		.loc 1 358 2 is_stmt 1 view .LVU359
+ 1889 0026 0122     		movs	r2, #1
+ 1890 0028 0DF10701 		add	r1, sp, #7
+ 1891 002c 1C20     		movs	r0, #28
+ 1892 002e FFF7FEFF 		bl	nrf24_w_reg
+ 1893              	.LVL140:
+ 359:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** }
+ 1894              		.loc 1 359 1 is_stmt 0 view .LVU360
+ 1895 0032 03B0     		add	sp, sp, #12
+ 1896              	.LCFI83:
+ 1897              		.cfi_remember_state
+ 1898              		.cfi_def_cfa_offset 12
+ 1899              		@ sp needed
+ 1900 0034 30BD     		pop	{r4, r5, pc}
+ 1901              	.LVL141:
+ 1902              	.L117:
+ 1903              	.LCFI84:
+ 1904              		.cfi_restore_state
+ 355:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	}
+ 1905              		.loc 1 355 3 is_stmt 1 view .LVU361
+ 355:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	}
+ 1906              		.loc 1 355 16 is_stmt 0 view .LVU362
+ 1907 0036 0123     		movs	r3, #1
+ 1908 0038 A340     		lsls	r3, r3, r4
+ 355:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	}
+ 1909              		.loc 1 355 9 view .LVU363
+ 1910 003a DB43     		mvns	r3, r3
+ 1911 003c 5BB2     		sxtb	r3, r3
+ 1912 003e 1840     		ands	r0, r0, r3
+ 1913 0040 8DF80700 		strb	r0, [sp, #7]
+ 1914 0044 EFE7     		b	.L118
+ 1915              		.cfi_endproc
+ 1916              	.LFE169:
+ 1918              		.section	.text.nrf24_auto_ack,"ax",%progbits
+ 1919              		.align	1
+ 1920              		.global	nrf24_auto_ack
+ 1921              		.syntax unified
+ 1922              		.thumb
+ 1923              		.thumb_func
+ 1925              	nrf24_auto_ack:
+ 1926              	.LVL142:
+ 1927              	.LFB170:
+ 360:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 361:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** void nrf24_auto_ack(uint8_t pipe, uint8_t ack){
+ 1928              		.loc 1 361 47 is_stmt 1 view -0
+ 1929              		.cfi_startproc
+ 1930              		@ args = 0, pretend = 0, frame = 8
+ 1931              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1932              		.loc 1 361 47 is_stmt 0 view .LVU365
+ 1933 0000 30B5     		push	{r4, r5, lr}
+ARM GAS  /tmp/ccAYsZDq.s 			page 41
+
+
+ 1934              	.LCFI85:
+ 1935              		.cfi_def_cfa_offset 12
+ 1936              		.cfi_offset 4, -12
+ 1937              		.cfi_offset 5, -8
+ 1938              		.cfi_offset 14, -4
+ 1939 0002 83B0     		sub	sp, sp, #12
+ 1940              	.LCFI86:
+ 1941              		.cfi_def_cfa_offset 24
+ 1942 0004 0446     		mov	r4, r0
+ 1943 0006 0D46     		mov	r5, r1
+ 362:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 363:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	if(pipe > 5){
+ 1944              		.loc 1 363 2 is_stmt 1 view .LVU366
+ 1945              		.loc 1 363 4 is_stmt 0 view .LVU367
+ 1946 0008 0528     		cmp	r0, #5
+ 1947 000a 00D9     		bls	.L122
+ 364:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		pipe = 5;
+ 1948              		.loc 1 364 8 view .LVU368
+ 1949 000c 0524     		movs	r4, #5
+ 1950              	.L122:
+ 1951              	.LVL143:
+ 365:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	}
+ 366:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 367:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	uint8_t enaa = nrf24_r_reg(EN_AA, 1);
+ 1952              		.loc 1 367 2 is_stmt 1 view .LVU369
+ 1953              		.loc 1 367 17 is_stmt 0 view .LVU370
+ 1954 000e 0121     		movs	r1, #1
+ 1955              	.LVL144:
+ 1956              		.loc 1 367 17 view .LVU371
+ 1957 0010 0846     		mov	r0, r1
+ 1958 0012 FFF7FEFF 		bl	nrf24_r_reg
+ 1959              	.LVL145:
+ 1960              		.loc 1 367 10 discriminator 1 view .LVU372
+ 1961 0016 8DF80700 		strb	r0, [sp, #7]
+ 368:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 369:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	if(ack){
+ 1962              		.loc 1 369 2 is_stmt 1 view .LVU373
+ 1963              		.loc 1 369 4 is_stmt 0 view .LVU374
+ 1964 001a 65B1     		cbz	r5, .L123
+ 370:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		enaa |= (1 << pipe);
+ 1965              		.loc 1 370 3 is_stmt 1 view .LVU375
+ 1966              		.loc 1 370 14 is_stmt 0 view .LVU376
+ 1967 001c 0123     		movs	r3, #1
+ 1968 001e A340     		lsls	r3, r3, r4
+ 1969              		.loc 1 370 8 view .LVU377
+ 1970 0020 1843     		orrs	r0, r0, r3
+ 1971 0022 8DF80700 		strb	r0, [sp, #7]
+ 1972              	.L124:
+ 371:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	}else{
+ 372:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		enaa &= ~(1 << pipe);
+ 373:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	}
+ 374:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 375:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	nrf24_w_reg(EN_AA, &enaa, 1);
+ 1973              		.loc 1 375 2 is_stmt 1 view .LVU378
+ 1974 0026 0122     		movs	r2, #1
+ 1975 0028 0DF10701 		add	r1, sp, #7
+ 1976 002c 1046     		mov	r0, r2
+ARM GAS  /tmp/ccAYsZDq.s 			page 42
+
+
+ 1977 002e FFF7FEFF 		bl	nrf24_w_reg
+ 1978              	.LVL146:
+ 376:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** }
+ 1979              		.loc 1 376 1 is_stmt 0 view .LVU379
+ 1980 0032 03B0     		add	sp, sp, #12
+ 1981              	.LCFI87:
+ 1982              		.cfi_remember_state
+ 1983              		.cfi_def_cfa_offset 12
+ 1984              		@ sp needed
+ 1985 0034 30BD     		pop	{r4, r5, pc}
+ 1986              	.LVL147:
+ 1987              	.L123:
+ 1988              	.LCFI88:
+ 1989              		.cfi_restore_state
+ 372:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	}
+ 1990              		.loc 1 372 3 is_stmt 1 view .LVU380
+ 372:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	}
+ 1991              		.loc 1 372 15 is_stmt 0 view .LVU381
+ 1992 0036 0123     		movs	r3, #1
+ 1993 0038 A340     		lsls	r3, r3, r4
+ 372:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	}
+ 1994              		.loc 1 372 8 view .LVU382
+ 1995 003a DB43     		mvns	r3, r3
+ 1996 003c 5BB2     		sxtb	r3, r3
+ 1997 003e 1840     		ands	r0, r0, r3
+ 1998 0040 8DF80700 		strb	r0, [sp, #7]
+ 1999 0044 EFE7     		b	.L124
+ 2000              		.cfi_endproc
+ 2001              	.LFE170:
+ 2003              		.section	.text.nrf24_auto_ack_all,"ax",%progbits
+ 2004              		.align	1
+ 2005              		.global	nrf24_auto_ack_all
+ 2006              		.syntax unified
+ 2007              		.thumb
+ 2008              		.thumb_func
+ 2010              	nrf24_auto_ack_all:
+ 2011              	.LVL148:
+ 2012              	.LFB171:
+ 377:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 378:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** void nrf24_auto_ack_all(uint8_t ack){
+ 2013              		.loc 1 378 37 is_stmt 1 view -0
+ 2014              		.cfi_startproc
+ 2015              		@ args = 0, pretend = 0, frame = 8
+ 2016              		@ frame_needed = 0, uses_anonymous_args = 0
+ 2017              		.loc 1 378 37 is_stmt 0 view .LVU384
+ 2018 0000 10B5     		push	{r4, lr}
+ 2019              	.LCFI89:
+ 2020              		.cfi_def_cfa_offset 8
+ 2021              		.cfi_offset 4, -8
+ 2022              		.cfi_offset 14, -4
+ 2023 0002 82B0     		sub	sp, sp, #8
+ 2024              	.LCFI90:
+ 2025              		.cfi_def_cfa_offset 16
+ 2026 0004 0446     		mov	r4, r0
+ 379:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	uint8_t enaa = nrf24_r_reg(EN_AA, 1);
+ 2027              		.loc 1 379 2 is_stmt 1 view .LVU385
+ 2028              		.loc 1 379 17 is_stmt 0 view .LVU386
+ARM GAS  /tmp/ccAYsZDq.s 			page 43
+
+
+ 2029 0006 0121     		movs	r1, #1
+ 2030 0008 0846     		mov	r0, r1
+ 2031              	.LVL149:
+ 2032              		.loc 1 379 17 view .LVU387
+ 2033 000a FFF7FEFF 		bl	nrf24_r_reg
+ 2034              	.LVL150:
+ 2035              		.loc 1 379 10 discriminator 1 view .LVU388
+ 2036 000e 8DF80700 		strb	r0, [sp, #7]
+ 380:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 381:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	if(ack){
+ 2037              		.loc 1 381 2 is_stmt 1 view .LVU389
+ 2038              		.loc 1 381 4 is_stmt 0 view .LVU390
+ 2039 0012 54B1     		cbz	r4, .L128
+ 382:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		enaa = 63;
+ 2040              		.loc 1 382 3 is_stmt 1 view .LVU391
+ 2041              		.loc 1 382 8 is_stmt 0 view .LVU392
+ 2042 0014 3F23     		movs	r3, #63
+ 2043 0016 8DF80730 		strb	r3, [sp, #7]
+ 2044              	.L129:
+ 383:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	}else{
+ 384:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		enaa = 0;
+ 385:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	}
+ 386:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 387:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	nrf24_w_reg(EN_AA, &enaa, 1);
+ 2045              		.loc 1 387 2 is_stmt 1 view .LVU393
+ 2046 001a 0122     		movs	r2, #1
+ 2047 001c 0DF10701 		add	r1, sp, #7
+ 2048 0020 1046     		mov	r0, r2
+ 2049 0022 FFF7FEFF 		bl	nrf24_w_reg
+ 2050              	.LVL151:
+ 388:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** }
+ 2051              		.loc 1 388 1 is_stmt 0 view .LVU394
+ 2052 0026 02B0     		add	sp, sp, #8
+ 2053              	.LCFI91:
+ 2054              		.cfi_remember_state
+ 2055              		.cfi_def_cfa_offset 8
+ 2056              		@ sp needed
+ 2057 0028 10BD     		pop	{r4, pc}
+ 2058              	.LVL152:
+ 2059              	.L128:
+ 2060              	.LCFI92:
+ 2061              		.cfi_restore_state
+ 384:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	}
+ 2062              		.loc 1 384 3 is_stmt 1 view .LVU395
+ 384:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	}
+ 2063              		.loc 1 384 8 is_stmt 0 view .LVU396
+ 2064 002a 0023     		movs	r3, #0
+ 2065 002c 8DF80730 		strb	r3, [sp, #7]
+ 2066 0030 F3E7     		b	.L129
+ 2067              		.cfi_endproc
+ 2068              	.LFE171:
+ 2070              		.section	.text.nrf24_en_ack_pld,"ax",%progbits
+ 2071              		.align	1
+ 2072              		.global	nrf24_en_ack_pld
+ 2073              		.syntax unified
+ 2074              		.thumb
+ 2075              		.thumb_func
+ARM GAS  /tmp/ccAYsZDq.s 			page 44
+
+
+ 2077              	nrf24_en_ack_pld:
+ 2078              	.LVL153:
+ 2079              	.LFB172:
+ 389:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 390:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** void nrf24_en_ack_pld(uint8_t en){
+ 2080              		.loc 1 390 34 is_stmt 1 view -0
+ 2081              		.cfi_startproc
+ 2082              		@ args = 0, pretend = 0, frame = 8
+ 2083              		@ frame_needed = 0, uses_anonymous_args = 0
+ 2084              		.loc 1 390 34 is_stmt 0 view .LVU398
+ 2085 0000 10B5     		push	{r4, lr}
+ 2086              	.LCFI93:
+ 2087              		.cfi_def_cfa_offset 8
+ 2088              		.cfi_offset 4, -8
+ 2089              		.cfi_offset 14, -4
+ 2090 0002 82B0     		sub	sp, sp, #8
+ 2091              	.LCFI94:
+ 2092              		.cfi_def_cfa_offset 16
+ 2093 0004 0446     		mov	r4, r0
+ 391:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	uint8_t feature = nrf24_r_reg(FEATURE, 1);
+ 2094              		.loc 1 391 2 is_stmt 1 view .LVU399
+ 2095              		.loc 1 391 20 is_stmt 0 view .LVU400
+ 2096 0006 0121     		movs	r1, #1
+ 2097 0008 1D20     		movs	r0, #29
+ 2098              	.LVL154:
+ 2099              		.loc 1 391 20 view .LVU401
+ 2100 000a FFF7FEFF 		bl	nrf24_r_reg
+ 2101              	.LVL155:
+ 2102              		.loc 1 391 10 discriminator 1 view .LVU402
+ 2103 000e 8DF80700 		strb	r0, [sp, #7]
+ 392:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 393:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	if(en){
+ 2104              		.loc 1 393 2 is_stmt 1 view .LVU403
+ 2105              		.loc 1 393 4 is_stmt 0 view .LVU404
+ 2106 0012 5CB1     		cbz	r4, .L132
+ 394:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		feature |= (1 << EN_ACK_PAY);
+ 2107              		.loc 1 394 3 is_stmt 1 view .LVU405
+ 2108              		.loc 1 394 11 is_stmt 0 view .LVU406
+ 2109 0014 40F00200 		orr	r0, r0, #2
+ 2110 0018 8DF80700 		strb	r0, [sp, #7]
+ 2111              	.L133:
+ 395:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	}else{
+ 396:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		feature &= ~(1 << EN_ACK_PAY);
+ 397:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	}
+ 398:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 399:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	nrf24_w_reg(FEATURE, &feature, 1);
+ 2112              		.loc 1 399 2 is_stmt 1 view .LVU407
+ 2113 001c 0122     		movs	r2, #1
+ 2114 001e 0DF10701 		add	r1, sp, #7
+ 2115 0022 1D20     		movs	r0, #29
+ 2116 0024 FFF7FEFF 		bl	nrf24_w_reg
+ 2117              	.LVL156:
+ 400:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** }
+ 2118              		.loc 1 400 1 is_stmt 0 view .LVU408
+ 2119 0028 02B0     		add	sp, sp, #8
+ 2120              	.LCFI95:
+ 2121              		.cfi_remember_state
+ARM GAS  /tmp/ccAYsZDq.s 			page 45
+
+
+ 2122              		.cfi_def_cfa_offset 8
+ 2123              		@ sp needed
+ 2124 002a 10BD     		pop	{r4, pc}
+ 2125              	.LVL157:
+ 2126              	.L132:
+ 2127              	.LCFI96:
+ 2128              		.cfi_restore_state
+ 396:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	}
+ 2129              		.loc 1 396 3 is_stmt 1 view .LVU409
+ 396:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	}
+ 2130              		.loc 1 396 11 is_stmt 0 view .LVU410
+ 2131 002c 20F00200 		bic	r0, r0, #2
+ 2132 0030 8DF80700 		strb	r0, [sp, #7]
+ 2133 0034 F2E7     		b	.L133
+ 2134              		.cfi_endproc
+ 2135              	.LFE172:
+ 2137              		.section	.text.nrf24_en_dyn_ack,"ax",%progbits
+ 2138              		.align	1
+ 2139              		.global	nrf24_en_dyn_ack
+ 2140              		.syntax unified
+ 2141              		.thumb
+ 2142              		.thumb_func
+ 2144              	nrf24_en_dyn_ack:
+ 2145              	.LVL158:
+ 2146              	.LFB173:
+ 401:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 402:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** void nrf24_en_dyn_ack(uint8_t en){
+ 2147              		.loc 1 402 34 is_stmt 1 view -0
+ 2148              		.cfi_startproc
+ 2149              		@ args = 0, pretend = 0, frame = 8
+ 2150              		@ frame_needed = 0, uses_anonymous_args = 0
+ 2151              		.loc 1 402 34 is_stmt 0 view .LVU412
+ 2152 0000 10B5     		push	{r4, lr}
+ 2153              	.LCFI97:
+ 2154              		.cfi_def_cfa_offset 8
+ 2155              		.cfi_offset 4, -8
+ 2156              		.cfi_offset 14, -4
+ 2157 0002 82B0     		sub	sp, sp, #8
+ 2158              	.LCFI98:
+ 2159              		.cfi_def_cfa_offset 16
+ 2160 0004 0446     		mov	r4, r0
+ 403:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	uint8_t feature = nrf24_r_reg(FEATURE, 1);
+ 2161              		.loc 1 403 2 is_stmt 1 view .LVU413
+ 2162              		.loc 1 403 20 is_stmt 0 view .LVU414
+ 2163 0006 0121     		movs	r1, #1
+ 2164 0008 1D20     		movs	r0, #29
+ 2165              	.LVL159:
+ 2166              		.loc 1 403 20 view .LVU415
+ 2167 000a FFF7FEFF 		bl	nrf24_r_reg
+ 2168              	.LVL160:
+ 2169              		.loc 1 403 10 discriminator 1 view .LVU416
+ 2170 000e 8DF80700 		strb	r0, [sp, #7]
+ 404:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 405:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	if(en){
+ 2171              		.loc 1 405 2 is_stmt 1 view .LVU417
+ 2172              		.loc 1 405 4 is_stmt 0 view .LVU418
+ 2173 0012 5CB1     		cbz	r4, .L136
+ARM GAS  /tmp/ccAYsZDq.s 			page 46
+
+
+ 406:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		feature |= (1 << EN_DYN_ACK);
+ 2174              		.loc 1 406 3 is_stmt 1 view .LVU419
+ 2175              		.loc 1 406 11 is_stmt 0 view .LVU420
+ 2176 0014 40F00100 		orr	r0, r0, #1
+ 2177 0018 8DF80700 		strb	r0, [sp, #7]
+ 2178              	.L137:
+ 407:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	}else{
+ 408:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		feature &= ~(1 << EN_DYN_ACK);
+ 409:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	}
+ 410:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 411:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	nrf24_w_reg(FEATURE, &feature, 1);
+ 2179              		.loc 1 411 2 is_stmt 1 view .LVU421
+ 2180 001c 0122     		movs	r2, #1
+ 2181 001e 0DF10701 		add	r1, sp, #7
+ 2182 0022 1D20     		movs	r0, #29
+ 2183 0024 FFF7FEFF 		bl	nrf24_w_reg
+ 2184              	.LVL161:
+ 412:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** }
+ 2185              		.loc 1 412 1 is_stmt 0 view .LVU422
+ 2186 0028 02B0     		add	sp, sp, #8
+ 2187              	.LCFI99:
+ 2188              		.cfi_remember_state
+ 2189              		.cfi_def_cfa_offset 8
+ 2190              		@ sp needed
+ 2191 002a 10BD     		pop	{r4, pc}
+ 2192              	.LVL162:
+ 2193              	.L136:
+ 2194              	.LCFI100:
+ 2195              		.cfi_restore_state
+ 408:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	}
+ 2196              		.loc 1 408 3 is_stmt 1 view .LVU423
+ 408:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	}
+ 2197              		.loc 1 408 11 is_stmt 0 view .LVU424
+ 2198 002c 20F00100 		bic	r0, r0, #1
+ 2199 0030 8DF80700 		strb	r0, [sp, #7]
+ 2200 0034 F2E7     		b	.L137
+ 2201              		.cfi_endproc
+ 2202              	.LFE173:
+ 2204              		.section	.text.nrf24_auto_retr_delay,"ax",%progbits
+ 2205              		.align	1
+ 2206              		.global	nrf24_auto_retr_delay
+ 2207              		.syntax unified
+ 2208              		.thumb
+ 2209              		.thumb_func
+ 2211              	nrf24_auto_retr_delay:
+ 2212              	.LVL163:
+ 2213              	.LFB174:
+ 413:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 414:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** void nrf24_auto_retr_delay(uint8_t delay){
+ 2214              		.loc 1 414 42 is_stmt 1 view -0
+ 2215              		.cfi_startproc
+ 2216              		@ args = 0, pretend = 0, frame = 8
+ 2217              		@ frame_needed = 0, uses_anonymous_args = 0
+ 2218              		.loc 1 414 42 is_stmt 0 view .LVU426
+ 2219 0000 10B5     		push	{r4, lr}
+ 2220              	.LCFI101:
+ 2221              		.cfi_def_cfa_offset 8
+ARM GAS  /tmp/ccAYsZDq.s 			page 47
+
+
+ 2222              		.cfi_offset 4, -8
+ 2223              		.cfi_offset 14, -4
+ 2224 0002 82B0     		sub	sp, sp, #8
+ 2225              	.LCFI102:
+ 2226              		.cfi_def_cfa_offset 16
+ 2227 0004 0446     		mov	r4, r0
+ 415:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	uint8_t data = nrf24_r_reg(SETUP_RETR, 1);
+ 2228              		.loc 1 415 2 is_stmt 1 view .LVU427
+ 2229              		.loc 1 415 17 is_stmt 0 view .LVU428
+ 2230 0006 0121     		movs	r1, #1
+ 2231 0008 0420     		movs	r0, #4
+ 2232              	.LVL164:
+ 2233              		.loc 1 415 17 view .LVU429
+ 2234 000a FFF7FEFF 		bl	nrf24_r_reg
+ 2235              	.LVL165:
+ 2236              		.loc 1 415 10 discriminator 1 view .LVU430
+ 2237 000e 8DF80700 		strb	r0, [sp, #7]
+ 416:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 417:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	data &= 15;
+ 2238              		.loc 1 417 2 is_stmt 1 view .LVU431
+ 2239              		.loc 1 417 7 is_stmt 0 view .LVU432
+ 2240 0012 00F00F03 		and	r3, r0, #15
+ 2241 0016 8DF80730 		strb	r3, [sp, #7]
+ 418:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 419:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	data |= (delay << ARD);
+ 2242              		.loc 1 419 2 is_stmt 1 view .LVU433
+ 2243              		.loc 1 419 7 is_stmt 0 view .LVU434
+ 2244 001a 43EA0413 		orr	r3, r3, r4, lsl #4
+ 2245 001e 8DF80730 		strb	r3, [sp, #7]
+ 420:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 421:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	nrf24_w_reg(SETUP_RETR, &data, 1);
+ 2246              		.loc 1 421 2 is_stmt 1 view .LVU435
+ 2247 0022 0122     		movs	r2, #1
+ 2248 0024 0DF10701 		add	r1, sp, #7
+ 2249 0028 0420     		movs	r0, #4
+ 2250 002a FFF7FEFF 		bl	nrf24_w_reg
+ 2251              	.LVL166:
+ 422:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** }
+ 2252              		.loc 1 422 1 is_stmt 0 view .LVU436
+ 2253 002e 02B0     		add	sp, sp, #8
+ 2254              	.LCFI103:
+ 2255              		.cfi_def_cfa_offset 8
+ 2256              		@ sp needed
+ 2257 0030 10BD     		pop	{r4, pc}
+ 2258              		.loc 1 422 1 view .LVU437
+ 2259              		.cfi_endproc
+ 2260              	.LFE174:
+ 2262              		.section	.text.nrf24_auto_retr_limit,"ax",%progbits
+ 2263              		.align	1
+ 2264              		.global	nrf24_auto_retr_limit
+ 2265              		.syntax unified
+ 2266              		.thumb
+ 2267              		.thumb_func
+ 2269              	nrf24_auto_retr_limit:
+ 2270              	.LVL167:
+ 2271              	.LFB175:
+ 423:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ARM GAS  /tmp/ccAYsZDq.s 			page 48
+
+
+ 424:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** void nrf24_auto_retr_limit(uint8_t limit){
+ 2272              		.loc 1 424 42 is_stmt 1 view -0
+ 2273              		.cfi_startproc
+ 2274              		@ args = 0, pretend = 0, frame = 8
+ 2275              		@ frame_needed = 0, uses_anonymous_args = 0
+ 2276              		.loc 1 424 42 is_stmt 0 view .LVU439
+ 2277 0000 10B5     		push	{r4, lr}
+ 2278              	.LCFI104:
+ 2279              		.cfi_def_cfa_offset 8
+ 2280              		.cfi_offset 4, -8
+ 2281              		.cfi_offset 14, -4
+ 2282 0002 82B0     		sub	sp, sp, #8
+ 2283              	.LCFI105:
+ 2284              		.cfi_def_cfa_offset 16
+ 2285 0004 0446     		mov	r4, r0
+ 425:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	uint8_t data = nrf24_r_reg(SETUP_RETR, 1);
+ 2286              		.loc 1 425 2 is_stmt 1 view .LVU440
+ 2287              		.loc 1 425 17 is_stmt 0 view .LVU441
+ 2288 0006 0121     		movs	r1, #1
+ 2289 0008 0420     		movs	r0, #4
+ 2290              	.LVL168:
+ 2291              		.loc 1 425 17 view .LVU442
+ 2292 000a FFF7FEFF 		bl	nrf24_r_reg
+ 2293              	.LVL169:
+ 2294              		.loc 1 425 10 discriminator 1 view .LVU443
+ 2295 000e 8DF80700 		strb	r0, [sp, #7]
+ 426:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 427:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	data &= 240;
+ 2296              		.loc 1 427 2 is_stmt 1 view .LVU444
+ 2297              		.loc 1 427 7 is_stmt 0 view .LVU445
+ 2298 0012 00F0F003 		and	r3, r0, #240
+ 2299 0016 8DF80730 		strb	r3, [sp, #7]
+ 428:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 429:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	data |= (limit << ARC);
+ 2300              		.loc 1 429 2 is_stmt 1 view .LVU446
+ 2301              		.loc 1 429 7 is_stmt 0 view .LVU447
+ 2302 001a 2343     		orrs	r3, r3, r4
+ 2303 001c 8DF80730 		strb	r3, [sp, #7]
+ 430:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 431:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	nrf24_w_reg(SETUP_RETR, &data, 1);
+ 2304              		.loc 1 431 2 is_stmt 1 view .LVU448
+ 2305 0020 0122     		movs	r2, #1
+ 2306 0022 0DF10701 		add	r1, sp, #7
+ 2307 0026 0420     		movs	r0, #4
+ 2308 0028 FFF7FEFF 		bl	nrf24_w_reg
+ 2309              	.LVL170:
+ 432:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** }
+ 2310              		.loc 1 432 1 is_stmt 0 view .LVU449
+ 2311 002c 02B0     		add	sp, sp, #8
+ 2312              	.LCFI106:
+ 2313              		.cfi_def_cfa_offset 8
+ 2314              		@ sp needed
+ 2315 002e 10BD     		pop	{r4, pc}
+ 2316              		.loc 1 432 1 view .LVU450
+ 2317              		.cfi_endproc
+ 2318              	.LFE175:
+ 2320              		.section	.text.nrf24_type_to_uint8_t,"ax",%progbits
+ARM GAS  /tmp/ccAYsZDq.s 			page 49
+
+
+ 2321              		.align	1
+ 2322              		.global	nrf24_type_to_uint8_t
+ 2323              		.syntax unified
+ 2324              		.thumb
+ 2325              		.thumb_func
+ 2327              	nrf24_type_to_uint8_t:
+ 2328              	.LVL171:
+ 2329              	.LFB176:
+ 433:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 434:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** void nrf24_type_to_uint8_t(size_t in, uint8_t* out, uint16_t size){
+ 2330              		.loc 1 434 67 is_stmt 1 view -0
+ 2331              		.cfi_startproc
+ 2332              		@ args = 0, pretend = 0, frame = 0
+ 2333              		@ frame_needed = 0, uses_anonymous_args = 0
+ 435:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	for(uint16_t i = 0; i < size; i++){
+ 2334              		.loc 1 435 2 view .LVU452
+ 2335              	.LBB2:
+ 2336              		.loc 1 435 6 view .LVU453
+ 2337              		.loc 1 435 15 is_stmt 0 view .LVU454
+ 2338 0000 4FF0000C 		mov	ip, #0
+ 2339              	.LVL172:
+ 2340              		.loc 1 435 24 is_stmt 1 discriminator 1 view .LVU455
+ 2341 0004 9445     		cmp	ip, r2
+ 2342 0006 12D2     		bcs	.L149
+ 2343              	.LBE2:
+ 434:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	for(uint16_t i = 0; i < size; i++){
+ 2344              		.loc 1 434 67 is_stmt 0 view .LVU456
+ 2345 0008 00B5     		push	{lr}
+ 2346              	.LCFI107:
+ 2347              		.cfi_def_cfa_offset 4
+ 2348              		.cfi_offset 14, -4
+ 2349              	.L145:
+ 2350              	.LBB3:
+ 436:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		out[i] = (((in & (255 << (i*8)))) >> (i*8));
+ 2351              		.loc 1 436 3 is_stmt 1 view .LVU457
+ 2352              		.loc 1 436 30 is_stmt 0 view .LVU458
+ 2353 000a 4FEACC0E 		lsl	lr, ip, #3
+ 2354              		.loc 1 436 25 view .LVU459
+ 2355 000e FF23     		movs	r3, #255
+ 2356 0010 03FA0EF3 		lsl	r3, r3, lr
+ 2357              		.loc 1 436 18 view .LVU460
+ 2358 0014 0340     		ands	r3, r3, r0
+ 2359              		.loc 1 436 37 view .LVU461
+ 2360 0016 23FA0EF3 		lsr	r3, r3, lr
+ 2361              		.loc 1 436 10 view .LVU462
+ 2362 001a 01F80C30 		strb	r3, [r1, ip]
+ 435:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	for(uint16_t i = 0; i < size; i++){
+ 2363              		.loc 1 435 33 is_stmt 1 discriminator 3 view .LVU463
+ 2364 001e 0CF1010C 		add	ip, ip, #1
+ 2365              	.LVL173:
+ 435:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	for(uint16_t i = 0; i < size; i++){
+ 2366              		.loc 1 435 33 is_stmt 0 discriminator 3 view .LVU464
+ 2367 0022 1FFA8CFC 		uxth	ip, ip
+ 2368              	.LVL174:
+ 435:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	for(uint16_t i = 0; i < size; i++){
+ 2369              		.loc 1 435 24 is_stmt 1 discriminator 1 view .LVU465
+ 2370 0026 9445     		cmp	ip, r2
+ARM GAS  /tmp/ccAYsZDq.s 			page 50
+
+
+ 2371 0028 EFD3     		bcc	.L145
+ 2372              	.LBE3:
+ 437:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	}
+ 438:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** }
+ 2373              		.loc 1 438 1 is_stmt 0 view .LVU466
+ 2374 002a 5DF804FB 		ldr	pc, [sp], #4
+ 2375              	.L149:
+ 2376              	.LCFI108:
+ 2377              		.cfi_def_cfa_offset 0
+ 2378              		.cfi_restore 14
+ 2379              		.loc 1 438 1 view .LVU467
+ 2380 002e 7047     		bx	lr
+ 2381              		.cfi_endproc
+ 2382              	.LFE176:
+ 2384              		.section	.text.nrf24_uint8_t_to_type,"ax",%progbits
+ 2385              		.align	1
+ 2386              		.global	nrf24_uint8_t_to_type
+ 2387              		.syntax unified
+ 2388              		.thumb
+ 2389              		.thumb_func
+ 2391              	nrf24_uint8_t_to_type:
+ 2392              	.LVL175:
+ 2393              	.LFB177:
+ 439:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 440:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** size_t nrf24_uint8_t_to_type(uint8_t* in, uint16_t size){
+ 2394              		.loc 1 440 57 is_stmt 1 view -0
+ 2395              		.cfi_startproc
+ 2396              		@ args = 0, pretend = 0, frame = 0
+ 2397              		@ frame_needed = 0, uses_anonymous_args = 0
+ 2398              		.loc 1 440 57 is_stmt 0 view .LVU469
+ 2399 0000 00B5     		push	{lr}
+ 2400              	.LCFI109:
+ 2401              		.cfi_def_cfa_offset 4
+ 2402              		.cfi_offset 14, -4
+ 2403 0002 8646     		mov	lr, r0
+ 441:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	size_t out = 0;
+ 2404              		.loc 1 441 2 is_stmt 1 view .LVU470
+ 2405              	.LVL176:
+ 442:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 443:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	for(uint16_t i = 0; i < size; i++){
+ 2406              		.loc 1 443 2 view .LVU471
+ 2407              	.LBB4:
+ 2408              		.loc 1 443 6 view .LVU472
+ 2409              		.loc 1 443 15 is_stmt 0 view .LVU473
+ 2410 0004 0023     		movs	r3, #0
+ 2411              	.LBE4:
+ 441:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	size_t out = 0;
+ 2412              		.loc 1 441 9 view .LVU474
+ 2413 0006 1846     		mov	r0, r3
+ 2414              	.LVL177:
+ 2415              	.LBB5:
+ 2416              		.loc 1 443 2 view .LVU475
+ 2417 0008 08E0     		b	.L151
+ 2418              	.LVL178:
+ 2419              	.L152:
+ 444:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		out |= (in[i] << (8*i));
+ 2420              		.loc 1 444 3 is_stmt 1 view .LVU476
+ARM GAS  /tmp/ccAYsZDq.s 			page 51
+
+
+ 2421              		.loc 1 444 13 is_stmt 0 view .LVU477
+ 2422 000a 1EF80320 		ldrb	r2, [lr, r3]	@ zero_extendqisi2
+ 2423              		.loc 1 444 22 view .LVU478
+ 2424 000e 4FEAC30C 		lsl	ip, r3, #3
+ 2425              		.loc 1 444 17 view .LVU479
+ 2426 0012 02FA0CF2 		lsl	r2, r2, ip
+ 2427              		.loc 1 444 7 view .LVU480
+ 2428 0016 1043     		orrs	r0, r0, r2
+ 2429              	.LVL179:
+ 443:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		out |= (in[i] << (8*i));
+ 2430              		.loc 1 443 33 is_stmt 1 discriminator 3 view .LVU481
+ 2431 0018 0133     		adds	r3, r3, #1
+ 2432              	.LVL180:
+ 443:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		out |= (in[i] << (8*i));
+ 2433              		.loc 1 443 33 is_stmt 0 discriminator 3 view .LVU482
+ 2434 001a 9BB2     		uxth	r3, r3
+ 2435              	.LVL181:
+ 2436              	.L151:
+ 443:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		out |= (in[i] << (8*i));
+ 2437              		.loc 1 443 24 is_stmt 1 discriminator 1 view .LVU483
+ 2438 001c 8B42     		cmp	r3, r1
+ 2439 001e F4D3     		bcc	.L152
+ 2440              	.LBE5:
+ 445:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	}
+ 446:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 447:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	return out;
+ 2441              		.loc 1 447 2 view .LVU484
+ 448:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** }
+ 2442              		.loc 1 448 1 is_stmt 0 view .LVU485
+ 2443 0020 5DF804FB 		ldr	pc, [sp], #4
+ 2444              		.cfi_endproc
+ 2445              	.LFE177:
+ 2447              		.section	.text.nrf24_transmit,"ax",%progbits
+ 2448              		.align	1
+ 2449              		.global	nrf24_transmit
+ 2450              		.syntax unified
+ 2451              		.thumb
+ 2452              		.thumb_func
+ 2454              	nrf24_transmit:
+ 2455              	.LVL182:
+ 2456              	.LFB178:
+ 449:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 450:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 451:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** uint8_t nrf24_transmit(uint8_t *data, uint8_t size){
+ 2457              		.loc 1 451 52 is_stmt 1 view -0
+ 2458              		.cfi_startproc
+ 2459              		@ args = 0, pretend = 0, frame = 8
+ 2460              		@ frame_needed = 0, uses_anonymous_args = 0
+ 2461              		.loc 1 451 52 is_stmt 0 view .LVU487
+ 2462 0000 70B5     		push	{r4, r5, r6, lr}
+ 2463              	.LCFI110:
+ 2464              		.cfi_def_cfa_offset 16
+ 2465              		.cfi_offset 4, -16
+ 2466              		.cfi_offset 5, -12
+ 2467              		.cfi_offset 6, -8
+ 2468              		.cfi_offset 14, -4
+ 2469 0002 82B0     		sub	sp, sp, #8
+ARM GAS  /tmp/ccAYsZDq.s 			page 52
+
+
+ 2470              	.LCFI111:
+ 2471              		.cfi_def_cfa_offset 24
+ 2472 0004 0446     		mov	r4, r0
+ 2473 0006 0D46     		mov	r5, r1
+ 452:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 453:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	ce_low();
+ 2474              		.loc 1 453 2 is_stmt 1 view .LVU488
+ 2475 0008 FFF7FEFF 		bl	ce_low
+ 2476              	.LVL183:
+ 454:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 455:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	uint8_t cmd = W_TX_PAYLOAD;
+ 2477              		.loc 1 455 2 view .LVU489
+ 2478              		.loc 1 455 10 is_stmt 0 view .LVU490
+ 2479 000c A023     		movs	r3, #160
+ 2480 000e 8DF80730 		strb	r3, [sp, #7]
+ 456:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 457:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	csn_low();
+ 2481              		.loc 1 457 2 is_stmt 1 view .LVU491
+ 2482 0012 FFF7FEFF 		bl	csn_low
+ 2483              	.LVL184:
+ 458:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	HAL_SPI_Transmit(&hspiX, &cmd, 1, spi_w_timeout);
+ 2484              		.loc 1 458 2 view .LVU492
+ 2485 0016 134E     		ldr	r6, .L158
+ 2486 0018 4FF47A73 		mov	r3, #1000
+ 2487 001c 0122     		movs	r2, #1
+ 2488 001e 0DF10701 		add	r1, sp, #7
+ 2489 0022 3046     		mov	r0, r6
+ 2490 0024 FFF7FEFF 		bl	HAL_SPI_Transmit
+ 2491              	.LVL185:
+ 459:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	HAL_SPI_Transmit(&hspiX, data, size, spi_w_timeout);
+ 2492              		.loc 1 459 2 view .LVU493
+ 2493 0028 4FF47A73 		mov	r3, #1000
+ 2494 002c 2A46     		mov	r2, r5
+ 2495 002e 2146     		mov	r1, r4
+ 2496 0030 3046     		mov	r0, r6
+ 2497 0032 FFF7FEFF 		bl	HAL_SPI_Transmit
+ 2498              	.LVL186:
+ 460:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	csn_high();
+ 2499              		.loc 1 460 2 view .LVU494
+ 2500 0036 FFF7FEFF 		bl	csn_high
+ 2501              	.LVL187:
+ 461:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 462:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	ce_high();
+ 2502              		.loc 1 462 2 view .LVU495
+ 2503 003a FFF7FEFF 		bl	ce_high
+ 2504              	.LVL188:
+ 463:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	HAL_Delay(1);
+ 2505              		.loc 1 463 2 view .LVU496
+ 2506 003e 0120     		movs	r0, #1
+ 2507 0040 FFF7FEFF 		bl	HAL_Delay
+ 2508              	.LVL189:
+ 464:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	ce_low();
+ 2509              		.loc 1 464 2 view .LVU497
+ 2510 0044 FFF7FEFF 		bl	ce_low
+ 2511              	.LVL190:
+ 465:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 466:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	if(nrf24_r_status() & (1 << MAX_RT)){
+ARM GAS  /tmp/ccAYsZDq.s 			page 53
+
+
+ 2512              		.loc 1 466 2 view .LVU498
+ 2513              		.loc 1 466 5 is_stmt 0 view .LVU499
+ 2514 0048 FFF7FEFF 		bl	nrf24_r_status
+ 2515              	.LVL191:
+ 2516              		.loc 1 466 4 discriminator 1 view .LVU500
+ 2517 004c 10F01000 		ands	r0, r0, #16
+ 2518 0050 01D1     		bne	.L157
+ 2519              	.L155:
+ 467:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		nrf24_clear_max_rt();
+ 468:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		nrf24_flush_tx();
+ 469:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		return 1;
+ 470:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	}
+ 471:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 472:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	return 0;
+ 473:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** }
+ 2520              		.loc 1 473 1 view .LVU501
+ 2521 0052 02B0     		add	sp, sp, #8
+ 2522              	.LCFI112:
+ 2523              		.cfi_remember_state
+ 2524              		.cfi_def_cfa_offset 16
+ 2525              		@ sp needed
+ 2526 0054 70BD     		pop	{r4, r5, r6, pc}
+ 2527              	.LVL192:
+ 2528              	.L157:
+ 2529              	.LCFI113:
+ 2530              		.cfi_restore_state
+ 467:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		nrf24_clear_max_rt();
+ 2531              		.loc 1 467 3 is_stmt 1 view .LVU502
+ 2532 0056 FFF7FEFF 		bl	nrf24_clear_max_rt
+ 2533              	.LVL193:
+ 468:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		return 1;
+ 2534              		.loc 1 468 3 view .LVU503
+ 2535 005a FFF7FEFF 		bl	nrf24_flush_tx
+ 2536              	.LVL194:
+ 469:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	}
+ 2537              		.loc 1 469 3 view .LVU504
+ 469:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	}
+ 2538              		.loc 1 469 10 is_stmt 0 view .LVU505
+ 2539 005e 0120     		movs	r0, #1
+ 2540 0060 F7E7     		b	.L155
+ 2541              	.L159:
+ 2542 0062 00BF     		.align	2
+ 2543              	.L158:
+ 2544 0064 00000000 		.word	hspi3
+ 2545              		.cfi_endproc
+ 2546              	.LFE178:
+ 2548              		.section	.text.nrf24_transmit_no_ack,"ax",%progbits
+ 2549              		.align	1
+ 2550              		.global	nrf24_transmit_no_ack
+ 2551              		.syntax unified
+ 2552              		.thumb
+ 2553              		.thumb_func
+ 2555              	nrf24_transmit_no_ack:
+ 2556              	.LVL195:
+ 2557              	.LFB179:
+ 474:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 475:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** void nrf24_transmit_no_ack(uint8_t *data, uint8_t size){
+ARM GAS  /tmp/ccAYsZDq.s 			page 54
+
+
+ 2558              		.loc 1 475 56 is_stmt 1 view -0
+ 2559              		.cfi_startproc
+ 2560              		@ args = 0, pretend = 0, frame = 8
+ 2561              		@ frame_needed = 0, uses_anonymous_args = 0
+ 2562              		.loc 1 475 56 is_stmt 0 view .LVU507
+ 2563 0000 70B5     		push	{r4, r5, r6, lr}
+ 2564              	.LCFI114:
+ 2565              		.cfi_def_cfa_offset 16
+ 2566              		.cfi_offset 4, -16
+ 2567              		.cfi_offset 5, -12
+ 2568              		.cfi_offset 6, -8
+ 2569              		.cfi_offset 14, -4
+ 2570 0002 82B0     		sub	sp, sp, #8
+ 2571              	.LCFI115:
+ 2572              		.cfi_def_cfa_offset 24
+ 2573 0004 0446     		mov	r4, r0
+ 2574 0006 0D46     		mov	r5, r1
+ 476:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 477:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	ce_low();
+ 2575              		.loc 1 477 2 is_stmt 1 view .LVU508
+ 2576 0008 FFF7FEFF 		bl	ce_low
+ 2577              	.LVL196:
+ 478:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 479:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	uint8_t cmd = W_TX_PAYLOAD_NOACK;
+ 2578              		.loc 1 479 2 view .LVU509
+ 2579              		.loc 1 479 10 is_stmt 0 view .LVU510
+ 2580 000c B023     		movs	r3, #176
+ 2581 000e 8DF80730 		strb	r3, [sp, #7]
+ 480:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 481:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	csn_low();
+ 2582              		.loc 1 481 2 is_stmt 1 view .LVU511
+ 2583 0012 FFF7FEFF 		bl	csn_low
+ 2584              	.LVL197:
+ 482:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	HAL_SPI_Transmit(&hspiX, &cmd, 1, spi_w_timeout);
+ 2585              		.loc 1 482 2 view .LVU512
+ 2586 0016 0D4E     		ldr	r6, .L162
+ 2587 0018 4FF47A73 		mov	r3, #1000
+ 2588 001c 0122     		movs	r2, #1
+ 2589 001e 0DF10701 		add	r1, sp, #7
+ 2590 0022 3046     		mov	r0, r6
+ 2591 0024 FFF7FEFF 		bl	HAL_SPI_Transmit
+ 2592              	.LVL198:
+ 483:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	HAL_SPI_Transmit(&hspiX, data, size, spi_w_timeout);
+ 2593              		.loc 1 483 2 view .LVU513
+ 2594 0028 4FF47A73 		mov	r3, #1000
+ 2595 002c 2A46     		mov	r2, r5
+ 2596 002e 2146     		mov	r1, r4
+ 2597 0030 3046     		mov	r0, r6
+ 2598 0032 FFF7FEFF 		bl	HAL_SPI_Transmit
+ 2599              	.LVL199:
+ 484:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	csn_high();
+ 2600              		.loc 1 484 2 view .LVU514
+ 2601 0036 FFF7FEFF 		bl	csn_high
+ 2602              	.LVL200:
+ 485:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 486:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	ce_high();
+ 2603              		.loc 1 486 2 view .LVU515
+ARM GAS  /tmp/ccAYsZDq.s 			page 55
+
+
+ 2604 003a FFF7FEFF 		bl	ce_high
+ 2605              	.LVL201:
+ 487:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	HAL_Delay(1);
+ 2606              		.loc 1 487 2 view .LVU516
+ 2607 003e 0120     		movs	r0, #1
+ 2608 0040 FFF7FEFF 		bl	HAL_Delay
+ 2609              	.LVL202:
+ 488:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	ce_low();
+ 2610              		.loc 1 488 2 view .LVU517
+ 2611 0044 FFF7FEFF 		bl	ce_low
+ 2612              	.LVL203:
+ 489:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** }
+ 2613              		.loc 1 489 1 is_stmt 0 view .LVU518
+ 2614 0048 02B0     		add	sp, sp, #8
+ 2615              	.LCFI116:
+ 2616              		.cfi_def_cfa_offset 16
+ 2617              		@ sp needed
+ 2618 004a 70BD     		pop	{r4, r5, r6, pc}
+ 2619              	.LVL204:
+ 2620              	.L163:
+ 2621              		.loc 1 489 1 view .LVU519
+ 2622              		.align	2
+ 2623              	.L162:
+ 2624 004c 00000000 		.word	hspi3
+ 2625              		.cfi_endproc
+ 2626              	.LFE179:
+ 2628              		.section	.text.nrf24_transmit_rx_ack_pld,"ax",%progbits
+ 2629              		.align	1
+ 2630              		.global	nrf24_transmit_rx_ack_pld
+ 2631              		.syntax unified
+ 2632              		.thumb
+ 2633              		.thumb_func
+ 2635              	nrf24_transmit_rx_ack_pld:
+ 2636              	.LVL205:
+ 2637              	.LFB180:
+ 490:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 491:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** void nrf24_transmit_rx_ack_pld(uint8_t pipe, uint8_t *data, uint8_t size){
+ 2638              		.loc 1 491 74 is_stmt 1 view -0
+ 2639              		.cfi_startproc
+ 2640              		@ args = 0, pretend = 0, frame = 8
+ 2641              		@ frame_needed = 0, uses_anonymous_args = 0
+ 2642              		.loc 1 491 74 is_stmt 0 view .LVU521
+ 2643 0000 70B5     		push	{r4, r5, r6, lr}
+ 2644              	.LCFI117:
+ 2645              		.cfi_def_cfa_offset 16
+ 2646              		.cfi_offset 4, -16
+ 2647              		.cfi_offset 5, -12
+ 2648              		.cfi_offset 6, -8
+ 2649              		.cfi_offset 14, -4
+ 2650 0002 82B0     		sub	sp, sp, #8
+ 2651              	.LCFI118:
+ 2652              		.cfi_def_cfa_offset 24
+ 2653 0004 0C46     		mov	r4, r1
+ 2654 0006 1546     		mov	r5, r2
+ 492:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 493:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	if(pipe > 5){
+ 2655              		.loc 1 493 2 is_stmt 1 view .LVU522
+ARM GAS  /tmp/ccAYsZDq.s 			page 56
+
+
+ 2656              		.loc 1 493 4 is_stmt 0 view .LVU523
+ 2657 0008 0528     		cmp	r0, #5
+ 2658 000a 00D9     		bls	.L165
+ 494:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		pipe = 5;
+ 2659              		.loc 1 494 8 view .LVU524
+ 2660 000c 0520     		movs	r0, #5
+ 2661              	.LVL206:
+ 2662              	.L165:
+ 495:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	}
+ 496:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 497:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	uint8_t cmd = (W_ACK_PAYLOAD | pipe);
+ 2663              		.loc 1 497 2 is_stmt 1 view .LVU525
+ 2664              		.loc 1 497 10 is_stmt 0 view .LVU526
+ 2665 000e 60F05700 		orn	r0, r0, #87
+ 2666              	.LVL207:
+ 2667              		.loc 1 497 10 view .LVU527
+ 2668 0012 8DF80700 		strb	r0, [sp, #7]
+ 498:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 499:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	csn_low();
+ 2669              		.loc 1 499 2 is_stmt 1 view .LVU528
+ 2670 0016 FFF7FEFF 		bl	csn_low
+ 2671              	.LVL208:
+ 500:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	HAL_SPI_Transmit(&hspiX, &cmd, 1, spi_w_timeout);
+ 2672              		.loc 1 500 2 view .LVU529
+ 2673 001a 0A4E     		ldr	r6, .L168
+ 2674 001c 4FF47A73 		mov	r3, #1000
+ 2675 0020 0122     		movs	r2, #1
+ 2676 0022 0DF10701 		add	r1, sp, #7
+ 2677 0026 3046     		mov	r0, r6
+ 2678 0028 FFF7FEFF 		bl	HAL_SPI_Transmit
+ 2679              	.LVL209:
+ 501:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	HAL_SPI_Transmit(&hspiX, data, size, spi_w_timeout);
+ 2680              		.loc 1 501 2 view .LVU530
+ 2681 002c 4FF47A73 		mov	r3, #1000
+ 2682 0030 2A46     		mov	r2, r5
+ 2683 0032 2146     		mov	r1, r4
+ 2684 0034 3046     		mov	r0, r6
+ 2685 0036 FFF7FEFF 		bl	HAL_SPI_Transmit
+ 2686              	.LVL210:
+ 502:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	csn_high();
+ 2687              		.loc 1 502 2 view .LVU531
+ 2688 003a FFF7FEFF 		bl	csn_high
+ 2689              	.LVL211:
+ 503:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 504:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** }
+ 2690              		.loc 1 504 1 is_stmt 0 view .LVU532
+ 2691 003e 02B0     		add	sp, sp, #8
+ 2692              	.LCFI119:
+ 2693              		.cfi_def_cfa_offset 16
+ 2694              		@ sp needed
+ 2695 0040 70BD     		pop	{r4, r5, r6, pc}
+ 2696              	.LVL212:
+ 2697              	.L169:
+ 2698              		.loc 1 504 1 view .LVU533
+ 2699 0042 00BF     		.align	2
+ 2700              	.L168:
+ 2701 0044 00000000 		.word	hspi3
+ARM GAS  /tmp/ccAYsZDq.s 			page 57
+
+
+ 2702              		.cfi_endproc
+ 2703              	.LFE180:
+ 2705              		.section	.text.nrf24_carrier_detect,"ax",%progbits
+ 2706              		.align	1
+ 2707              		.global	nrf24_carrier_detect
+ 2708              		.syntax unified
+ 2709              		.thumb
+ 2710              		.thumb_func
+ 2712              	nrf24_carrier_detect:
+ 2713              	.LFB181:
+ 505:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 506:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** uint8_t nrf24_carrier_detect(void){
+ 2714              		.loc 1 506 35 is_stmt 1 view -0
+ 2715              		.cfi_startproc
+ 2716              		@ args = 0, pretend = 0, frame = 0
+ 2717              		@ frame_needed = 0, uses_anonymous_args = 0
+ 2718 0000 08B5     		push	{r3, lr}
+ 2719              	.LCFI120:
+ 2720              		.cfi_def_cfa_offset 8
+ 2721              		.cfi_offset 3, -8
+ 2722              		.cfi_offset 14, -4
+ 507:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	return nrf24_r_reg(RPD, 1);
+ 2723              		.loc 1 507 2 view .LVU535
+ 2724              		.loc 1 507 9 is_stmt 0 view .LVU536
+ 2725 0002 0121     		movs	r1, #1
+ 2726 0004 0920     		movs	r0, #9
+ 2727 0006 FFF7FEFF 		bl	nrf24_r_reg
+ 2728              	.LVL213:
+ 508:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** }
+ 2729              		.loc 1 508 1 view .LVU537
+ 2730 000a 08BD     		pop	{r3, pc}
+ 2731              		.cfi_endproc
+ 2732              	.LFE181:
+ 2734              		.section	.text.nrf24_data_available,"ax",%progbits
+ 2735              		.align	1
+ 2736              		.global	nrf24_data_available
+ 2737              		.syntax unified
+ 2738              		.thumb
+ 2739              		.thumb_func
+ 2741              	nrf24_data_available:
+ 2742              	.LFB182:
+ 509:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 510:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** uint8_t nrf24_data_available(void){
+ 2743              		.loc 1 510 35 is_stmt 1 view -0
+ 2744              		.cfi_startproc
+ 2745              		@ args = 0, pretend = 0, frame = 0
+ 2746              		@ frame_needed = 0, uses_anonymous_args = 0
+ 2747 0000 08B5     		push	{r3, lr}
+ 2748              	.LCFI121:
+ 2749              		.cfi_def_cfa_offset 8
+ 2750              		.cfi_offset 3, -8
+ 2751              		.cfi_offset 14, -4
+ 511:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 512:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c ****  	uint8_t reg_dt = nrf24_r_reg(FIFO_STATUS, 1);
+ 2752              		.loc 1 512 3 view .LVU539
+ 2753              		.loc 1 512 20 is_stmt 0 view .LVU540
+ 2754 0002 0121     		movs	r1, #1
+ARM GAS  /tmp/ccAYsZDq.s 			page 58
+
+
+ 2755 0004 1720     		movs	r0, #23
+ 2756 0006 FFF7FEFF 		bl	nrf24_r_reg
+ 2757              	.LVL214:
+ 513:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 514:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	if(!(reg_dt & (1 << RX_EMPTY))){
+ 2758              		.loc 1 514 2 is_stmt 1 view .LVU541
+ 2759              		.loc 1 514 4 is_stmt 0 view .LVU542
+ 2760 000a 10F0010F 		tst	r0, #1
+ 2761 000e 01D0     		beq	.L174
+ 515:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		return 1;
+ 516:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	}
+ 517:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 518:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	return 0;
+ 2762              		.loc 1 518 9 view .LVU543
+ 2763 0010 0020     		movs	r0, #0
+ 2764              	.LVL215:
+ 2765              	.L173:
+ 519:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** }
+ 2766              		.loc 1 519 1 view .LVU544
+ 2767 0012 08BD     		pop	{r3, pc}
+ 2768              	.LVL216:
+ 2769              	.L174:
+ 515:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		return 1;
+ 2770              		.loc 1 515 10 view .LVU545
+ 2771 0014 0120     		movs	r0, #1
+ 2772              	.LVL217:
+ 515:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		return 1;
+ 2773              		.loc 1 515 10 view .LVU546
+ 2774 0016 FCE7     		b	.L173
+ 2775              		.cfi_endproc
+ 2776              	.LFE182:
+ 2778              		.section	.text.nrf24_receive,"ax",%progbits
+ 2779              		.align	1
+ 2780              		.global	nrf24_receive
+ 2781              		.syntax unified
+ 2782              		.thumb
+ 2783              		.thumb_func
+ 2785              	nrf24_receive:
+ 2786              	.LVL218:
+ 2787              	.LFB183:
+ 520:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 521:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** void nrf24_receive(uint8_t *data, uint8_t size){
+ 2788              		.loc 1 521 48 is_stmt 1 view -0
+ 2789              		.cfi_startproc
+ 2790              		@ args = 0, pretend = 0, frame = 8
+ 2791              		@ frame_needed = 0, uses_anonymous_args = 0
+ 2792              		.loc 1 521 48 is_stmt 0 view .LVU548
+ 2793 0000 70B5     		push	{r4, r5, r6, lr}
+ 2794              	.LCFI122:
+ 2795              		.cfi_def_cfa_offset 16
+ 2796              		.cfi_offset 4, -16
+ 2797              		.cfi_offset 5, -12
+ 2798              		.cfi_offset 6, -8
+ 2799              		.cfi_offset 14, -4
+ 2800 0002 82B0     		sub	sp, sp, #8
+ 2801              	.LCFI123:
+ 2802              		.cfi_def_cfa_offset 24
+ARM GAS  /tmp/ccAYsZDq.s 			page 59
+
+
+ 2803 0004 0446     		mov	r4, r0
+ 2804 0006 0D46     		mov	r5, r1
+ 522:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	uint8_t cmd = R_RX_PAYLOAD;
+ 2805              		.loc 1 522 2 is_stmt 1 view .LVU549
+ 2806              		.loc 1 522 10 is_stmt 0 view .LVU550
+ 2807 0008 6123     		movs	r3, #97
+ 2808 000a 8DF80730 		strb	r3, [sp, #7]
+ 523:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 524:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	csn_low();
+ 2809              		.loc 1 524 2 is_stmt 1 view .LVU551
+ 2810 000e FFF7FEFF 		bl	csn_low
+ 2811              	.LVL219:
+ 525:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	HAL_SPI_Transmit(&hspiX, &cmd, 1, spi_w_timeout);
+ 2812              		.loc 1 525 2 view .LVU552
+ 2813 0012 0B4E     		ldr	r6, .L178
+ 2814 0014 4FF47A73 		mov	r3, #1000
+ 2815 0018 0122     		movs	r2, #1
+ 2816 001a 0DF10701 		add	r1, sp, #7
+ 2817 001e 3046     		mov	r0, r6
+ 2818 0020 FFF7FEFF 		bl	HAL_SPI_Transmit
+ 2819              	.LVL220:
+ 526:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	HAL_SPI_Receive(&hspiX, data, size, spi_r_timeout);
+ 2820              		.loc 1 526 2 view .LVU553
+ 2821 0024 4FF47A73 		mov	r3, #1000
+ 2822 0028 2A46     		mov	r2, r5
+ 2823 002a 2146     		mov	r1, r4
+ 2824 002c 3046     		mov	r0, r6
+ 2825 002e FFF7FEFF 		bl	HAL_SPI_Receive
+ 2826              	.LVL221:
+ 527:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	csn_high();
+ 2827              		.loc 1 527 2 view .LVU554
+ 2828 0032 FFF7FEFF 		bl	csn_high
+ 2829              	.LVL222:
+ 528:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 529:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	nrf24_clear_rx_dr();
+ 2830              		.loc 1 529 2 view .LVU555
+ 2831 0036 FFF7FEFF 		bl	nrf24_clear_rx_dr
+ 2832              	.LVL223:
+ 530:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** }
+ 2833              		.loc 1 530 1 is_stmt 0 view .LVU556
+ 2834 003a 02B0     		add	sp, sp, #8
+ 2835              	.LCFI124:
+ 2836              		.cfi_def_cfa_offset 16
+ 2837              		@ sp needed
+ 2838 003c 70BD     		pop	{r4, r5, r6, pc}
+ 2839              	.LVL224:
+ 2840              	.L179:
+ 2841              		.loc 1 530 1 view .LVU557
+ 2842 003e 00BF     		.align	2
+ 2843              	.L178:
+ 2844 0040 00000000 		.word	hspi3
+ 2845              		.cfi_endproc
+ 2846              	.LFE183:
+ 2848              		.section	.text.nrf24_defaults,"ax",%progbits
+ 2849              		.align	1
+ 2850              		.global	nrf24_defaults
+ 2851              		.syntax unified
+ARM GAS  /tmp/ccAYsZDq.s 			page 60
+
+
+ 2852              		.thumb
+ 2853              		.thumb_func
+ 2855              	nrf24_defaults:
+ 2856              	.LFB184:
+ 531:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 532:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** void nrf24_defaults(void){
+ 2857              		.loc 1 532 26 is_stmt 1 view -0
+ 2858              		.cfi_startproc
+ 2859              		@ args = 0, pretend = 0, frame = 0
+ 2860              		@ frame_needed = 0, uses_anonymous_args = 0
+ 2861 0000 10B5     		push	{r4, lr}
+ 2862              	.LCFI125:
+ 2863              		.cfi_def_cfa_offset 8
+ 2864              		.cfi_offset 4, -8
+ 2865              		.cfi_offset 14, -4
+ 533:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	ce_low();
+ 2866              		.loc 1 533 2 view .LVU559
+ 2867 0002 FFF7FEFF 		bl	ce_low
+ 2868              	.LVL225:
+ 534:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 535:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	nrf24_pwr_dwn();
+ 2869              		.loc 1 535 2 view .LVU560
+ 2870 0006 FFF7FEFF 		bl	nrf24_pwr_dwn
+ 2871              	.LVL226:
+ 536:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	nrf24_tx_pwr(3);
+ 2872              		.loc 1 536 2 view .LVU561
+ 2873 000a 0320     		movs	r0, #3
+ 2874 000c FFF7FEFF 		bl	nrf24_tx_pwr
+ 2875              	.LVL227:
+ 537:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	nrf24_data_rate(_1mbps);
+ 2876              		.loc 1 537 2 view .LVU562
+ 2877 0010 0020     		movs	r0, #0
+ 2878 0012 FFF7FEFF 		bl	nrf24_data_rate
+ 2879              	.LVL228:
+ 538:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	nrf24_set_channel(2);
+ 2880              		.loc 1 538 2 view .LVU563
+ 2881 0016 0220     		movs	r0, #2
+ 2882 0018 FFF7FEFF 		bl	nrf24_set_channel
+ 2883              	.LVL229:
+ 539:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	nrf24_set_crc(no_crc, _1byte);
+ 2884              		.loc 1 539 2 view .LVU564
+ 2885 001c 0021     		movs	r1, #0
+ 2886 001e 0846     		mov	r0, r1
+ 2887 0020 FFF7FEFF 		bl	nrf24_set_crc
+ 2888              	.LVL230:
+ 540:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	nrf24_set_addr_width(5);
+ 2889              		.loc 1 540 2 view .LVU565
+ 2890 0024 0520     		movs	r0, #5
+ 2891 0026 FFF7FEFF 		bl	nrf24_set_addr_width
+ 2892              	.LVL231:
+ 541:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	nrf24_flush_tx();
+ 2893              		.loc 1 541 2 view .LVU566
+ 2894 002a FFF7FEFF 		bl	nrf24_flush_tx
+ 2895              	.LVL232:
+ 542:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	nrf24_flush_rx();
+ 2896              		.loc 1 542 2 view .LVU567
+ 2897 002e FFF7FEFF 		bl	nrf24_flush_rx
+ARM GAS  /tmp/ccAYsZDq.s 			page 61
+
+
+ 2898              	.LVL233:
+ 543:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	nrf24_clear_rx_dr();
+ 2899              		.loc 1 543 2 view .LVU568
+ 2900 0032 FFF7FEFF 		bl	nrf24_clear_rx_dr
+ 2901              	.LVL234:
+ 544:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	nrf24_clear_tx_ds();
+ 2902              		.loc 1 544 2 view .LVU569
+ 2903 0036 FFF7FEFF 		bl	nrf24_clear_tx_ds
+ 2904              	.LVL235:
+ 545:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	nrf24_clear_max_rt();
+ 2905              		.loc 1 545 2 view .LVU570
+ 2906 003a FFF7FEFF 		bl	nrf24_clear_max_rt
+ 2907              	.LVL236:
+ 546:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	nrf24_stop_listen();
+ 2908              		.loc 1 546 2 view .LVU571
+ 2909 003e FFF7FEFF 		bl	nrf24_stop_listen
+ 2910              	.LVL237:
+ 547:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	nrf24_dpl(disable);
+ 2911              		.loc 1 547 2 view .LVU572
+ 2912 0042 0020     		movs	r0, #0
+ 2913 0044 FFF7FEFF 		bl	nrf24_dpl
+ 2914              	.LVL238:
+ 548:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	nrf24_en_ack_pld(disable);
+ 2915              		.loc 1 548 2 view .LVU573
+ 2916 0048 0020     		movs	r0, #0
+ 2917 004a FFF7FEFF 		bl	nrf24_en_ack_pld
+ 2918              	.LVL239:
+ 549:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	nrf24_en_dyn_ack(disable);
+ 2919              		.loc 1 549 2 view .LVU574
+ 2920 004e 0020     		movs	r0, #0
+ 2921 0050 FFF7FEFF 		bl	nrf24_en_dyn_ack
+ 2922              	.LVL240:
+ 550:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	nrf24_auto_retr_delay(0);
+ 2923              		.loc 1 550 2 view .LVU575
+ 2924 0054 0020     		movs	r0, #0
+ 2925 0056 FFF7FEFF 		bl	nrf24_auto_retr_delay
+ 2926              	.LVL241:
+ 551:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	nrf24_auto_retr_limit(3);
+ 2927              		.loc 1 551 2 view .LVU576
+ 2928 005a 0320     		movs	r0, #3
+ 2929 005c FFF7FEFF 		bl	nrf24_auto_retr_limit
+ 2930              	.LVL242:
+ 552:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 553:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 554:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	for(uint8_t i = 0; i < 5; i++){
+ 2931              		.loc 1 554 2 view .LVU577
+ 2932              	.LBB6:
+ 2933              		.loc 1 554 6 view .LVU578
+ 2934              		.loc 1 554 14 is_stmt 0 view .LVU579
+ 2935 0060 0024     		movs	r4, #0
+ 2936              		.loc 1 554 2 view .LVU580
+ 2937 0062 10E0     		b	.L181
+ 2938              	.LVL243:
+ 2939              	.L182:
+ 555:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		nrf24_pipe_pld_size(i, 0);
+ 2940              		.loc 1 555 3 is_stmt 1 view .LVU581
+ 2941 0064 0021     		movs	r1, #0
+ARM GAS  /tmp/ccAYsZDq.s 			page 62
+
+
+ 2942 0066 2046     		mov	r0, r4
+ 2943 0068 FFF7FEFF 		bl	nrf24_pipe_pld_size
+ 2944              	.LVL244:
+ 556:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		nrf24_cls_rx_pipe(i);
+ 2945              		.loc 1 556 3 view .LVU582
+ 2946 006c 2046     		mov	r0, r4
+ 2947 006e FFF7FEFF 		bl	nrf24_cls_rx_pipe
+ 2948              	.LVL245:
+ 557:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		nrf24_set_rx_dpl(i, disable);
+ 2949              		.loc 1 557 3 view .LVU583
+ 2950 0072 0021     		movs	r1, #0
+ 2951 0074 2046     		mov	r0, r4
+ 2952 0076 FFF7FEFF 		bl	nrf24_set_rx_dpl
+ 2953              	.LVL246:
+ 558:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		nrf24_auto_ack(i, enable);
+ 2954              		.loc 1 558 3 view .LVU584
+ 2955 007a 0121     		movs	r1, #1
+ 2956 007c 2046     		mov	r0, r4
+ 2957 007e FFF7FEFF 		bl	nrf24_auto_ack
+ 2958              	.LVL247:
+ 554:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		nrf24_pipe_pld_size(i, 0);
+ 2959              		.loc 1 554 29 discriminator 3 view .LVU585
+ 2960 0082 0134     		adds	r4, r4, #1
+ 2961              	.LVL248:
+ 554:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		nrf24_pipe_pld_size(i, 0);
+ 2962              		.loc 1 554 29 is_stmt 0 discriminator 3 view .LVU586
+ 2963 0084 E4B2     		uxtb	r4, r4
+ 2964              	.LVL249:
+ 2965              	.L181:
+ 554:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 		nrf24_pipe_pld_size(i, 0);
+ 2966              		.loc 1 554 23 is_stmt 1 discriminator 1 view .LVU587
+ 2967 0086 042C     		cmp	r4, #4
+ 2968 0088 ECD9     		bls	.L182
+ 2969              	.LBE6:
+ 559:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	}
+ 560:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 561:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	ce_high();
+ 2970              		.loc 1 561 2 view .LVU588
+ 2971 008a FFF7FEFF 		bl	ce_high
+ 2972              	.LVL250:
+ 562:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** }
+ 2973              		.loc 1 562 1 is_stmt 0 view .LVU589
+ 2974 008e 10BD     		pop	{r4, pc}
+ 2975              		.loc 1 562 1 view .LVU590
+ 2976              		.cfi_endproc
+ 2977              	.LFE184:
+ 2979              		.section	.text.nrf24_init,"ax",%progbits
+ 2980              		.align	1
+ 2981              		.global	nrf24_init
+ 2982              		.syntax unified
+ 2983              		.thumb
+ 2984              		.thumb_func
+ 2986              	nrf24_init:
+ 2987              	.LFB185:
+ 563:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 564:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** void nrf24_init(void){
+ 2988              		.loc 1 564 22 is_stmt 1 view -0
+ARM GAS  /tmp/ccAYsZDq.s 			page 63
+
+
+ 2989              		.cfi_startproc
+ 2990              		@ args = 0, pretend = 0, frame = 0
+ 2991              		@ frame_needed = 0, uses_anonymous_args = 0
+ 2992 0000 08B5     		push	{r3, lr}
+ 2993              	.LCFI126:
+ 2994              		.cfi_def_cfa_offset 8
+ 2995              		.cfi_offset 3, -8
+ 2996              		.cfi_offset 14, -4
+ 565:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 566:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	nrf24_pwr_up();
+ 2997              		.loc 1 566 2 view .LVU592
+ 2998 0002 FFF7FEFF 		bl	nrf24_pwr_up
+ 2999              	.LVL251:
+ 567:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 568:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	nrf24_flush_tx();
+ 3000              		.loc 1 568 2 view .LVU593
+ 3001 0006 FFF7FEFF 		bl	nrf24_flush_tx
+ 3002              	.LVL252:
+ 569:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	nrf24_flush_rx();
+ 3003              		.loc 1 569 2 view .LVU594
+ 3004 000a FFF7FEFF 		bl	nrf24_flush_rx
+ 3005              	.LVL253:
+ 570:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 
+ 571:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	nrf24_clear_rx_dr();
+ 3006              		.loc 1 571 2 view .LVU595
+ 3007 000e FFF7FEFF 		bl	nrf24_clear_rx_dr
+ 3008              	.LVL254:
+ 572:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	nrf24_clear_tx_ds();
+ 3009              		.loc 1 572 2 view .LVU596
+ 3010 0012 FFF7FEFF 		bl	nrf24_clear_tx_ds
+ 3011              	.LVL255:
+ 573:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** 	nrf24_clear_max_rt();
+ 3012              		.loc 1 573 2 view .LVU597
+ 3013 0016 FFF7FEFF 		bl	nrf24_clear_max_rt
+ 3014              	.LVL256:
+ 574:/home/dat/Documents/colir_one/rocket_code/Module/Src/nrf24.c **** }
+ 3015              		.loc 1 574 1 is_stmt 0 view .LVU598
+ 3016 001a 08BD     		pop	{r3, pc}
+ 3017              		.cfi_endproc
+ 3018              	.LFE185:
+ 3020              		.text
+ 3021              	.Letext0:
+ 3022              		.file 2 "/home/dat/.config/Code/User/globalStorage/litaitech.stm32-colir-one/@xpack-dev-tools/arm-
+ 3023              		.file 3 "/home/dat/.config/Code/User/globalStorage/litaitech.stm32-colir-one/@xpack-dev-tools/arm-
+ 3024              		.file 4 "/home/dat/.config/Code/User/globalStorage/litaitech.stm32-colir-one/@xpack-dev-tools/arm-
+ 3025              		.file 5 "/home/dat/Documents/colir_one/rocket_code/Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32
+ 3026              		.file 6 "/home/dat/Documents/colir_one/rocket_code/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_
+ 3027              		.file 7 "/home/dat/Documents/colir_one/rocket_code/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_
+ 3028              		.file 8 "/home/dat/Documents/colir_one/rocket_code/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_
+ 3029              		.file 9 "/home/dat/Documents/colir_one/rocket_code/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_
+ 3030              		.file 10 "/home/dat/Documents/colir_one/rocket_code/Module/Inc/nrf24.h"
+ 3031              		.file 11 "/home/dat/Documents/colir_one/rocket_code/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal
+ARM GAS  /tmp/ccAYsZDq.s 			page 64
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 nrf24.c
+     /tmp/ccAYsZDq.s:21     .text.csn_high:00000000 $t
+     /tmp/ccAYsZDq.s:27     .text.csn_high:00000000 csn_high
+     /tmp/ccAYsZDq.s:49     .text.csn_high:00000010 $d
+     /tmp/ccAYsZDq.s:54     .text.csn_low:00000000 $t
+     /tmp/ccAYsZDq.s:60     .text.csn_low:00000000 csn_low
+     /tmp/ccAYsZDq.s:82     .text.csn_low:00000010 $d
+     /tmp/ccAYsZDq.s:87     .text.ce_high:00000000 $t
+     /tmp/ccAYsZDq.s:93     .text.ce_high:00000000 ce_high
+     /tmp/ccAYsZDq.s:115    .text.ce_high:00000010 $d
+     /tmp/ccAYsZDq.s:120    .text.ce_low:00000000 $t
+     /tmp/ccAYsZDq.s:126    .text.ce_low:00000000 ce_low
+     /tmp/ccAYsZDq.s:148    .text.ce_low:00000010 $d
+     /tmp/ccAYsZDq.s:153    .text.nrf24_w_reg:00000000 $t
+     /tmp/ccAYsZDq.s:159    .text.nrf24_w_reg:00000000 nrf24_w_reg
+     /tmp/ccAYsZDq.s:217    .text.nrf24_w_reg:0000003c $d
+     /tmp/ccAYsZDq.s:222    .text.nrf24_r_reg:00000000 $t
+     /tmp/ccAYsZDq.s:228    .text.nrf24_r_reg:00000000 nrf24_r_reg
+     /tmp/ccAYsZDq.s:287    .text.nrf24_r_reg:00000044 $d
+     /tmp/ccAYsZDq.s:292    .text.nrf24_w_spec_cmd:00000000 $t
+     /tmp/ccAYsZDq.s:298    .text.nrf24_w_spec_cmd:00000000 nrf24_w_spec_cmd
+     /tmp/ccAYsZDq.s:332    .text.nrf24_w_spec_cmd:00000020 $d
+     /tmp/ccAYsZDq.s:337    .text.nrf24_w_spec_reg:00000000 $t
+     /tmp/ccAYsZDq.s:343    .text.nrf24_w_spec_reg:00000000 nrf24_w_spec_reg
+     /tmp/ccAYsZDq.s:372    .text.nrf24_w_spec_reg:00000014 $d
+     /tmp/ccAYsZDq.s:377    .text.nrf24_r_spec_reg:00000000 $t
+     /tmp/ccAYsZDq.s:383    .text.nrf24_r_spec_reg:00000000 nrf24_r_spec_reg
+     /tmp/ccAYsZDq.s:412    .text.nrf24_r_spec_reg:00000014 $d
+     /tmp/ccAYsZDq.s:417    .text.nrf24_pwr_up:00000000 $t
+     /tmp/ccAYsZDq.s:423    .text.nrf24_pwr_up:00000000 nrf24_pwr_up
+     /tmp/ccAYsZDq.s:469    .text.nrf24_pwr_dwn:00000000 $t
+     /tmp/ccAYsZDq.s:475    .text.nrf24_pwr_dwn:00000000 nrf24_pwr_dwn
+     /tmp/ccAYsZDq.s:521    .text.nrf24_tx_pwr:00000000 $t
+     /tmp/ccAYsZDq.s:527    .text.nrf24_tx_pwr:00000000 nrf24_tx_pwr
+     /tmp/ccAYsZDq.s:583    .text.nrf24_data_rate:00000000 $t
+     /tmp/ccAYsZDq.s:589    .text.nrf24_data_rate:00000000 nrf24_data_rate
+     /tmp/ccAYsZDq.s:665    .text.nrf24_set_channel:00000000 $t
+     /tmp/ccAYsZDq.s:671    .text.nrf24_set_channel:00000000 nrf24_set_channel
+     /tmp/ccAYsZDq.s:705    .text.nrf24_open_tx_pipe:00000000 $t
+     /tmp/ccAYsZDq.s:711    .text.nrf24_open_tx_pipe:00000000 nrf24_open_tx_pipe
+     /tmp/ccAYsZDq.s:738    .text.nrf24_pipe_pld_size:00000000 $t
+     /tmp/ccAYsZDq.s:744    .text.nrf24_pipe_pld_size:00000000 nrf24_pipe_pld_size
+     /tmp/ccAYsZDq.s:776    .text.nrf24_pipe_pld_size:0000001c $d
+     /tmp/ccAYsZDq.s:782    .text.nrf24_pipe_pld_size:00000022 $t
+     /tmp/ccAYsZDq.s:880    .text.nrf24_open_rx_pipe:00000000 $t
+     /tmp/ccAYsZDq.s:886    .text.nrf24_open_rx_pipe:00000000 nrf24_open_rx_pipe
+     /tmp/ccAYsZDq.s:926    .text.nrf24_open_rx_pipe:00000022 $d
+     /tmp/ccAYsZDq.s:932    .text.nrf24_open_rx_pipe:00000028 $t
+     /tmp/ccAYsZDq.s:1037   .text.nrf24_cls_rx_pipe:00000000 $t
+     /tmp/ccAYsZDq.s:1043   .text.nrf24_cls_rx_pipe:00000000 nrf24_cls_rx_pipe
+     /tmp/ccAYsZDq.s:1095   .text.nrf24_set_crc:00000000 $t
+     /tmp/ccAYsZDq.s:1101   .text.nrf24_set_crc:00000000 nrf24_set_crc
+     /tmp/ccAYsZDq.s:1163   .text.nrf24_set_addr_width:00000000 $t
+     /tmp/ccAYsZDq.s:1169   .text.nrf24_set_addr_width:00000000 nrf24_set_addr_width
+     /tmp/ccAYsZDq.s:1208   .text.nrf24_flush_tx:00000000 $t
+     /tmp/ccAYsZDq.s:1214   .text.nrf24_flush_tx:00000000 nrf24_flush_tx
+ARM GAS  /tmp/ccAYsZDq.s 			page 65
+
+
+     /tmp/ccAYsZDq.s:1241   .text.nrf24_flush_rx:00000000 $t
+     /tmp/ccAYsZDq.s:1247   .text.nrf24_flush_rx:00000000 nrf24_flush_rx
+     /tmp/ccAYsZDq.s:1274   .text.nrf24_r_status:00000000 $t
+     /tmp/ccAYsZDq.s:1280   .text.nrf24_r_status:00000000 nrf24_r_status
+     /tmp/ccAYsZDq.s:1327   .text.nrf24_r_status:00000038 $d
+     /tmp/ccAYsZDq.s:1332   .text.nrf24_clear_rx_dr:00000000 $t
+     /tmp/ccAYsZDq.s:1338   .text.nrf24_clear_rx_dr:00000000 nrf24_clear_rx_dr
+     /tmp/ccAYsZDq.s:1381   .text.nrf24_clear_tx_ds:00000000 $t
+     /tmp/ccAYsZDq.s:1387   .text.nrf24_clear_tx_ds:00000000 nrf24_clear_tx_ds
+     /tmp/ccAYsZDq.s:1430   .text.nrf24_clear_max_rt:00000000 $t
+     /tmp/ccAYsZDq.s:1436   .text.nrf24_clear_max_rt:00000000 nrf24_clear_max_rt
+     /tmp/ccAYsZDq.s:1479   .text.nrf24_read_bit:00000000 $t
+     /tmp/ccAYsZDq.s:1485   .text.nrf24_read_bit:00000000 nrf24_read_bit
+     /tmp/ccAYsZDq.s:1525   .text.nrf24_set_bit:00000000 $t
+     /tmp/ccAYsZDq.s:1531   .text.nrf24_set_bit:00000000 nrf24_set_bit
+     /tmp/ccAYsZDq.s:1607   .text.nrf24_r_pld_wid:00000000 $t
+     /tmp/ccAYsZDq.s:1613   .text.nrf24_r_pld_wid:00000000 nrf24_r_pld_wid
+     /tmp/ccAYsZDq.s:1657   .text.nrf24_listen:00000000 $t
+     /tmp/ccAYsZDq.s:1663   .text.nrf24_listen:00000000 nrf24_listen
+     /tmp/ccAYsZDq.s:1712   .text.nrf24_stop_listen:00000000 $t
+     /tmp/ccAYsZDq.s:1718   .text.nrf24_stop_listen:00000000 nrf24_stop_listen
+     /tmp/ccAYsZDq.s:1764   .text.nrf24_dpl:00000000 $t
+     /tmp/ccAYsZDq.s:1770   .text.nrf24_dpl:00000000 nrf24_dpl
+     /tmp/ccAYsZDq.s:1832   .text.nrf24_set_rx_dpl:00000000 $t
+     /tmp/ccAYsZDq.s:1838   .text.nrf24_set_rx_dpl:00000000 nrf24_set_rx_dpl
+     /tmp/ccAYsZDq.s:1919   .text.nrf24_auto_ack:00000000 $t
+     /tmp/ccAYsZDq.s:1925   .text.nrf24_auto_ack:00000000 nrf24_auto_ack
+     /tmp/ccAYsZDq.s:2004   .text.nrf24_auto_ack_all:00000000 $t
+     /tmp/ccAYsZDq.s:2010   .text.nrf24_auto_ack_all:00000000 nrf24_auto_ack_all
+     /tmp/ccAYsZDq.s:2071   .text.nrf24_en_ack_pld:00000000 $t
+     /tmp/ccAYsZDq.s:2077   .text.nrf24_en_ack_pld:00000000 nrf24_en_ack_pld
+     /tmp/ccAYsZDq.s:2138   .text.nrf24_en_dyn_ack:00000000 $t
+     /tmp/ccAYsZDq.s:2144   .text.nrf24_en_dyn_ack:00000000 nrf24_en_dyn_ack
+     /tmp/ccAYsZDq.s:2205   .text.nrf24_auto_retr_delay:00000000 $t
+     /tmp/ccAYsZDq.s:2211   .text.nrf24_auto_retr_delay:00000000 nrf24_auto_retr_delay
+     /tmp/ccAYsZDq.s:2263   .text.nrf24_auto_retr_limit:00000000 $t
+     /tmp/ccAYsZDq.s:2269   .text.nrf24_auto_retr_limit:00000000 nrf24_auto_retr_limit
+     /tmp/ccAYsZDq.s:2321   .text.nrf24_type_to_uint8_t:00000000 $t
+     /tmp/ccAYsZDq.s:2327   .text.nrf24_type_to_uint8_t:00000000 nrf24_type_to_uint8_t
+     /tmp/ccAYsZDq.s:2385   .text.nrf24_uint8_t_to_type:00000000 $t
+     /tmp/ccAYsZDq.s:2391   .text.nrf24_uint8_t_to_type:00000000 nrf24_uint8_t_to_type
+     /tmp/ccAYsZDq.s:2448   .text.nrf24_transmit:00000000 $t
+     /tmp/ccAYsZDq.s:2454   .text.nrf24_transmit:00000000 nrf24_transmit
+     /tmp/ccAYsZDq.s:2544   .text.nrf24_transmit:00000064 $d
+     /tmp/ccAYsZDq.s:2549   .text.nrf24_transmit_no_ack:00000000 $t
+     /tmp/ccAYsZDq.s:2555   .text.nrf24_transmit_no_ack:00000000 nrf24_transmit_no_ack
+     /tmp/ccAYsZDq.s:2624   .text.nrf24_transmit_no_ack:0000004c $d
+     /tmp/ccAYsZDq.s:2629   .text.nrf24_transmit_rx_ack_pld:00000000 $t
+     /tmp/ccAYsZDq.s:2635   .text.nrf24_transmit_rx_ack_pld:00000000 nrf24_transmit_rx_ack_pld
+     /tmp/ccAYsZDq.s:2701   .text.nrf24_transmit_rx_ack_pld:00000044 $d
+     /tmp/ccAYsZDq.s:2706   .text.nrf24_carrier_detect:00000000 $t
+     /tmp/ccAYsZDq.s:2712   .text.nrf24_carrier_detect:00000000 nrf24_carrier_detect
+     /tmp/ccAYsZDq.s:2735   .text.nrf24_data_available:00000000 $t
+     /tmp/ccAYsZDq.s:2741   .text.nrf24_data_available:00000000 nrf24_data_available
+     /tmp/ccAYsZDq.s:2779   .text.nrf24_receive:00000000 $t
+     /tmp/ccAYsZDq.s:2785   .text.nrf24_receive:00000000 nrf24_receive
+     /tmp/ccAYsZDq.s:2844   .text.nrf24_receive:00000040 $d
+ARM GAS  /tmp/ccAYsZDq.s 			page 66
+
+
+     /tmp/ccAYsZDq.s:2849   .text.nrf24_defaults:00000000 $t
+     /tmp/ccAYsZDq.s:2855   .text.nrf24_defaults:00000000 nrf24_defaults
+     /tmp/ccAYsZDq.s:2980   .text.nrf24_init:00000000 $t
+     /tmp/ccAYsZDq.s:2986   .text.nrf24_init:00000000 nrf24_init
+
+UNDEFINED SYMBOLS
+HAL_GPIO_WritePin
+HAL_SPI_Transmit
+hspi3
+HAL_SPI_Receive
+HAL_SPI_TransmitReceive
+HAL_Delay

@@ -1,0 +1,2215 @@
+ARM GAS  /tmp/ccbP1M9Y.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"bmp581.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c"
+  20              		.section	.text.writeRegisters,"ax",%progbits
+  21              		.align	1
+  22              		.global	writeRegisters
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	writeRegisters:
+  28              	.LVL0:
+  29              	.LFB135:
+   1:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** /*
+   2:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****  * bmp581.c
+   3:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****  *
+   4:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****  *  Created on: Jun 14, 2024
+   5:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****  *      Author: Administrator
+   6:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****  */
+   7:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** #include "stm32f4xx_hal.h"
+   8:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** #include "bmp581.h"
+   9:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** #include "string.h"
+  10:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+  11:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** extern SPI_HandleTypeDef hspi1;
+  12:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** #define BMP5_SPI &hspi1
+  13:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+  14:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** // Reference to the sensor
+  15:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** struct bmp5_dev sensor;
+  16:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+  17:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** // Place to store OSR/ODR config values
+  18:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** struct bmp5_osr_odr_press_config osrOdrConfig;
+  19:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+  20:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** // Place to store FIFO config values
+  21:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** struct bmp5_fifo fifo;
+  22:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+  23:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** HAL_StatusTypeDef bmp5_hal_result;
+  24:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+  25:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+  26:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** BMP5_INTF_RET_TYPE readRegisters(uint8_t regAddress, uint8_t* dataBuffer, uint32_t numBytes, void* 
+  27:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** {
+  28:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // Make sure the number of bytes is valid
+  29:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     if(numBytes == 0)
+ARM GAS  /tmp/ccbP1M9Y.s 			page 2
+
+
+  30:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     {
+  31:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****         return BMP5_E_COM_FAIL;
+  32:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     }
+  33:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+  34:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // Start transmission
+  35:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     HAL_GPIO_WritePin(BMP581_CSN_PORT, BMP581_CSN_PIN, GPIO_PIN_RESET);
+  36:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+  37:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // Read all requested bytes
+  38:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     bmp5_hal_result = HAL_SPI_Transmit(BMP5_SPI, &regAddress, 1, 100);
+  39:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     bmp5_hal_result = HAL_SPI_Receive(BMP5_SPI, dataBuffer, numBytes, 1000);
+  40:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+  41:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // End transmission
+  42:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     HAL_GPIO_WritePin(BMP581_CSN_PORT, BMP581_CSN_PIN, GPIO_PIN_SET);
+  43:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+  44:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     return BMP5_OK;
+  45:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** }
+  46:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+  47:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** BMP5_INTF_RET_TYPE writeRegisters(uint8_t regAddress, const uint8_t* dataBuffer, uint32_t numBytes,
+  48:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** {
+  30              		.loc 1 48 1 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 8
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		.loc 1 48 1 is_stmt 0 view .LVU1
+  35 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+  36              	.LCFI0:
+  37              		.cfi_def_cfa_offset 20
+  38              		.cfi_offset 4, -20
+  39              		.cfi_offset 5, -16
+  40              		.cfi_offset 6, -12
+  41              		.cfi_offset 7, -8
+  42              		.cfi_offset 14, -4
+  43 0002 83B0     		sub	sp, sp, #12
+  44              	.LCFI1:
+  45              		.cfi_def_cfa_offset 32
+  46 0004 8DF80700 		strb	r0, [sp, #7]
+  49:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // Make sure the number of bytes is valid
+  50:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     if(numBytes == 0)
+  47              		.loc 1 50 5 is_stmt 1 view .LVU2
+  48              		.loc 1 50 7 is_stmt 0 view .LVU3
+  49 0008 F2B1     		cbz	r2, .L3
+  50 000a 0C46     		mov	r4, r1
+  51 000c 1746     		mov	r7, r2
+  51:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     {
+  52:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****         return BMP5_E_COM_FAIL;
+  53:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     }
+  54:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+  55:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // Begin transmission
+  56:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     HAL_GPIO_WritePin(BMP581_CSN_PORT, BMP581_CSN_PIN, GPIO_PIN_RESET);
+  52              		.loc 1 56 5 is_stmt 1 view .LVU4
+  53 000e 104D     		ldr	r5, .L5
+  54 0010 0022     		movs	r2, #0
+  55              	.LVL1:
+  56              		.loc 1 56 5 is_stmt 0 view .LVU5
+  57 0012 1021     		movs	r1, #16
+  58              	.LVL2:
+  59              		.loc 1 56 5 view .LVU6
+ARM GAS  /tmp/ccbP1M9Y.s 			page 3
+
+
+  60 0014 2846     		mov	r0, r5
+  61              	.LVL3:
+  62              		.loc 1 56 5 view .LVU7
+  63 0016 FFF7FEFF 		bl	HAL_GPIO_WritePin
+  64              	.LVL4:
+  57:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+  58:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // Write all the data
+  59:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     HAL_SPI_Transmit(BMP5_SPI, &regAddress, 1, 100);
+  65              		.loc 1 59 5 is_stmt 1 view .LVU8
+  66 001a 0E4E     		ldr	r6, .L5+4
+  67 001c 6423     		movs	r3, #100
+  68 001e 0122     		movs	r2, #1
+  69 0020 0DF10701 		add	r1, sp, #7
+  70 0024 3046     		mov	r0, r6
+  71 0026 FFF7FEFF 		bl	HAL_SPI_Transmit
+  72              	.LVL5:
+  60:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     HAL_SPI_Transmit(BMP5_SPI, dataBuffer, numBytes, 1000);
+  73              		.loc 1 60 5 view .LVU9
+  74 002a 4FF47A73 		mov	r3, #1000
+  75 002e BAB2     		uxth	r2, r7
+  76 0030 2146     		mov	r1, r4
+  77 0032 3046     		mov	r0, r6
+  78 0034 FFF7FEFF 		bl	HAL_SPI_Transmit
+  79              	.LVL6:
+  61:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+  62:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // End transmission
+  63:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     HAL_GPIO_WritePin(BMP581_CSN_PORT, BMP581_CSN_PIN, GPIO_PIN_SET);
+  80              		.loc 1 63 5 view .LVU10
+  81 0038 0122     		movs	r2, #1
+  82 003a 1021     		movs	r1, #16
+  83 003c 2846     		mov	r0, r5
+  84 003e FFF7FEFF 		bl	HAL_GPIO_WritePin
+  85              	.LVL7:
+  64:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+  65:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     return BMP5_OK;
+  86              		.loc 1 65 5 view .LVU11
+  87              		.loc 1 65 12 is_stmt 0 view .LVU12
+  88 0042 0020     		movs	r0, #0
+  89              	.LVL8:
+  90              	.L2:
+  66:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** }
+  91              		.loc 1 66 1 view .LVU13
+  92 0044 03B0     		add	sp, sp, #12
+  93              	.LCFI2:
+  94              		.cfi_remember_state
+  95              		.cfi_def_cfa_offset 20
+  96              		@ sp needed
+  97 0046 F0BD     		pop	{r4, r5, r6, r7, pc}
+  98              	.LVL9:
+  99              	.L3:
+ 100              	.LCFI3:
+ 101              		.cfi_restore_state
+  52:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     }
+ 102              		.loc 1 52 16 view .LVU14
+ 103 0048 6FF00100 		mvn	r0, #1
+ 104              	.LVL10:
+  52:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     }
+ARM GAS  /tmp/ccbP1M9Y.s 			page 4
+
+
+ 105              		.loc 1 52 16 view .LVU15
+ 106 004c FAE7     		b	.L2
+ 107              	.L6:
+ 108 004e 00BF     		.align	2
+ 109              	.L5:
+ 110 0050 00080240 		.word	1073874944
+ 111 0054 00000000 		.word	hspi1
+ 112              		.cfi_endproc
+ 113              	.LFE135:
+ 115              		.section	.text.readRegisters,"ax",%progbits
+ 116              		.align	1
+ 117              		.global	readRegisters
+ 118              		.syntax unified
+ 119              		.thumb
+ 120              		.thumb_func
+ 122              	readRegisters:
+ 123              	.LVL11:
+ 124              	.LFB134:
+  27:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // Make sure the number of bytes is valid
+ 125              		.loc 1 27 1 is_stmt 1 view -0
+ 126              		.cfi_startproc
+ 127              		@ args = 0, pretend = 0, frame = 8
+ 128              		@ frame_needed = 0, uses_anonymous_args = 0
+  27:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // Make sure the number of bytes is valid
+ 129              		.loc 1 27 1 is_stmt 0 view .LVU17
+ 130 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 131              	.LCFI4:
+ 132              		.cfi_def_cfa_offset 24
+ 133              		.cfi_offset 4, -24
+ 134              		.cfi_offset 5, -20
+ 135              		.cfi_offset 6, -16
+ 136              		.cfi_offset 7, -12
+ 137              		.cfi_offset 8, -8
+ 138              		.cfi_offset 14, -4
+ 139 0004 82B0     		sub	sp, sp, #8
+ 140              	.LCFI5:
+ 141              		.cfi_def_cfa_offset 32
+ 142 0006 8DF80700 		strb	r0, [sp, #7]
+  29:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     {
+ 143              		.loc 1 29 5 is_stmt 1 view .LVU18
+  29:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     {
+ 144              		.loc 1 29 7 is_stmt 0 view .LVU19
+ 145 000a 1AB3     		cbz	r2, .L9
+ 146 000c 0C46     		mov	r4, r1
+ 147 000e 9046     		mov	r8, r2
+  35:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 148              		.loc 1 35 5 is_stmt 1 view .LVU20
+ 149 0010 124D     		ldr	r5, .L11
+ 150 0012 0022     		movs	r2, #0
+ 151              	.LVL12:
+  35:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 152              		.loc 1 35 5 is_stmt 0 view .LVU21
+ 153 0014 1021     		movs	r1, #16
+ 154              	.LVL13:
+  35:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 155              		.loc 1 35 5 view .LVU22
+ 156 0016 2846     		mov	r0, r5
+ARM GAS  /tmp/ccbP1M9Y.s 			page 5
+
+
+ 157              	.LVL14:
+  35:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 158              		.loc 1 35 5 view .LVU23
+ 159 0018 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 160              	.LVL15:
+  38:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     bmp5_hal_result = HAL_SPI_Receive(BMP5_SPI, dataBuffer, numBytes, 1000);
+ 161              		.loc 1 38 5 is_stmt 1 view .LVU24
+  38:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     bmp5_hal_result = HAL_SPI_Receive(BMP5_SPI, dataBuffer, numBytes, 1000);
+ 162              		.loc 1 38 23 is_stmt 0 view .LVU25
+ 163 001c 104F     		ldr	r7, .L11+4
+ 164 001e 6423     		movs	r3, #100
+ 165 0020 0122     		movs	r2, #1
+ 166 0022 0DF10701 		add	r1, sp, #7
+ 167 0026 3846     		mov	r0, r7
+ 168 0028 FFF7FEFF 		bl	HAL_SPI_Transmit
+ 169              	.LVL16:
+  38:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     bmp5_hal_result = HAL_SPI_Receive(BMP5_SPI, dataBuffer, numBytes, 1000);
+ 170              		.loc 1 38 21 discriminator 1 view .LVU26
+ 171 002c 0D4E     		ldr	r6, .L11+8
+ 172 002e 3070     		strb	r0, [r6]
+  39:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 173              		.loc 1 39 5 is_stmt 1 view .LVU27
+  39:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 174              		.loc 1 39 23 is_stmt 0 view .LVU28
+ 175 0030 4FF47A73 		mov	r3, #1000
+ 176 0034 1FFA88F2 		uxth	r2, r8
+ 177 0038 2146     		mov	r1, r4
+ 178 003a 3846     		mov	r0, r7
+ 179 003c FFF7FEFF 		bl	HAL_SPI_Receive
+ 180              	.LVL17:
+  39:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 181              		.loc 1 39 21 discriminator 1 view .LVU29
+ 182 0040 3070     		strb	r0, [r6]
+  42:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 183              		.loc 1 42 5 is_stmt 1 view .LVU30
+ 184 0042 0122     		movs	r2, #1
+ 185 0044 1021     		movs	r1, #16
+ 186 0046 2846     		mov	r0, r5
+ 187 0048 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 188              	.LVL18:
+  44:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** }
+ 189              		.loc 1 44 5 view .LVU31
+  44:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** }
+ 190              		.loc 1 44 12 is_stmt 0 view .LVU32
+ 191 004c 0020     		movs	r0, #0
+ 192              	.LVL19:
+ 193              	.L8:
+  45:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 194              		.loc 1 45 1 view .LVU33
+ 195 004e 02B0     		add	sp, sp, #8
+ 196              	.LCFI6:
+ 197              		.cfi_remember_state
+ 198              		.cfi_def_cfa_offset 24
+ 199              		@ sp needed
+ 200 0050 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 201              	.LVL20:
+ 202              	.L9:
+ARM GAS  /tmp/ccbP1M9Y.s 			page 6
+
+
+ 203              	.LCFI7:
+ 204              		.cfi_restore_state
+  31:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     }
+ 205              		.loc 1 31 16 view .LVU34
+ 206 0054 6FF00100 		mvn	r0, #1
+ 207              	.LVL21:
+  31:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     }
+ 208              		.loc 1 31 16 view .LVU35
+ 209 0058 F9E7     		b	.L8
+ 210              	.L12:
+ 211 005a 00BF     		.align	2
+ 212              	.L11:
+ 213 005c 00080240 		.word	1073874944
+ 214 0060 00000000 		.word	hspi1
+ 215 0064 00000000 		.word	bmp5_hal_result
+ 216              		.cfi_endproc
+ 217              	.LFE134:
+ 219              		.section	.text.usDelay,"ax",%progbits
+ 220              		.align	1
+ 221              		.global	usDelay
+ 222              		.syntax unified
+ 223              		.thumb
+ 224              		.thumb_func
+ 226              	usDelay:
+ 227              	.LVL22:
+ 228              	.LFB136:
+  67:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+  68:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** void usDelay(uint32_t period, void* interfacePtr)
+  69:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** {
+ 229              		.loc 1 69 1 is_stmt 1 view -0
+ 230              		.cfi_startproc
+ 231              		@ args = 0, pretend = 0, frame = 0
+ 232              		@ frame_needed = 0, uses_anonymous_args = 0
+ 233              		.loc 1 69 1 is_stmt 0 view .LVU37
+ 234 0000 08B5     		push	{r3, lr}
+ 235              	.LCFI8:
+ 236              		.cfi_def_cfa_offset 8
+ 237              		.cfi_offset 3, -8
+ 238              		.cfi_offset 14, -4
+  70:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     HAL_Delay(period);
+ 239              		.loc 1 70 5 is_stmt 1 view .LVU38
+ 240 0002 FFF7FEFF 		bl	HAL_Delay
+ 241              	.LVL23:
+  71:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** }
+ 242              		.loc 1 71 1 is_stmt 0 view .LVU39
+ 243 0006 08BD     		pop	{r3, pc}
+ 244              		.cfi_endproc
+ 245              	.LFE136:
+ 247              		.section	.text.init,"ax",%progbits
+ 248              		.align	1
+ 249              		.global	init
+ 250              		.syntax unified
+ 251              		.thumb
+ 252              		.thumb_func
+ 254              	init:
+ 255              	.LFB139:
+  72:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ARM GAS  /tmp/ccbP1M9Y.s 			page 7
+
+
+  73:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** int8_t begin()
+  74:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** {
+  75:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // Variable to track errors returned by API calls
+  76:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     int8_t err = BMP5_OK;
+  77:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+  78:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // Initialize the sensor
+  79:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     err = init();
+  80:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     if(err != BMP5_OK)
+  81:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     {
+  82:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****         return err;
+  83:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     }
+  84:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+  85:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // Enable both pressure and temperature sensors
+  86:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     err = enablePress(BMP5_ENABLE);
+  87:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     if(err != BMP5_OK)
+  88:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     {
+  89:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****         return err;
+  90:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     }
+  91:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+  92:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // Set to normal mode
+  93:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     return setMode(BMP5_POWERMODE_NORMAL);
+  94:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** }
+  95:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+  96:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** int8_t beginSPI()
+  97:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** {
+  98:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // Set up chip select pin
+  99:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     HAL_GPIO_WritePin(BMP581_CSN_PORT, BMP581_CSN_PIN, GPIO_PIN_SET);
+ 100:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 101:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // Initialize sensor
+ 102:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     return begin();
+ 103:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** }
+ 104:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 105:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** int8_t init()
+ 106:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** {
+ 256              		.loc 1 106 1 is_stmt 1 view -0
+ 257              		.cfi_startproc
+ 258              		@ args = 0, pretend = 0, frame = 0
+ 259              		@ frame_needed = 0, uses_anonymous_args = 0
+ 260 0000 08B5     		push	{r3, lr}
+ 261              	.LCFI9:
+ 262              		.cfi_def_cfa_offset 8
+ 263              		.cfi_offset 3, -8
+ 264              		.cfi_offset 14, -4
+ 107:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // Variable to track errors returned by API calls
+ 108:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     int8_t err = BMP5_OK;
+ 265              		.loc 1 108 5 view .LVU41
+ 266              	.LVL24:
+ 109:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 110:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // Initialize config values
+ 111:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     osrOdrConfig = (struct bmp5_osr_odr_press_config){0,0,0,0};
+ 267              		.loc 1 111 5 view .LVU42
+ 268              		.loc 1 111 18 is_stmt 0 view .LVU43
+ 269 0002 0023     		movs	r3, #0
+ 270 0004 0A4A     		ldr	r2, .L19
+ 271 0006 1360     		str	r3, [r2]
+ 112:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     fifo = (struct bmp5_fifo){0,0,0,0,0,0,0,0,0};
+ 272              		.loc 1 112 5 is_stmt 1 view .LVU44
+ARM GAS  /tmp/ccbP1M9Y.s 			page 8
+
+
+ 273              		.loc 1 112 10 is_stmt 0 view .LVU45
+ 274 0008 0A4A     		ldr	r2, .L19+4
+ 275 000a 1360     		str	r3, [r2]
+ 276 000c 5360     		str	r3, [r2, #4]
+ 277 000e 9360     		str	r3, [r2, #8]
+ 278 0010 D360     		str	r3, [r2, #12]
+ 113:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 114:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // Set helper function pointers
+ 115:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     sensor.read = readRegisters;
+ 279              		.loc 1 115 5 is_stmt 1 view .LVU46
+ 280              		.loc 1 115 17 is_stmt 0 view .LVU47
+ 281 0012 0948     		ldr	r0, .L19+8
+ 282 0014 094B     		ldr	r3, .L19+12
+ 283 0016 8360     		str	r3, [r0, #8]
+ 116:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     sensor.write = writeRegisters;
+ 284              		.loc 1 116 5 is_stmt 1 view .LVU48
+ 285              		.loc 1 116 18 is_stmt 0 view .LVU49
+ 286 0018 094B     		ldr	r3, .L19+16
+ 287 001a C360     		str	r3, [r0, #12]
+ 117:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     sensor.delay_us = usDelay;
+ 288              		.loc 1 117 5 is_stmt 1 view .LVU50
+ 289              		.loc 1 117 21 is_stmt 0 view .LVU51
+ 290 001c 094B     		ldr	r3, .L19+20
+ 291 001e 0361     		str	r3, [r0, #16]
+ 118:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     //sensor.intf_ptr = &interfaceData;
+ 119:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 120:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // Reset the sensor
+ 121:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     err = bmp5_soft_reset(&sensor);
+ 292              		.loc 1 121 5 is_stmt 1 view .LVU52
+ 293              		.loc 1 121 11 is_stmt 0 view .LVU53
+ 294 0020 FFF7FEFF 		bl	bmp5_soft_reset
+ 295              	.LVL25:
+ 122:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     if(err != BMP5_OK)
+ 296              		.loc 1 122 5 is_stmt 1 view .LVU54
+ 297              		.loc 1 122 7 is_stmt 0 view .LVU55
+ 298 0024 00B1     		cbz	r0, .L18
+ 299              	.L16:
+ 123:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     {
+ 124:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****         return err;
+ 125:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     }
+ 126:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 127:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // Initialize the sensor
+ 128:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     return bmp5_init(&sensor);
+ 129:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** }
+ 300              		.loc 1 129 1 view .LVU56
+ 301 0026 08BD     		pop	{r3, pc}
+ 302              	.L18:
+ 128:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** }
+ 303              		.loc 1 128 5 is_stmt 1 view .LVU57
+ 128:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** }
+ 304              		.loc 1 128 12 is_stmt 0 view .LVU58
+ 305 0028 0348     		ldr	r0, .L19+8
+ 306 002a FFF7FEFF 		bl	bmp5_init
+ 307              	.LVL26:
+ 308 002e FAE7     		b	.L16
+ 309              	.L20:
+ 310              		.align	2
+ARM GAS  /tmp/ccbP1M9Y.s 			page 9
+
+
+ 311              	.L19:
+ 312 0030 00000000 		.word	osrOdrConfig
+ 313 0034 00000000 		.word	fifo
+ 314 0038 00000000 		.word	sensor
+ 315 003c 00000000 		.word	readRegisters
+ 316 0040 00000000 		.word	writeRegisters
+ 317 0044 00000000 		.word	usDelay
+ 318              		.cfi_endproc
+ 319              	.LFE139:
+ 321              		.section	.text.setMode,"ax",%progbits
+ 322              		.align	1
+ 323              		.global	setMode
+ 324              		.syntax unified
+ 325              		.thumb
+ 326              		.thumb_func
+ 328              	setMode:
+ 329              	.LVL27:
+ 330              	.LFB140:
+ 130:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 131:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** int8_t setMode(enum bmp5_powermode mode)
+ 132:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** {
+ 331              		.loc 1 132 1 is_stmt 1 view -0
+ 332              		.cfi_startproc
+ 333              		@ args = 0, pretend = 0, frame = 0
+ 334              		@ frame_needed = 0, uses_anonymous_args = 0
+ 335              		.loc 1 132 1 is_stmt 0 view .LVU60
+ 336 0000 08B5     		push	{r3, lr}
+ 337              	.LCFI10:
+ 338              		.cfi_def_cfa_offset 8
+ 339              		.cfi_offset 3, -8
+ 340              		.cfi_offset 14, -4
+ 133:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     return bmp5_set_power_mode(mode, &sensor);
+ 341              		.loc 1 133 5 is_stmt 1 view .LVU61
+ 342              		.loc 1 133 12 is_stmt 0 view .LVU62
+ 343 0002 0249     		ldr	r1, .L23
+ 344 0004 FFF7FEFF 		bl	bmp5_set_power_mode
+ 345              	.LVL28:
+ 134:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** }
+ 346              		.loc 1 134 1 view .LVU63
+ 347 0008 08BD     		pop	{r3, pc}
+ 348              	.L24:
+ 349 000a 00BF     		.align	2
+ 350              	.L23:
+ 351 000c 00000000 		.word	sensor
+ 352              		.cfi_endproc
+ 353              	.LFE140:
+ 355              		.section	.text.getMode,"ax",%progbits
+ 356              		.align	1
+ 357              		.global	getMode
+ 358              		.syntax unified
+ 359              		.thumb
+ 360              		.thumb_func
+ 362              	getMode:
+ 363              	.LVL29:
+ 364              	.LFB141:
+ 135:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 136:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** int8_t getMode(enum bmp5_powermode* mode)
+ARM GAS  /tmp/ccbP1M9Y.s 			page 10
+
+
+ 137:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** {
+ 365              		.loc 1 137 1 is_stmt 1 view -0
+ 366              		.cfi_startproc
+ 367              		@ args = 0, pretend = 0, frame = 0
+ 368              		@ frame_needed = 0, uses_anonymous_args = 0
+ 369              		.loc 1 137 1 is_stmt 0 view .LVU65
+ 370 0000 08B5     		push	{r3, lr}
+ 371              	.LCFI11:
+ 372              		.cfi_def_cfa_offset 8
+ 373              		.cfi_offset 3, -8
+ 374              		.cfi_offset 14, -4
+ 138:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     return bmp5_get_power_mode(mode, &sensor);
+ 375              		.loc 1 138 5 is_stmt 1 view .LVU66
+ 376              		.loc 1 138 12 is_stmt 0 view .LVU67
+ 377 0002 0249     		ldr	r1, .L27
+ 378 0004 FFF7FEFF 		bl	bmp5_get_power_mode
+ 379              	.LVL30:
+ 139:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** }
+ 380              		.loc 1 139 1 view .LVU68
+ 381 0008 08BD     		pop	{r3, pc}
+ 382              	.L28:
+ 383 000a 00BF     		.align	2
+ 384              	.L27:
+ 385 000c 00000000 		.word	sensor
+ 386              		.cfi_endproc
+ 387              	.LFE141:
+ 389              		.section	.text.enablePress,"ax",%progbits
+ 390              		.align	1
+ 391              		.global	enablePress
+ 392              		.syntax unified
+ 393              		.thumb
+ 394              		.thumb_func
+ 396              	enablePress:
+ 397              	.LVL31:
+ 398              	.LFB142:
+ 140:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 141:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** int8_t enablePress(uint8_t pressEnable)
+ 142:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** {
+ 399              		.loc 1 142 1 is_stmt 1 view -0
+ 400              		.cfi_startproc
+ 401              		@ args = 0, pretend = 0, frame = 0
+ 402              		@ frame_needed = 0, uses_anonymous_args = 0
+ 403              		.loc 1 142 1 is_stmt 0 view .LVU70
+ 404 0000 08B5     		push	{r3, lr}
+ 405              	.LCFI12:
+ 406              		.cfi_def_cfa_offset 8
+ 407              		.cfi_offset 3, -8
+ 408              		.cfi_offset 14, -4
+ 143:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     osrOdrConfig.press_en = pressEnable;
+ 409              		.loc 1 143 5 is_stmt 1 view .LVU71
+ 410              		.loc 1 143 27 is_stmt 0 view .LVU72
+ 411 0002 034B     		ldr	r3, .L31
+ 412 0004 9870     		strb	r0, [r3, #2]
+ 144:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     return bmp5_set_osr_odr_press_config(&osrOdrConfig, &sensor);
+ 413              		.loc 1 144 5 is_stmt 1 view .LVU73
+ 414              		.loc 1 144 12 is_stmt 0 view .LVU74
+ 415 0006 0349     		ldr	r1, .L31+4
+ARM GAS  /tmp/ccbP1M9Y.s 			page 11
+
+
+ 416 0008 1846     		mov	r0, r3
+ 417              	.LVL32:
+ 418              		.loc 1 144 12 view .LVU75
+ 419 000a FFF7FEFF 		bl	bmp5_set_osr_odr_press_config
+ 420              	.LVL33:
+ 145:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** }
+ 421              		.loc 1 145 1 view .LVU76
+ 422 000e 08BD     		pop	{r3, pc}
+ 423              	.L32:
+ 424              		.align	2
+ 425              	.L31:
+ 426 0010 00000000 		.word	osrOdrConfig
+ 427 0014 00000000 		.word	sensor
+ 428              		.cfi_endproc
+ 429              	.LFE142:
+ 431              		.section	.text.begin,"ax",%progbits
+ 432              		.align	1
+ 433              		.global	begin
+ 434              		.syntax unified
+ 435              		.thumb
+ 436              		.thumb_func
+ 438              	begin:
+ 439              	.LFB137:
+  74:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // Variable to track errors returned by API calls
+ 440              		.loc 1 74 1 is_stmt 1 view -0
+ 441              		.cfi_startproc
+ 442              		@ args = 0, pretend = 0, frame = 0
+ 443              		@ frame_needed = 0, uses_anonymous_args = 0
+ 444 0000 08B5     		push	{r3, lr}
+ 445              	.LCFI13:
+ 446              		.cfi_def_cfa_offset 8
+ 447              		.cfi_offset 3, -8
+ 448              		.cfi_offset 14, -4
+  76:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 449              		.loc 1 76 5 view .LVU78
+ 450              	.LVL34:
+  79:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     if(err != BMP5_OK)
+ 451              		.loc 1 79 5 view .LVU79
+  79:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     if(err != BMP5_OK)
+ 452              		.loc 1 79 11 is_stmt 0 view .LVU80
+ 453 0002 FFF7FEFF 		bl	init
+ 454              	.LVL35:
+  80:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     {
+ 455              		.loc 1 80 5 is_stmt 1 view .LVU81
+  80:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     {
+ 456              		.loc 1 80 7 is_stmt 0 view .LVU82
+ 457 0006 0346     		mov	r3, r0
+ 458 0008 08B1     		cbz	r0, .L36
+ 459              	.LVL36:
+ 460              	.L34:
+  94:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 461              		.loc 1 94 1 view .LVU83
+ 462 000a 1846     		mov	r0, r3
+ 463 000c 08BD     		pop	{r3, pc}
+ 464              	.LVL37:
+ 465              	.L36:
+  86:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     if(err != BMP5_OK)
+ARM GAS  /tmp/ccbP1M9Y.s 			page 12
+
+
+ 466              		.loc 1 86 5 is_stmt 1 view .LVU84
+  86:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     if(err != BMP5_OK)
+ 467              		.loc 1 86 11 is_stmt 0 view .LVU85
+ 468 000e 0120     		movs	r0, #1
+ 469              	.LVL38:
+  86:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     if(err != BMP5_OK)
+ 470              		.loc 1 86 11 view .LVU86
+ 471 0010 FFF7FEFF 		bl	enablePress
+ 472              	.LVL39:
+  87:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     {
+ 473              		.loc 1 87 5 is_stmt 1 view .LVU87
+  87:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     {
+ 474              		.loc 1 87 7 is_stmt 0 view .LVU88
+ 475 0014 0346     		mov	r3, r0
+ 476 0016 0028     		cmp	r0, #0
+ 477 0018 F7D1     		bne	.L34
+  93:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** }
+ 478              		.loc 1 93 5 is_stmt 1 view .LVU89
+  93:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** }
+ 479              		.loc 1 93 12 is_stmt 0 view .LVU90
+ 480 001a 0120     		movs	r0, #1
+ 481              	.LVL40:
+  93:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** }
+ 482              		.loc 1 93 12 view .LVU91
+ 483 001c FFF7FEFF 		bl	setMode
+ 484              	.LVL41:
+  93:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** }
+ 485              		.loc 1 93 12 view .LVU92
+ 486 0020 0346     		mov	r3, r0
+ 487 0022 F2E7     		b	.L34
+ 488              		.cfi_endproc
+ 489              	.LFE137:
+ 491              		.section	.text.beginSPI,"ax",%progbits
+ 492              		.align	1
+ 493              		.global	beginSPI
+ 494              		.syntax unified
+ 495              		.thumb
+ 496              		.thumb_func
+ 498              	beginSPI:
+ 499              	.LFB138:
+  97:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // Set up chip select pin
+ 500              		.loc 1 97 1 is_stmt 1 view -0
+ 501              		.cfi_startproc
+ 502              		@ args = 0, pretend = 0, frame = 0
+ 503              		@ frame_needed = 0, uses_anonymous_args = 0
+ 504 0000 08B5     		push	{r3, lr}
+ 505              	.LCFI14:
+ 506              		.cfi_def_cfa_offset 8
+ 507              		.cfi_offset 3, -8
+ 508              		.cfi_offset 14, -4
+  99:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 509              		.loc 1 99 5 view .LVU94
+ 510 0002 0122     		movs	r2, #1
+ 511 0004 1021     		movs	r1, #16
+ 512 0006 0348     		ldr	r0, .L39
+ 513 0008 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 514              	.LVL42:
+ARM GAS  /tmp/ccbP1M9Y.s 			page 13
+
+
+ 102:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** }
+ 515              		.loc 1 102 5 view .LVU95
+ 102:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** }
+ 516              		.loc 1 102 12 is_stmt 0 view .LVU96
+ 517 000c FFF7FEFF 		bl	begin
+ 518              	.LVL43:
+ 103:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 519              		.loc 1 103 1 view .LVU97
+ 520 0010 08BD     		pop	{r3, pc}
+ 521              	.L40:
+ 522 0012 00BF     		.align	2
+ 523              	.L39:
+ 524 0014 00080240 		.word	1073874944
+ 525              		.cfi_endproc
+ 526              	.LFE138:
+ 528              		.section	.text.getSensorData,"ax",%progbits
+ 529              		.align	1
+ 530              		.global	getSensorData
+ 531              		.syntax unified
+ 532              		.thumb
+ 533              		.thumb_func
+ 535              	getSensorData:
+ 536              	.LVL44:
+ 537              	.LFB143:
+ 146:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 147:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** int8_t getSensorData(struct bmp5_sensor_data* data)
+ 148:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** {
+ 538              		.loc 1 148 1 is_stmt 1 view -0
+ 539              		.cfi_startproc
+ 540              		@ args = 0, pretend = 0, frame = 0
+ 541              		@ frame_needed = 0, uses_anonymous_args = 0
+ 542              		.loc 1 148 1 is_stmt 0 view .LVU99
+ 543 0000 08B5     		push	{r3, lr}
+ 544              	.LCFI15:
+ 545              		.cfi_def_cfa_offset 8
+ 546              		.cfi_offset 3, -8
+ 547              		.cfi_offset 14, -4
+ 149:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     return bmp5_get_sensor_data(data, &osrOdrConfig, &sensor);
+ 548              		.loc 1 149 5 is_stmt 1 view .LVU100
+ 549              		.loc 1 149 12 is_stmt 0 view .LVU101
+ 550 0002 024A     		ldr	r2, .L43
+ 551 0004 0249     		ldr	r1, .L43+4
+ 552 0006 FFF7FEFF 		bl	bmp5_get_sensor_data
+ 553              	.LVL45:
+ 150:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** }
+ 554              		.loc 1 150 1 view .LVU102
+ 555 000a 08BD     		pop	{r3, pc}
+ 556              	.L44:
+ 557              		.align	2
+ 558              	.L43:
+ 559 000c 00000000 		.word	sensor
+ 560 0010 00000000 		.word	osrOdrConfig
+ 561              		.cfi_endproc
+ 562              	.LFE143:
+ 564              		.section	.text.kalman_filter,"ax",%progbits
+ 565              		.align	1
+ 566              		.global	kalman_filter
+ARM GAS  /tmp/ccbP1M9Y.s 			page 14
+
+
+ 567              		.syntax unified
+ 568              		.thumb
+ 569              		.thumb_func
+ 571              	kalman_filter:
+ 572              	.LVL46:
+ 573              	.LFB144:
+ 151:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 152:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** float kalman_filter(float inputValue)
+ 153:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** {
+ 574              		.loc 1 153 1 is_stmt 1 view -0
+ 575              		.cfi_startproc
+ 576              		@ args = 0, pretend = 0, frame = 0
+ 577              		@ frame_needed = 0, uses_anonymous_args = 0
+ 578              		@ link register save eliminated.
+ 154:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     float x_k1_k1,x_k_k1;
+ 579              		.loc 1 154 5 view .LVU104
+ 155:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     float Z_k;
+ 580              		.loc 1 155 5 view .LVU105
+ 156:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     static float P_k1_k1;
+ 581              		.loc 1 156 5 view .LVU106
+ 157:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 158:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     static float Q = 0.0001;//Q: Regulation noise, Q increases, dynamic response becomes faster, an
+ 582              		.loc 1 158 5 view .LVU107
+ 159:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     static float R = 0.005; //R: Test noise, R increases, dynamic response becomes slower, converge
+ 583              		.loc 1 159 5 view .LVU108
+ 160:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     static float Kg = 0;
+ 584              		.loc 1 160 5 view .LVU109
+ 161:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     static float P_k_k1 = 1;
+ 585              		.loc 1 161 5 view .LVU110
+ 162:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 163:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     float kalman_value;
+ 586              		.loc 1 163 5 view .LVU111
+ 164:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     static float kalman_old=0;
+ 587              		.loc 1 164 5 view .LVU112
+ 165:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     Z_k = inputValue;
+ 588              		.loc 1 165 5 view .LVU113
+ 166:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     x_k1_k1 = kalman_old;
+ 589              		.loc 1 166 5 view .LVU114
+ 590              		.loc 1 166 13 is_stmt 0 view .LVU115
+ 591 0000 144B     		ldr	r3, .L46
+ 592 0002 93ED006A 		vldr.32	s12, [r3]
+ 593              	.LVL47:
+ 167:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 168:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     x_k_k1 = x_k1_k1;
+ 594              		.loc 1 168 5 is_stmt 1 view .LVU116
+ 169:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     P_k_k1 = P_k1_k1 + Q;
+ 595              		.loc 1 169 5 view .LVU117
+ 596              		.loc 1 169 22 is_stmt 0 view .LVU118
+ 597 0006 1449     		ldr	r1, .L46+4
+ 598 0008 D1ED007A 		vldr.32	s15, [r1]
+ 599 000c 9FED137A 		vldr.32	s14, .L46+8
+ 600 0010 77EE877A 		vadd.f32	s15, s15, s14
+ 601              		.loc 1 169 12 view .LVU119
+ 602 0014 124A     		ldr	r2, .L46+12
+ 603 0016 C2ED007A 		vstr.32	s15, [r2]
+ 170:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 171:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     Kg = P_k_k1/(P_k_k1 + R);
+ARM GAS  /tmp/ccbP1M9Y.s 			page 15
+
+
+ 604              		.loc 1 171 5 is_stmt 1 view .LVU120
+ 605              		.loc 1 171 25 is_stmt 0 view .LVU121
+ 606 001a 9FED127A 		vldr.32	s14, .L46+16
+ 607 001e 37EE877A 		vadd.f32	s14, s15, s14
+ 608              		.loc 1 171 16 view .LVU122
+ 609 0022 C7EE876A 		vdiv.f32	s13, s15, s14
+ 610              		.loc 1 171 8 view .LVU123
+ 611 0026 1048     		ldr	r0, .L46+20
+ 612 0028 C0ED006A 		vstr.32	s13, [r0]
+ 172:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 173:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     kalman_value = x_k_k1 + Kg * (Z_k - kalman_old);
+ 613              		.loc 1 173 5 is_stmt 1 view .LVU124
+ 614              		.loc 1 173 39 is_stmt 0 view .LVU125
+ 615 002c 30EE460A 		vsub.f32	s0, s0, s12
+ 616              	.LVL48:
+ 617              		.loc 1 173 32 view .LVU126
+ 618 0030 26EE800A 		vmul.f32	s0, s13, s0
+ 619              		.loc 1 173 18 view .LVU127
+ 620 0034 30EE060A 		vadd.f32	s0, s0, s12
+ 621              	.LVL49:
+ 174:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     P_k1_k1 = (1 - Kg)*P_k_k1;
+ 622              		.loc 1 174 5 is_stmt 1 view .LVU128
+ 623              		.loc 1 174 18 is_stmt 0 view .LVU129
+ 624 0038 B7EE007A 		vmov.f32	s14, #1.0e+0
+ 625 003c 37EE667A 		vsub.f32	s14, s14, s13
+ 626              		.loc 1 174 23 view .LVU130
+ 627 0040 67EE877A 		vmul.f32	s15, s15, s14
+ 628              		.loc 1 174 13 view .LVU131
+ 629 0044 C1ED007A 		vstr.32	s15, [r1]
+ 175:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     P_k_k1 = P_k1_k1;
+ 630              		.loc 1 175 5 is_stmt 1 view .LVU132
+ 631              		.loc 1 175 12 is_stmt 0 view .LVU133
+ 632 0048 C2ED007A 		vstr.32	s15, [r2]
+ 176:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 177:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     kalman_old = kalman_value;
+ 633              		.loc 1 177 5 is_stmt 1 view .LVU134
+ 634              		.loc 1 177 16 is_stmt 0 view .LVU135
+ 635 004c 83ED000A 		vstr.32	s0, [r3]
+ 178:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 179:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     return kalman_value;
+ 636              		.loc 1 179 5 is_stmt 1 view .LVU136
+ 180:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** }
+ 637              		.loc 1 180 1 is_stmt 0 view .LVU137
+ 638 0050 7047     		bx	lr
+ 639              	.L47:
+ 640 0052 00BF     		.align	2
+ 641              	.L46:
+ 642 0054 00000000 		.word	kalman_old.5
+ 643 0058 00000000 		.word	P_k1_k1.4
+ 644 005c 17B7D138 		.word	953267991
+ 645 0060 00000000 		.word	P_k_k1.2
+ 646 0064 0AD7A33B 		.word	1000593162
+ 647 0068 00000000 		.word	Kg.0
+ 648              		.cfi_endproc
+ 649              	.LFE144:
+ 651              		.global	__aeabi_f2d
+ 652              		.global	__aeabi_d2f
+ARM GAS  /tmp/ccbP1M9Y.s 			page 16
+
+
+ 653              		.global	__aeabi_ddiv
+ 654              		.section	.text.calcAltitude,"ax",%progbits
+ 655              		.align	1
+ 656              		.global	calcAltitude
+ 657              		.syntax unified
+ 658              		.thumb
+ 659              		.thumb_func
+ 661              	calcAltitude:
+ 662              	.LVL50:
+ 663              	.LFB145:
+ 181:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 182:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** float calcAltitude(float pressure) {
+ 664              		.loc 1 182 36 is_stmt 1 view -0
+ 665              		.cfi_startproc
+ 666              		@ args = 0, pretend = 0, frame = 0
+ 667              		@ frame_needed = 0, uses_anonymous_args = 0
+ 668              		.loc 1 182 36 is_stmt 0 view .LVU139
+ 669 0000 08B5     		push	{r3, lr}
+ 670              	.LCFI16:
+ 671              		.cfi_def_cfa_offset 8
+ 672              		.cfi_offset 3, -8
+ 673              		.cfi_offset 14, -4
+ 183:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     float A = pressure / 101325;
+ 674              		.loc 1 183 5 is_stmt 1 view .LVU140
+ 675              	.LVL51:
+ 184:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     float B = 1 / 5.25588;
+ 676              		.loc 1 184 5 view .LVU141
+ 185:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     float C = pow(A, B);
+ 677              		.loc 1 185 5 view .LVU142
+ 678              		.loc 1 185 15 is_stmt 0 view .LVU143
+ 679 0002 DFED177A 		vldr.32	s15, .L50+16
+ 680 0006 C0EE277A 		vdiv.f32	s15, s0, s15
+ 681              	.LVL52:
+ 682              		.loc 1 185 15 view .LVU144
+ 683 000a 17EE900A 		vmov	r0, s15
+ 684 000e FFF7FEFF 		bl	__aeabi_f2d
+ 685              	.LVL53:
+ 686              		.loc 1 185 15 view .LVU145
+ 687 0012 9FED0F1B 		vldr.64	d1, .L50
+ 688 0016 41EC100B 		vmov	d0, r0, r1
+ 689 001a FFF7FEFF 		bl	pow
+ 690              	.LVL54:
+ 691 001e 51EC100B 		vmov	r0, r1, d0
+ 692              		.loc 1 185 11 discriminator 1 view .LVU146
+ 693 0022 FFF7FEFF 		bl	__aeabi_d2f
+ 694              	.LVL55:
+ 695 0026 07EE900A 		vmov	s15, r0
+ 696              	.LVL56:
+ 186:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     C = 1.0 - C;
+ 697              		.loc 1 186 5 is_stmt 1 view .LVU147
+ 187:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     C = C / 0.0000225577;
+ 698              		.loc 1 187 5 view .LVU148
+ 699              		.loc 1 187 11 is_stmt 0 view .LVU149
+ 700 002a B7EE007A 		vmov.f32	s14, #1.0e+0
+ 701 002e 77EE677A 		vsub.f32	s15, s14, s15
+ 702              	.LVL57:
+ 703              		.loc 1 187 11 view .LVU150
+ARM GAS  /tmp/ccbP1M9Y.s 			page 17
+
+
+ 704 0032 17EE900A 		vmov	r0, s15
+ 705 0036 FFF7FEFF 		bl	__aeabi_f2d
+ 706              	.LVL58:
+ 707              		.loc 1 187 11 view .LVU151
+ 708 003a 07A3     		adr	r3, .L50+8
+ 709 003c D3E90023 		ldrd	r2, [r3]
+ 710 0040 FFF7FEFF 		bl	__aeabi_ddiv
+ 711              	.LVL59:
+ 712              		.loc 1 187 7 view .LVU152
+ 713 0044 FFF7FEFF 		bl	__aeabi_d2f
+ 714              	.LVL60:
+ 188:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     return C;
+ 715              		.loc 1 188 5 is_stmt 1 view .LVU153
+ 189:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** }
+ 716              		.loc 1 189 1 is_stmt 0 view .LVU154
+ 717 0048 00EE100A 		vmov	s0, r0
+ 718 004c 08BD     		pop	{r3, pc}
+ 719              	.L51:
+ 720 004e 00BF     		.align	3
+ 721              	.L50:
+ 722 0050 00000080 		.word	-2147483648
+ 723 0054 8A5AC83F 		.word	1070094986
+ 724 0058 DF552257 		.word	1461867999
+ 725 005c 49A7F73E 		.word	1056417609
+ 726 0060 80E6C547 		.word	1204151936
+ 727              		.cfi_endproc
+ 728              	.LFE145:
+ 730              		.section	.text.setODRFrequency,"ax",%progbits
+ 731              		.align	1
+ 732              		.global	setODRFrequency
+ 733              		.syntax unified
+ 734              		.thumb
+ 735              		.thumb_func
+ 737              	setODRFrequency:
+ 738              	.LVL61:
+ 739              	.LFB146:
+ 190:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 191:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** int8_t setODRFrequency(uint8_t odr)
+ 192:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** {
+ 740              		.loc 1 192 1 is_stmt 1 view -0
+ 741              		.cfi_startproc
+ 742              		@ args = 0, pretend = 0, frame = 0
+ 743              		@ frame_needed = 0, uses_anonymous_args = 0
+ 193:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // Check whether ODR is valid
+ 194:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     if(odr > BMP5_ODR_0_125_HZ)
+ 744              		.loc 1 194 5 view .LVU156
+ 745              		.loc 1 194 7 is_stmt 0 view .LVU157
+ 746 0000 1F28     		cmp	r0, #31
+ 747 0002 07D8     		bhi	.L54
+ 192:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // Check whether ODR is valid
+ 748              		.loc 1 192 1 view .LVU158
+ 749 0004 08B5     		push	{r3, lr}
+ 750              	.LCFI17:
+ 751              		.cfi_def_cfa_offset 8
+ 752              		.cfi_offset 3, -8
+ 753              		.cfi_offset 14, -4
+ 754 0006 0346     		mov	r3, r0
+ARM GAS  /tmp/ccbP1M9Y.s 			page 18
+
+
+ 195:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     {
+ 196:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****         return BMP5_E_INVALID_SETTING;
+ 197:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     }
+ 198:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 199:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     osrOdrConfig.odr = odr;
+ 755              		.loc 1 199 5 is_stmt 1 view .LVU159
+ 756              		.loc 1 199 22 is_stmt 0 view .LVU160
+ 757 0008 0448     		ldr	r0, .L59
+ 758              	.LVL62:
+ 759              		.loc 1 199 22 view .LVU161
+ 760 000a C370     		strb	r3, [r0, #3]
+ 200:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     return bmp5_set_osr_odr_press_config(&osrOdrConfig, &sensor);
+ 761              		.loc 1 200 5 is_stmt 1 view .LVU162
+ 762              		.loc 1 200 12 is_stmt 0 view .LVU163
+ 763 000c 0449     		ldr	r1, .L59+4
+ 764 000e FFF7FEFF 		bl	bmp5_set_osr_odr_press_config
+ 765              	.LVL63:
+ 201:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** }
+ 766              		.loc 1 201 1 view .LVU164
+ 767 0012 08BD     		pop	{r3, pc}
+ 768              	.LVL64:
+ 769              	.L54:
+ 770              	.LCFI18:
+ 771              		.cfi_def_cfa_offset 0
+ 772              		.cfi_restore 3
+ 773              		.cfi_restore 14
+ 196:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     }
+ 774              		.loc 1 196 16 view .LVU165
+ 775 0014 6FF00B00 		mvn	r0, #11
+ 776              	.LVL65:
+ 777              		.loc 1 201 1 view .LVU166
+ 778 0018 7047     		bx	lr
+ 779              	.L60:
+ 780 001a 00BF     		.align	2
+ 781              	.L59:
+ 782 001c 00000000 		.word	osrOdrConfig
+ 783 0020 00000000 		.word	sensor
+ 784              		.cfi_endproc
+ 785              	.LFE146:
+ 787              		.section	.text.getODRFrequency,"ax",%progbits
+ 788              		.align	1
+ 789              		.global	getODRFrequency
+ 790              		.syntax unified
+ 791              		.thumb
+ 792              		.thumb_func
+ 794              	getODRFrequency:
+ 795              	.LVL66:
+ 796              	.LFB147:
+ 202:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 203:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** int8_t getODRFrequency(uint8_t* odr)
+ 204:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** {
+ 797              		.loc 1 204 1 is_stmt 1 view -0
+ 798              		.cfi_startproc
+ 799              		@ args = 0, pretend = 0, frame = 0
+ 800              		@ frame_needed = 0, uses_anonymous_args = 0
+ 801              		@ link register save eliminated.
+ 205:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     *odr = osrOdrConfig.odr;
+ARM GAS  /tmp/ccbP1M9Y.s 			page 19
+
+
+ 802              		.loc 1 205 5 view .LVU168
+ 803              		.loc 1 205 24 is_stmt 0 view .LVU169
+ 804 0000 024B     		ldr	r3, .L62
+ 805 0002 DB78     		ldrb	r3, [r3, #3]	@ zero_extendqisi2
+ 806              		.loc 1 205 10 view .LVU170
+ 807 0004 0370     		strb	r3, [r0]
+ 206:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     return BMP5_OK;
+ 808              		.loc 1 206 5 is_stmt 1 view .LVU171
+ 207:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** }
+ 809              		.loc 1 207 1 is_stmt 0 view .LVU172
+ 810 0006 0020     		movs	r0, #0
+ 811              	.LVL67:
+ 812              		.loc 1 207 1 view .LVU173
+ 813 0008 7047     		bx	lr
+ 814              	.L63:
+ 815 000a 00BF     		.align	2
+ 816              	.L62:
+ 817 000c 00000000 		.word	osrOdrConfig
+ 818              		.cfi_endproc
+ 819              	.LFE147:
+ 821              		.section	.text.setOSRMultipliers,"ax",%progbits
+ 822              		.align	1
+ 823              		.global	setOSRMultipliers
+ 824              		.syntax unified
+ 825              		.thumb
+ 826              		.thumb_func
+ 828              	setOSRMultipliers:
+ 829              	.LVL68:
+ 830              	.LFB148:
+ 208:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 209:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** int8_t setOSRMultipliers(struct bmp5_osr_odr_press_config* config)
+ 210:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** {
+ 831              		.loc 1 210 1 is_stmt 1 view -0
+ 832              		.cfi_startproc
+ 833              		@ args = 0, pretend = 0, frame = 0
+ 834              		@ frame_needed = 0, uses_anonymous_args = 0
+ 835              		.loc 1 210 1 is_stmt 0 view .LVU175
+ 836 0000 08B5     		push	{r3, lr}
+ 837              	.LCFI19:
+ 838              		.cfi_def_cfa_offset 8
+ 839              		.cfi_offset 3, -8
+ 840              		.cfi_offset 14, -4
+ 211:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // Check whether OSR multipliers are valid
+ 212:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     if(config->osr_t > BMP5_OVERSAMPLING_128X
+ 841              		.loc 1 212 5 is_stmt 1 view .LVU176
+ 842              		.loc 1 212 14 is_stmt 0 view .LVU177
+ 843 0002 0378     		ldrb	r3, [r0]	@ zero_extendqisi2
+ 844              		.loc 1 212 7 view .LVU178
+ 845 0004 072B     		cmp	r3, #7
+ 846 0006 09D8     		bhi	.L66
+ 213:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****         || config->osr_p > BMP5_OVERSAMPLING_128X)
+ 847              		.loc 1 213 18 view .LVU179
+ 848 0008 4278     		ldrb	r2, [r0, #1]	@ zero_extendqisi2
+ 849              		.loc 1 213 9 view .LVU180
+ 850 000a 072A     		cmp	r2, #7
+ 851 000c 09D8     		bhi	.L67
+ 214:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     {
+ARM GAS  /tmp/ccbP1M9Y.s 			page 20
+
+
+ 215:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****         return BMP5_E_INVALID_SETTING;
+ 216:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     }
+ 217:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 218:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // TODO - Check whether this OSR is compatible with current ODR
+ 219:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 220:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     osrOdrConfig.osr_t = config->osr_t;
+ 852              		.loc 1 220 5 is_stmt 1 view .LVU181
+ 853              		.loc 1 220 24 is_stmt 0 view .LVU182
+ 854 000e 0648     		ldr	r0, .L69
+ 855              	.LVL69:
+ 856              		.loc 1 220 24 view .LVU183
+ 857 0010 0370     		strb	r3, [r0]
+ 221:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     osrOdrConfig.osr_p = config->osr_p;
+ 858              		.loc 1 221 5 is_stmt 1 view .LVU184
+ 859              		.loc 1 221 24 is_stmt 0 view .LVU185
+ 860 0012 4270     		strb	r2, [r0, #1]
+ 222:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     return bmp5_set_osr_odr_press_config(&osrOdrConfig, &sensor);
+ 861              		.loc 1 222 5 is_stmt 1 view .LVU186
+ 862              		.loc 1 222 12 is_stmt 0 view .LVU187
+ 863 0014 0549     		ldr	r1, .L69+4
+ 864 0016 FFF7FEFF 		bl	bmp5_set_osr_odr_press_config
+ 865              	.LVL70:
+ 866              	.L65:
+ 223:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** }
+ 867              		.loc 1 223 1 view .LVU188
+ 868 001a 08BD     		pop	{r3, pc}
+ 869              	.LVL71:
+ 870              	.L66:
+ 215:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     }
+ 871              		.loc 1 215 16 view .LVU189
+ 872 001c 6FF00B00 		mvn	r0, #11
+ 873              	.LVL72:
+ 215:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     }
+ 874              		.loc 1 215 16 view .LVU190
+ 875 0020 FBE7     		b	.L65
+ 876              	.LVL73:
+ 877              	.L67:
+ 215:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     }
+ 878              		.loc 1 215 16 view .LVU191
+ 879 0022 6FF00B00 		mvn	r0, #11
+ 880              	.LVL74:
+ 215:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     }
+ 881              		.loc 1 215 16 view .LVU192
+ 882 0026 F8E7     		b	.L65
+ 883              	.L70:
+ 884              		.align	2
+ 885              	.L69:
+ 886 0028 00000000 		.word	osrOdrConfig
+ 887 002c 00000000 		.word	sensor
+ 888              		.cfi_endproc
+ 889              	.LFE148:
+ 891              		.section	.text.getOSRMultipliers,"ax",%progbits
+ 892              		.align	1
+ 893              		.global	getOSRMultipliers
+ 894              		.syntax unified
+ 895              		.thumb
+ 896              		.thumb_func
+ARM GAS  /tmp/ccbP1M9Y.s 			page 21
+
+
+ 898              	getOSRMultipliers:
+ 899              	.LVL75:
+ 900              	.LFB149:
+ 224:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 225:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** int8_t getOSRMultipliers(struct bmp5_osr_odr_press_config* config)
+ 226:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** {
+ 901              		.loc 1 226 1 is_stmt 1 view -0
+ 902              		.cfi_startproc
+ 903              		@ args = 0, pretend = 0, frame = 0
+ 904              		@ frame_needed = 0, uses_anonymous_args = 0
+ 905              		@ link register save eliminated.
+ 227:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     config->osr_t = osrOdrConfig.osr_t;
+ 906              		.loc 1 227 5 view .LVU194
+ 907              		.loc 1 227 33 is_stmt 0 view .LVU195
+ 908 0000 034B     		ldr	r3, .L72
+ 909 0002 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 910              		.loc 1 227 19 view .LVU196
+ 911 0004 0270     		strb	r2, [r0]
+ 228:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     config->osr_p = osrOdrConfig.osr_p;
+ 912              		.loc 1 228 5 is_stmt 1 view .LVU197
+ 913              		.loc 1 228 33 is_stmt 0 view .LVU198
+ 914 0006 5B78     		ldrb	r3, [r3, #1]	@ zero_extendqisi2
+ 915              		.loc 1 228 19 view .LVU199
+ 916 0008 4370     		strb	r3, [r0, #1]
+ 229:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     return BMP5_OK;
+ 917              		.loc 1 229 5 is_stmt 1 view .LVU200
+ 230:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** }
+ 918              		.loc 1 230 1 is_stmt 0 view .LVU201
+ 919 000a 0020     		movs	r0, #0
+ 920              	.LVL76:
+ 921              		.loc 1 230 1 view .LVU202
+ 922 000c 7047     		bx	lr
+ 923              	.L73:
+ 924 000e 00BF     		.align	2
+ 925              	.L72:
+ 926 0010 00000000 		.word	osrOdrConfig
+ 927              		.cfi_endproc
+ 928              	.LFE149:
+ 930              		.section	.text.getOSREffective,"ax",%progbits
+ 931              		.align	1
+ 932              		.global	getOSREffective
+ 933              		.syntax unified
+ 934              		.thumb
+ 935              		.thumb_func
+ 937              	getOSREffective:
+ 938              	.LVL77:
+ 939              	.LFB150:
+ 231:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 232:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** int8_t getOSREffective(struct bmp5_osr_odr_eff* osrOdrEffective)
+ 233:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** {
+ 940              		.loc 1 233 1 is_stmt 1 view -0
+ 941              		.cfi_startproc
+ 942              		@ args = 0, pretend = 0, frame = 0
+ 943              		@ frame_needed = 0, uses_anonymous_args = 0
+ 944              		.loc 1 233 1 is_stmt 0 view .LVU204
+ 945 0000 08B5     		push	{r3, lr}
+ 946              	.LCFI20:
+ARM GAS  /tmp/ccbP1M9Y.s 			page 22
+
+
+ 947              		.cfi_def_cfa_offset 8
+ 948              		.cfi_offset 3, -8
+ 949              		.cfi_offset 14, -4
+ 234:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     return bmp5_get_osr_odr_eff(osrOdrEffective, &sensor);
+ 950              		.loc 1 234 5 is_stmt 1 view .LVU205
+ 951              		.loc 1 234 12 is_stmt 0 view .LVU206
+ 952 0002 0249     		ldr	r1, .L76
+ 953 0004 FFF7FEFF 		bl	bmp5_get_osr_odr_eff
+ 954              	.LVL78:
+ 235:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** }
+ 955              		.loc 1 235 1 view .LVU207
+ 956 0008 08BD     		pop	{r3, pc}
+ 957              	.L77:
+ 958 000a 00BF     		.align	2
+ 959              	.L76:
+ 960 000c 00000000 		.word	sensor
+ 961              		.cfi_endproc
+ 962              	.LFE150:
+ 964              		.section	.text.setFilterConfig,"ax",%progbits
+ 965              		.align	1
+ 966              		.global	setFilterConfig
+ 967              		.syntax unified
+ 968              		.thumb
+ 969              		.thumb_func
+ 971              	setFilterConfig:
+ 972              	.LVL79:
+ 973              	.LFB151:
+ 236:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 237:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** int8_t setFilterConfig(struct bmp5_iir_config* iirConfig)
+ 238:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** {
+ 974              		.loc 1 238 1 is_stmt 1 view -0
+ 975              		.cfi_startproc
+ 976              		@ args = 0, pretend = 0, frame = 0
+ 977              		@ frame_needed = 0, uses_anonymous_args = 0
+ 978              		.loc 1 238 1 is_stmt 0 view .LVU209
+ 979 0000 08B5     		push	{r3, lr}
+ 980              	.LCFI21:
+ 981              		.cfi_def_cfa_offset 8
+ 982              		.cfi_offset 3, -8
+ 983              		.cfi_offset 14, -4
+ 239:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     return bmp5_set_iir_config(iirConfig, &sensor);
+ 984              		.loc 1 239 5 is_stmt 1 view .LVU210
+ 985              		.loc 1 239 12 is_stmt 0 view .LVU211
+ 986 0002 0249     		ldr	r1, .L80
+ 987 0004 FFF7FEFF 		bl	bmp5_set_iir_config
+ 988              	.LVL80:
+ 240:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** }
+ 989              		.loc 1 240 1 view .LVU212
+ 990 0008 08BD     		pop	{r3, pc}
+ 991              	.L81:
+ 992 000a 00BF     		.align	2
+ 993              	.L80:
+ 994 000c 00000000 		.word	sensor
+ 995              		.cfi_endproc
+ 996              	.LFE151:
+ 998              		.section	.text.setOORConfig,"ax",%progbits
+ 999              		.align	1
+ARM GAS  /tmp/ccbP1M9Y.s 			page 23
+
+
+ 1000              		.global	setOORConfig
+ 1001              		.syntax unified
+ 1002              		.thumb
+ 1003              		.thumb_func
+ 1005              	setOORConfig:
+ 1006              	.LVL81:
+ 1007              	.LFB152:
+ 241:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 242:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** int8_t setOORConfig(struct bmp5_oor_press_configuration* oorConfig)
+ 243:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** {
+ 1008              		.loc 1 243 1 is_stmt 1 view -0
+ 1009              		.cfi_startproc
+ 1010              		@ args = 0, pretend = 0, frame = 0
+ 1011              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1012              		.loc 1 243 1 is_stmt 0 view .LVU214
+ 1013 0000 08B5     		push	{r3, lr}
+ 1014              	.LCFI22:
+ 1015              		.cfi_def_cfa_offset 8
+ 1016              		.cfi_offset 3, -8
+ 1017              		.cfi_offset 14, -4
+ 244:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     return bmp5_set_oor_configuration(oorConfig, &sensor);
+ 1018              		.loc 1 244 5 is_stmt 1 view .LVU215
+ 1019              		.loc 1 244 12 is_stmt 0 view .LVU216
+ 1020 0002 0249     		ldr	r1, .L84
+ 1021 0004 FFF7FEFF 		bl	bmp5_set_oor_configuration
+ 1022              	.LVL82:
+ 245:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** }
+ 1023              		.loc 1 245 1 view .LVU217
+ 1024 0008 08BD     		pop	{r3, pc}
+ 1025              	.L85:
+ 1026 000a 00BF     		.align	2
+ 1027              	.L84:
+ 1028 000c 00000000 		.word	sensor
+ 1029              		.cfi_endproc
+ 1030              	.LFE152:
+ 1032              		.section	.text.setFIFOConfig,"ax",%progbits
+ 1033              		.align	1
+ 1034              		.global	setFIFOConfig
+ 1035              		.syntax unified
+ 1036              		.thumb
+ 1037              		.thumb_func
+ 1039              	setFIFOConfig:
+ 1040              	.LVL83:
+ 1041              	.LFB153:
+ 246:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 247:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** int8_t setFIFOConfig(struct bmp5_fifo* fifoConfig)
+ 248:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** {
+ 1042              		.loc 1 248 1 is_stmt 1 view -0
+ 1043              		.cfi_startproc
+ 1044              		@ args = 0, pretend = 0, frame = 8
+ 1045              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1046              		.loc 1 248 1 is_stmt 0 view .LVU219
+ 1047 0000 10B5     		push	{r4, lr}
+ 1048              	.LCFI23:
+ 1049              		.cfi_def_cfa_offset 8
+ 1050              		.cfi_offset 4, -8
+ 1051              		.cfi_offset 14, -4
+ARM GAS  /tmp/ccbP1M9Y.s 			page 24
+
+
+ 1052 0002 82B0     		sub	sp, sp, #8
+ 1053              	.LCFI24:
+ 1054              		.cfi_def_cfa_offset 16
+ 1055 0004 0346     		mov	r3, r0
+ 249:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // Variable to track errors returned by API calls
+ 250:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     int8_t err = BMP5_OK;
+ 1056              		.loc 1 250 5 is_stmt 1 view .LVU220
+ 1057              	.LVL84:
+ 251:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 252:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // Copy desired config
+ 253:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     memcpy(&fifo, fifoConfig, sizeof(struct bmp5_fifo));
+ 1058              		.loc 1 253 5 view .LVU221
+ 1059 0006 114C     		ldr	r4, .L90
+ 1060 0008 0068     		ldr	r0, [r0]	@ unaligned
+ 1061              	.LVL85:
+ 1062              		.loc 1 253 5 is_stmt 0 view .LVU222
+ 1063 000a 5968     		ldr	r1, [r3, #4]	@ unaligned
+ 1064 000c 9A68     		ldr	r2, [r3, #8]	@ unaligned
+ 1065 000e DB68     		ldr	r3, [r3, #12]	@ unaligned
+ 1066              	.LVL86:
+ 1067              		.loc 1 253 5 view .LVU223
+ 1068 0010 0FC4     		stmia	r4!, {r0, r1, r2, r3}
+ 254:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 255:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // The sensor must be in stanby mode for the FIFO config to
+ 256:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // be set, grab the current power mode
+ 257:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     enum bmp5_powermode originalMode;
+ 1069              		.loc 1 257 5 is_stmt 1 view .LVU224
+ 258:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     err = getMode(&originalMode);
+ 1070              		.loc 1 258 5 view .LVU225
+ 1071              		.loc 1 258 11 is_stmt 0 view .LVU226
+ 1072 0012 0DF10700 		add	r0, sp, #7
+ 1073 0016 FFF7FEFF 		bl	getMode
+ 1074              	.LVL87:
+ 259:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     if(err != BMP5_OK)
+ 1075              		.loc 1 259 5 is_stmt 1 view .LVU227
+ 1076              		.loc 1 259 7 is_stmt 0 view .LVU228
+ 1077 001a 0346     		mov	r3, r0
+ 1078 001c 10B1     		cbz	r0, .L89
+ 1079              	.LVL88:
+ 1080              	.L87:
+ 260:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     {
+ 261:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****         return err;
+ 262:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     }
+ 263:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 264:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // Now set to standby
+ 265:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     err = setMode(BMP5_POWERMODE_STANDBY);
+ 266:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     if(err != BMP5_OK)
+ 267:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     {
+ 268:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****         return err;
+ 269:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     }
+ 270:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 271:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // Now we can set the FIFO config
+ 272:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     err = bmp5_set_fifo_configuration(&fifo, &sensor);
+ 273:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     if(err != BMP5_OK)
+ 274:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     {
+ 275:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****         return err;
+ 276:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     }
+ARM GAS  /tmp/ccbP1M9Y.s 			page 25
+
+
+ 277:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 278:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // Finally, set back to original power mode
+ 279:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     return setMode(originalMode);
+ 280:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** }
+ 1081              		.loc 1 280 1 view .LVU229
+ 1082 001e 1846     		mov	r0, r3
+ 1083 0020 02B0     		add	sp, sp, #8
+ 1084              	.LCFI25:
+ 1085              		.cfi_remember_state
+ 1086              		.cfi_def_cfa_offset 8
+ 1087              		@ sp needed
+ 1088 0022 10BD     		pop	{r4, pc}
+ 1089              	.LVL89:
+ 1090              	.L89:
+ 1091              	.LCFI26:
+ 1092              		.cfi_restore_state
+ 265:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     if(err != BMP5_OK)
+ 1093              		.loc 1 265 5 is_stmt 1 view .LVU230
+ 265:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     if(err != BMP5_OK)
+ 1094              		.loc 1 265 11 is_stmt 0 view .LVU231
+ 1095 0024 FFF7FEFF 		bl	setMode
+ 1096              	.LVL90:
+ 266:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     {
+ 1097              		.loc 1 266 5 is_stmt 1 view .LVU232
+ 266:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     {
+ 1098              		.loc 1 266 7 is_stmt 0 view .LVU233
+ 1099 0028 0346     		mov	r3, r0
+ 1100 002a 0028     		cmp	r0, #0
+ 1101 002c F7D1     		bne	.L87
+ 272:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     if(err != BMP5_OK)
+ 1102              		.loc 1 272 5 is_stmt 1 view .LVU234
+ 272:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     if(err != BMP5_OK)
+ 1103              		.loc 1 272 11 is_stmt 0 view .LVU235
+ 1104 002e 0849     		ldr	r1, .L90+4
+ 1105 0030 A4F11000 		sub	r0, r4, #16
+ 1106              	.LVL91:
+ 272:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     if(err != BMP5_OK)
+ 1107              		.loc 1 272 11 view .LVU236
+ 1108 0034 FFF7FEFF 		bl	bmp5_set_fifo_configuration
+ 1109              	.LVL92:
+ 273:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     {
+ 1110              		.loc 1 273 5 is_stmt 1 view .LVU237
+ 273:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     {
+ 1111              		.loc 1 273 7 is_stmt 0 view .LVU238
+ 1112 0038 0346     		mov	r3, r0
+ 1113 003a 0028     		cmp	r0, #0
+ 1114 003c EFD1     		bne	.L87
+ 279:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** }
+ 1115              		.loc 1 279 5 is_stmt 1 view .LVU239
+ 279:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** }
+ 1116              		.loc 1 279 12 is_stmt 0 view .LVU240
+ 1117 003e 9DF80700 		ldrb	r0, [sp, #7]	@ zero_extendqisi2
+ 1118              	.LVL93:
+ 279:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** }
+ 1119              		.loc 1 279 12 view .LVU241
+ 1120 0042 FFF7FEFF 		bl	setMode
+ 1121              	.LVL94:
+ARM GAS  /tmp/ccbP1M9Y.s 			page 26
+
+
+ 279:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** }
+ 1122              		.loc 1 279 12 view .LVU242
+ 1123 0046 0346     		mov	r3, r0
+ 1124 0048 E9E7     		b	.L87
+ 1125              	.L91:
+ 1126 004a 00BF     		.align	2
+ 1127              	.L90:
+ 1128 004c 00000000 		.word	fifo
+ 1129 0050 00000000 		.word	sensor
+ 1130              		.cfi_endproc
+ 1131              	.LFE153:
+ 1133              		.section	.text.getFIFOLength,"ax",%progbits
+ 1134              		.align	1
+ 1135              		.global	getFIFOLength
+ 1136              		.syntax unified
+ 1137              		.thumb
+ 1138              		.thumb_func
+ 1140              	getFIFOLength:
+ 1141              	.LVL95:
+ 1142              	.LFB154:
+ 281:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 282:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** int8_t getFIFOLength(uint8_t* numData)
+ 283:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** {
+ 1143              		.loc 1 283 1 is_stmt 1 view -0
+ 1144              		.cfi_startproc
+ 1145              		@ args = 0, pretend = 0, frame = 8
+ 1146              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1147              		.loc 1 283 1 is_stmt 0 view .LVU244
+ 1148 0000 10B5     		push	{r4, lr}
+ 1149              	.LCFI27:
+ 1150              		.cfi_def_cfa_offset 8
+ 1151              		.cfi_offset 4, -8
+ 1152              		.cfi_offset 14, -4
+ 1153 0002 82B0     		sub	sp, sp, #8
+ 1154              	.LCFI28:
+ 1155              		.cfi_def_cfa_offset 16
+ 1156 0004 0446     		mov	r4, r0
+ 284:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // Variable to track errors returned by API calls
+ 285:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     int8_t err = BMP5_OK;
+ 1157              		.loc 1 285 5 is_stmt 1 view .LVU245
+ 1158              	.LVL96:
+ 286:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 287:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     uint16_t numBytes = 0;
+ 1159              		.loc 1 287 5 view .LVU246
+ 1160              		.loc 1 287 14 is_stmt 0 view .LVU247
+ 1161 0006 0023     		movs	r3, #0
+ 1162 0008 ADF80630 		strh	r3, [sp, #6]	@ movhi
+ 288:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     err = bmp5_get_fifo_len(&numBytes, &fifo, &sensor);
+ 1163              		.loc 1 288 5 is_stmt 1 view .LVU248
+ 1164              		.loc 1 288 11 is_stmt 0 view .LVU249
+ 1165 000c 0D4A     		ldr	r2, .L98
+ 1166 000e 0E49     		ldr	r1, .L98+4
+ 1167 0010 0DF10600 		add	r0, sp, #6
+ 1168              	.LVL97:
+ 1169              		.loc 1 288 11 view .LVU250
+ 1170 0014 FFF7FEFF 		bl	bmp5_get_fifo_len
+ 1171              	.LVL98:
+ARM GAS  /tmp/ccbP1M9Y.s 			page 27
+
+
+ 289:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     if(err != BMP5_OK)
+ 1172              		.loc 1 289 5 is_stmt 1 view .LVU251
+ 1173              		.loc 1 289 7 is_stmt 0 view .LVU252
+ 1174 0018 68B9     		cbnz	r0, .L93
+ 290:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     {
+ 291:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****         return err;
+ 292:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     }
+ 293:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 294:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // Determine number of bytes per sample
+ 295:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     uint8_t bytesPerSample = 1;
+ 1175              		.loc 1 295 5 is_stmt 1 view .LVU253
+ 1176              	.LVL99:
+ 296:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     if(fifo.frame_sel == BMP5_FIFO_PRESS_TEMP_DATA)
+ 1177              		.loc 1 296 5 view .LVU254
+ 1178              		.loc 1 296 12 is_stmt 0 view .LVU255
+ 1179 001a 0B4B     		ldr	r3, .L98+4
+ 1180 001c 9B79     		ldrb	r3, [r3, #6]	@ zero_extendqisi2
+ 1181              		.loc 1 296 7 view .LVU256
+ 1182 001e 032B     		cmp	r3, #3
+ 1183 0020 0BD0     		beq	.L95
+ 297:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     {
+ 298:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****         bytesPerSample = 6;
+ 299:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     }
+ 300:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     else if((fifo.frame_sel == BMP5_FIFO_TEMPERATURE_DATA) || (fifo.frame_sel == BMP5_FIFO_PRESSURE
+ 1184              		.loc 1 300 10 is_stmt 1 view .LVU257
+ 1185              		.loc 1 300 60 is_stmt 0 view .LVU258
+ 1186 0022 013B     		subs	r3, r3, #1
+ 1187 0024 DBB2     		uxtb	r3, r3
+ 1188              		.loc 1 300 12 view .LVU259
+ 1189 0026 012B     		cmp	r3, #1
+ 1190 0028 09D9     		bls	.L96
+ 295:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     if(fifo.frame_sel == BMP5_FIFO_PRESS_TEMP_DATA)
+ 1191              		.loc 1 295 13 view .LVU260
+ 1192 002a 0122     		movs	r2, #1
+ 1193              	.L94:
+ 1194              	.LVL100:
+ 301:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     {
+ 302:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****         bytesPerSample = 3;
+ 303:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     }
+ 304:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 305:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // Compute number of samples in the FIFO buffer
+ 306:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     *numData = numBytes / bytesPerSample;
+ 1195              		.loc 1 306 5 is_stmt 1 view .LVU261
+ 1196              		.loc 1 306 25 is_stmt 0 view .LVU262
+ 1197 002c BDF80630 		ldrh	r3, [sp, #6]
+ 1198 0030 93FBF2F3 		sdiv	r3, r3, r2
+ 1199              		.loc 1 306 14 view .LVU263
+ 1200 0034 2370     		strb	r3, [r4]
+ 307:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 308:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     return BMP5_OK;
+ 1201              		.loc 1 308 5 is_stmt 1 view .LVU264
+ 1202              	.LVL101:
+ 1203              	.L93:
+ 309:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** }
+ 1204              		.loc 1 309 1 is_stmt 0 view .LVU265
+ 1205 0036 02B0     		add	sp, sp, #8
+ 1206              	.LCFI29:
+ARM GAS  /tmp/ccbP1M9Y.s 			page 28
+
+
+ 1207              		.cfi_remember_state
+ 1208              		.cfi_def_cfa_offset 8
+ 1209              		@ sp needed
+ 1210 0038 10BD     		pop	{r4, pc}
+ 1211              	.LVL102:
+ 1212              	.L95:
+ 1213              	.LCFI30:
+ 1214              		.cfi_restore_state
+ 298:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     }
+ 1215              		.loc 1 298 24 view .LVU266
+ 1216 003a 0622     		movs	r2, #6
+ 1217 003c F6E7     		b	.L94
+ 1218              	.L96:
+ 302:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     }
+ 1219              		.loc 1 302 24 view .LVU267
+ 1220 003e 0322     		movs	r2, #3
+ 1221 0040 F4E7     		b	.L94
+ 1222              	.L99:
+ 1223 0042 00BF     		.align	2
+ 1224              	.L98:
+ 1225 0044 00000000 		.word	sensor
+ 1226 0048 00000000 		.word	fifo
+ 1227              		.cfi_endproc
+ 1228              	.LFE154:
+ 1230              		.section	.text.getFIFOData,"ax",%progbits
+ 1231              		.align	1
+ 1232              		.global	getFIFOData
+ 1233              		.syntax unified
+ 1234              		.thumb
+ 1235              		.thumb_func
+ 1237              	getFIFOData:
+ 1238              	.LVL103:
+ 1239              	.LFB155:
+ 310:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 311:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** int8_t getFIFOData(struct bmp5_sensor_data* data, uint8_t numData)
+ 312:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** {
+ 1240              		.loc 1 312 1 is_stmt 1 view -0
+ 1241              		.cfi_startproc
+ 1242              		@ args = 0, pretend = 0, frame = 0
+ 1243              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1244              		.loc 1 312 1 is_stmt 0 view .LVU269
+ 1245 0000 98B5     		push	{r3, r4, r7, lr}
+ 1246              	.LCFI31:
+ 1247              		.cfi_def_cfa_offset 16
+ 1248              		.cfi_offset 3, -16
+ 1249              		.cfi_offset 4, -12
+ 1250              		.cfi_offset 7, -8
+ 1251              		.cfi_offset 14, -4
+ 1252 0002 00AF     		add	r7, sp, #0
+ 1253              	.LCFI32:
+ 1254              		.cfi_def_cfa_register 7
+ 1255 0004 0446     		mov	r4, r0
+ 313:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // Variable to track errors returned by API calls
+ 314:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     int8_t err = BMP5_OK;
+ 1256              		.loc 1 314 5 is_stmt 1 view .LVU270
+ 1257              	.LVL104:
+ 315:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ARM GAS  /tmp/ccbP1M9Y.s 			page 29
+
+
+ 316:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // Determine the number of bytes per data frame, 3 bytes per sensor
+ 317:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     uint8_t bytesPerFrame;
+ 1258              		.loc 1 317 5 view .LVU271
+ 318:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     if(fifo.frame_sel == BMP5_FIFO_TEMPERATURE_DATA
+ 1259              		.loc 1 318 5 view .LVU272
+ 1260              		.loc 1 318 12 is_stmt 0 view .LVU273
+ 1261 0006 104B     		ldr	r3, .L107
+ 1262 0008 9B79     		ldrb	r3, [r3, #6]	@ zero_extendqisi2
+ 319:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****         || fifo.frame_sel == BMP5_FIFO_PRESSURE_DATA)
+ 1263              		.loc 1 319 9 view .LVU274
+ 1264 000a 013B     		subs	r3, r3, #1
+ 1265 000c DBB2     		uxtb	r3, r3
+ 318:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     if(fifo.frame_sel == BMP5_FIFO_TEMPERATURE_DATA
+ 1266              		.loc 1 318 7 view .LVU275
+ 1267 000e 012B     		cmp	r3, #1
+ 1268 0010 12D9     		bls	.L105
+ 320:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     {
+ 321:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****         bytesPerFrame = 3;
+ 322:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     }
+ 323:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     else
+ 324:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     {
+ 325:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****         bytesPerFrame = 6;
+ 1269              		.loc 1 325 23 view .LVU276
+ 1270 0012 0623     		movs	r3, #6
+ 1271              	.L101:
+ 1272              	.LVL105:
+ 326:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     }
+ 327:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 328:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // Set number of bytes to read based on user's buffer size. If this is larger
+ 329:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // than the number of bytes in the buffer, bmp5_get_fifo_data() will
+ 330:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // automatically limit it
+ 331:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     fifo.length = numData * bytesPerFrame;
+ 1273              		.loc 1 331 5 is_stmt 1 view .LVU277
+ 1274              		.loc 1 331 27 is_stmt 0 view .LVU278
+ 1275 0014 03FB01F1 		mul	r1, r3, r1
+ 1276              	.LVL106:
+ 1277              		.loc 1 331 17 view .LVU279
+ 1278 0018 0B48     		ldr	r0, .L107
+ 1279              	.LVL107:
+ 1280              		.loc 1 331 17 view .LVU280
+ 1281 001a 8180     		strh	r1, [r0, #4]	@ movhi
+ 332:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 333:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // Create buffer to hold all bytes of FIFO buffer
+ 334:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     uint8_t byteBuffer[fifo.length];
+ 1282              		.loc 1 334 5 is_stmt 1 view .LVU281
+ 1283              	.LVL108:
+ 1284              		.loc 1 334 13 is_stmt 0 view .LVU282
+ 1285 001c CB1D     		adds	r3, r1, #7
+ 1286              	.LVL109:
+ 1287              		.loc 1 334 13 view .LVU283
+ 1288 001e DB08     		lsrs	r3, r3, #3
+ 1289 0020 6A46     		mov	r2, sp
+ 1290 0022 A2EBC303 		sub	r3, r2, r3, lsl #3
+ 1291 0026 9D46     		mov	sp, r3
+ 1292              	.LVL110:
+ 335:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     fifo.data = byteBuffer;
+ 1293              		.loc 1 335 5 is_stmt 1 view .LVU284
+ARM GAS  /tmp/ccbP1M9Y.s 			page 30
+
+
+ 1294              		.loc 1 335 15 is_stmt 0 view .LVU285
+ 1295 0028 C0F800D0 		str	sp, [r0]
+ 336:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 337:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // Get all bytes out of FIFO buffer
+ 338:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     err = bmp5_get_fifo_data(&fifo, &sensor);
+ 1296              		.loc 1 338 5 is_stmt 1 view .LVU286
+ 1297              		.loc 1 338 11 is_stmt 0 view .LVU287
+ 1298 002c 0749     		ldr	r1, .L107+4
+ 1299              	.LVL111:
+ 1300              		.loc 1 338 11 view .LVU288
+ 1301 002e FFF7FEFF 		bl	bmp5_get_fifo_data
+ 1302              	.LVL112:
+ 339:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     if(err != BMP5_OK)
+ 1303              		.loc 1 339 5 is_stmt 1 view .LVU289
+ 1304              		.loc 1 339 7 is_stmt 0 view .LVU290
+ 1305 0032 18B1     		cbz	r0, .L106
+ 1306              	.LVL113:
+ 1307              	.L102:
+ 340:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     {
+ 341:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****         return err;
+ 342:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     }
+ 343:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 344:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // Parse raw data into temperature and pressure data
+ 345:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     return bmp5_extract_fifo_data(&fifo, data);
+ 346:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** }
+ 1308              		.loc 1 346 1 view .LVU291
+ 1309 0034 BD46     		mov	sp, r7
+ 1310              	.LCFI33:
+ 1311              		.cfi_remember_state
+ 1312              		.cfi_def_cfa_register 13
+ 1313              	.LVL114:
+ 1314              		.loc 1 346 1 view .LVU292
+ 1315              		@ sp needed
+ 1316 0036 98BD     		pop	{r3, r4, r7, pc}
+ 1317              	.LVL115:
+ 1318              	.L105:
+ 1319              	.LCFI34:
+ 1320              		.cfi_restore_state
+ 321:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     }
+ 1321              		.loc 1 321 23 view .LVU293
+ 1322 0038 0323     		movs	r3, #3
+ 1323 003a EBE7     		b	.L101
+ 1324              	.LVL116:
+ 1325              	.L106:
+ 345:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** }
+ 1326              		.loc 1 345 5 is_stmt 1 view .LVU294
+ 345:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** }
+ 1327              		.loc 1 345 12 is_stmt 0 view .LVU295
+ 1328 003c 2146     		mov	r1, r4
+ 1329 003e 0248     		ldr	r0, .L107
+ 1330              	.LVL117:
+ 345:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** }
+ 1331              		.loc 1 345 12 view .LVU296
+ 1332 0040 FFF7FEFF 		bl	bmp5_extract_fifo_data
+ 1333              	.LVL118:
+ 1334 0044 F6E7     		b	.L102
+ 1335              	.L108:
+ARM GAS  /tmp/ccbP1M9Y.s 			page 31
+
+
+ 1336 0046 00BF     		.align	2
+ 1337              	.L107:
+ 1338 0048 00000000 		.word	fifo
+ 1339 004c 00000000 		.word	sensor
+ 1340              		.cfi_endproc
+ 1341              	.LFE155:
+ 1343              		.section	.text.flushFIFO,"ax",%progbits
+ 1344              		.align	1
+ 1345              		.global	flushFIFO
+ 1346              		.syntax unified
+ 1347              		.thumb
+ 1348              		.thumb_func
+ 1350              	flushFIFO:
+ 1351              	.LFB156:
+ 347:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 348:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** int8_t flushFIFO()
+ 349:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** {
+ 1352              		.loc 1 349 1 is_stmt 1 view -0
+ 1353              		.cfi_startproc
+ 1354              		@ args = 0, pretend = 0, frame = 8
+ 1355              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1356 0000 00B5     		push	{lr}
+ 1357              	.LCFI35:
+ 1358              		.cfi_def_cfa_offset 4
+ 1359              		.cfi_offset 14, -4
+ 1360 0002 83B0     		sub	sp, sp, #12
+ 1361              	.LCFI36:
+ 1362              		.cfi_def_cfa_offset 16
+ 350:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // Variable to track errors returned by API calls
+ 351:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     int8_t err = BMP5_OK;
+ 1363              		.loc 1 351 5 view .LVU298
+ 1364              	.LVL119:
+ 352:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 353:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // There isn't a simple way to flush the FIFO buffer unfortunately. However the
+ 354:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // FIFO is automatically flushed when certain config settings change, such as
+ 355:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // the power mode. We can simply change the power mode twice to flush the buffer
+ 356:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 357:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // Grab the current power mode
+ 358:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     enum bmp5_powermode originalMode;
+ 1365              		.loc 1 358 5 view .LVU299
+ 359:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     err = getMode(&originalMode);
+ 1366              		.loc 1 359 5 view .LVU300
+ 1367              		.loc 1 359 11 is_stmt 0 view .LVU301
+ 1368 0004 0DF10700 		add	r0, sp, #7
+ 1369 0008 FFF7FEFF 		bl	getMode
+ 1370              	.LVL120:
+ 360:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     if(err != BMP5_OK)
+ 1371              		.loc 1 360 5 is_stmt 1 view .LVU302
+ 1372              		.loc 1 360 7 is_stmt 0 view .LVU303
+ 1373 000c 0346     		mov	r3, r0
+ 1374 000e 58B9     		cbnz	r0, .L110
+ 361:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     {
+ 362:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****         return err;
+ 363:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     }
+ 364:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 365:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // Change the power mode to something else
+ 366:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     if(originalMode != BMP5_POWERMODE_STANDBY)
+ARM GAS  /tmp/ccbP1M9Y.s 			page 32
+
+
+ 1375              		.loc 1 366 5 is_stmt 1 view .LVU304
+ 1376              		.loc 1 366 21 is_stmt 0 view .LVU305
+ 1377 0010 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 1378              		.loc 1 366 7 view .LVU306
+ 1379 0014 63B1     		cbz	r3, .L111
+ 367:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     {
+ 368:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****         // Sensor is not in standby mode, so default to that
+ 369:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****         err = setMode(BMP5_POWERMODE_STANDBY);
+ 1380              		.loc 1 369 9 is_stmt 1 view .LVU307
+ 1381              		.loc 1 369 15 is_stmt 0 view .LVU308
+ 1382 0016 FFF7FEFF 		bl	setMode
+ 1383              	.LVL121:
+ 370:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****         if(err != BMP5_OK)
+ 1384              		.loc 1 370 9 is_stmt 1 view .LVU309
+ 1385              		.loc 1 370 11 is_stmt 0 view .LVU310
+ 1386 001a 0346     		mov	r3, r0
+ 1387 001c 20B9     		cbnz	r0, .L110
+ 1388              	.L112:
+ 371:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****         {
+ 372:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****             return err;
+ 373:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****         }
+ 374:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     }
+ 375:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     else
+ 376:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     {
+ 377:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****         // Already in standby, switch to forced instead
+ 378:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****         err = setMode(BMP5_POWERMODE_FORCED);
+ 379:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****         if(err != BMP5_OK)
+ 380:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****         {
+ 381:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****             return err;
+ 382:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****         }
+ 383:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     }
+ 384:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 385:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     // Finally, set back to original power mode
+ 386:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     return setMode(originalMode);
+ 1389              		.loc 1 386 5 is_stmt 1 view .LVU311
+ 1390              		.loc 1 386 12 is_stmt 0 view .LVU312
+ 1391 001e 9DF80700 		ldrb	r0, [sp, #7]	@ zero_extendqisi2
+ 1392              	.LVL122:
+ 1393              		.loc 1 386 12 view .LVU313
+ 1394 0022 FFF7FEFF 		bl	setMode
+ 1395              	.LVL123:
+ 1396 0026 0346     		mov	r3, r0
+ 1397              	.LVL124:
+ 1398              	.L110:
+ 387:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** }
+ 1399              		.loc 1 387 1 view .LVU314
+ 1400 0028 1846     		mov	r0, r3
+ 1401 002a 03B0     		add	sp, sp, #12
+ 1402              	.LCFI37:
+ 1403              		.cfi_remember_state
+ 1404              		.cfi_def_cfa_offset 4
+ 1405              		@ sp needed
+ 1406 002c 5DF804FB 		ldr	pc, [sp], #4
+ 1407              	.LVL125:
+ 1408              	.L111:
+ 1409              	.LCFI38:
+ 1410              		.cfi_restore_state
+ARM GAS  /tmp/ccbP1M9Y.s 			page 33
+
+
+ 378:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****         if(err != BMP5_OK)
+ 1411              		.loc 1 378 9 is_stmt 1 view .LVU315
+ 378:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****         if(err != BMP5_OK)
+ 1412              		.loc 1 378 15 is_stmt 0 view .LVU316
+ 1413 0030 0220     		movs	r0, #2
+ 1414              	.LVL126:
+ 378:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****         if(err != BMP5_OK)
+ 1415              		.loc 1 378 15 view .LVU317
+ 1416 0032 FFF7FEFF 		bl	setMode
+ 1417              	.LVL127:
+ 379:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****         {
+ 1418              		.loc 1 379 9 is_stmt 1 view .LVU318
+ 379:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****         {
+ 1419              		.loc 1 379 11 is_stmt 0 view .LVU319
+ 1420 0036 0346     		mov	r3, r0
+ 1421 0038 0028     		cmp	r0, #0
+ 1422 003a F0D0     		beq	.L112
+ 1423 003c F4E7     		b	.L110
+ 1424              		.cfi_endproc
+ 1425              	.LFE156:
+ 1427              		.section	.text.readNVM,"ax",%progbits
+ 1428              		.align	1
+ 1429              		.global	readNVM
+ 1430              		.syntax unified
+ 1431              		.thumb
+ 1432              		.thumb_func
+ 1434              	readNVM:
+ 1435              	.LVL128:
+ 1436              	.LFB157:
+ 388:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 389:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** int8_t readNVM(uint8_t addr, uint16_t* data)
+ 390:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** {
+ 1437              		.loc 1 390 1 is_stmt 1 view -0
+ 1438              		.cfi_startproc
+ 1439              		@ args = 0, pretend = 0, frame = 0
+ 1440              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1441              		.loc 1 390 1 is_stmt 0 view .LVU321
+ 1442 0000 08B5     		push	{r3, lr}
+ 1443              	.LCFI39:
+ 1444              		.cfi_def_cfa_offset 8
+ 1445              		.cfi_offset 3, -8
+ 1446              		.cfi_offset 14, -4
+ 391:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     return bmp5_nvm_read(addr, data, &sensor);
+ 1447              		.loc 1 391 5 is_stmt 1 view .LVU322
+ 1448              		.loc 1 391 12 is_stmt 0 view .LVU323
+ 1449 0002 024A     		ldr	r2, .L116
+ 1450 0004 FFF7FEFF 		bl	bmp5_nvm_read
+ 1451              	.LVL129:
+ 392:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** }
+ 1452              		.loc 1 392 1 view .LVU324
+ 1453 0008 08BD     		pop	{r3, pc}
+ 1454              	.L117:
+ 1455 000a 00BF     		.align	2
+ 1456              	.L116:
+ 1457 000c 00000000 		.word	sensor
+ 1458              		.cfi_endproc
+ 1459              	.LFE157:
+ARM GAS  /tmp/ccbP1M9Y.s 			page 34
+
+
+ 1461              		.section	.text.writeNVM,"ax",%progbits
+ 1462              		.align	1
+ 1463              		.global	writeNVM
+ 1464              		.syntax unified
+ 1465              		.thumb
+ 1466              		.thumb_func
+ 1468              	writeNVM:
+ 1469              	.LVL130:
+ 1470              	.LFB158:
+ 393:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** 
+ 394:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** int8_t writeNVM(uint8_t addr, uint16_t data)
+ 395:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** {
+ 1471              		.loc 1 395 1 is_stmt 1 view -0
+ 1472              		.cfi_startproc
+ 1473              		@ args = 0, pretend = 0, frame = 8
+ 1474              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1475              		.loc 1 395 1 is_stmt 0 view .LVU326
+ 1476 0000 00B5     		push	{lr}
+ 1477              	.LCFI40:
+ 1478              		.cfi_def_cfa_offset 4
+ 1479              		.cfi_offset 14, -4
+ 1480 0002 83B0     		sub	sp, sp, #12
+ 1481              	.LCFI41:
+ 1482              		.cfi_def_cfa_offset 16
+ 1483 0004 ADF80610 		strh	r1, [sp, #6]	@ movhi
+ 396:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c ****     return bmp5_nvm_write(addr, &data, &sensor);
+ 1484              		.loc 1 396 5 is_stmt 1 view .LVU327
+ 1485              		.loc 1 396 12 is_stmt 0 view .LVU328
+ 1486 0008 034A     		ldr	r2, .L120
+ 1487 000a 0DF10601 		add	r1, sp, #6
+ 1488              	.LVL131:
+ 1489              		.loc 1 396 12 view .LVU329
+ 1490 000e FFF7FEFF 		bl	bmp5_nvm_write
+ 1491              	.LVL132:
+ 397:/home/dat/Documents/colir_one/rocket_code/Module/Src/bmp581.c **** }
+ 1492              		.loc 1 397 1 view .LVU330
+ 1493 0012 03B0     		add	sp, sp, #12
+ 1494              	.LCFI42:
+ 1495              		.cfi_def_cfa_offset 4
+ 1496              		@ sp needed
+ 1497 0014 5DF804FB 		ldr	pc, [sp], #4
+ 1498              	.L121:
+ 1499              		.align	2
+ 1500              	.L120:
+ 1501 0018 00000000 		.word	sensor
+ 1502              		.cfi_endproc
+ 1503              	.LFE158:
+ 1505              		.section	.bss.Kg.0,"aw",%nobits
+ 1506              		.align	2
+ 1509              	Kg.0:
+ 1510 0000 00000000 		.space	4
+ 1511              		.section	.bss.P_k_k1.2,"aw",%nobits
+ 1512              		.align	2
+ 1515              	P_k_k1.2:
+ 1516 0000 00000000 		.space	4
+ 1517              		.section	.bss.P_k1_k1.4,"aw",%nobits
+ 1518              		.align	2
+ARM GAS  /tmp/ccbP1M9Y.s 			page 35
+
+
+ 1521              	P_k1_k1.4:
+ 1522 0000 00000000 		.space	4
+ 1523              		.section	.bss.kalman_old.5,"aw",%nobits
+ 1524              		.align	2
+ 1527              	kalman_old.5:
+ 1528 0000 00000000 		.space	4
+ 1529              		.global	bmp5_hal_result
+ 1530              		.section	.bss.bmp5_hal_result,"aw",%nobits
+ 1533              	bmp5_hal_result:
+ 1534 0000 00       		.space	1
+ 1535              		.global	fifo
+ 1536              		.section	.bss.fifo,"aw",%nobits
+ 1537              		.align	2
+ 1540              	fifo:
+ 1541 0000 00000000 		.space	16
+ 1541      00000000 
+ 1541      00000000 
+ 1541      00000000 
+ 1542              		.global	osrOdrConfig
+ 1543              		.section	.bss.osrOdrConfig,"aw",%nobits
+ 1544              		.align	2
+ 1547              	osrOdrConfig:
+ 1548 0000 00000000 		.space	4
+ 1549              		.global	sensor
+ 1550              		.section	.bss.sensor,"aw",%nobits
+ 1551              		.align	2
+ 1554              	sensor:
+ 1555 0000 00000000 		.space	24
+ 1555      00000000 
+ 1555      00000000 
+ 1555      00000000 
+ 1555      00000000 
+ 1556              		.text
+ 1557              	.Letext0:
+ 1558              		.file 2 "/home/dat/.config/Code/User/globalStorage/litaitech.stm32-colir-one/@xpack-dev-tools/arm-
+ 1559              		.file 3 "/home/dat/.config/Code/User/globalStorage/litaitech.stm32-colir-one/@xpack-dev-tools/arm-
+ 1560              		.file 4 "/home/dat/Documents/colir_one/rocket_code/Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32
+ 1561              		.file 5 "/home/dat/.config/Code/User/globalStorage/litaitech.stm32-colir-one/@xpack-dev-tools/arm-
+ 1562              		.file 6 "/home/dat/Documents/colir_one/rocket_code/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_
+ 1563              		.file 7 "/home/dat/Documents/colir_one/rocket_code/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_
+ 1564              		.file 8 "/home/dat/Documents/colir_one/rocket_code/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_
+ 1565              		.file 9 "/home/dat/Documents/colir_one/rocket_code/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_
+ 1566              		.file 10 "/home/dat/Documents/colir_one/rocket_code/Drivers/bmp5_api/Inc/bmp5_defs.h"
+ 1567              		.file 11 "/home/dat/Documents/colir_one/rocket_code/Drivers/bmp5_api/Inc/bmp5.h"
+ 1568              		.file 12 "/home/dat/.config/Code/User/globalStorage/litaitech.stm32-colir-one/@xpack-dev-tools/arm
+ 1569              		.file 13 "/home/dat/Documents/colir_one/rocket_code/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal
+ 1570              		.file 14 "/home/dat/.config/Code/User/globalStorage/litaitech.stm32-colir-one/@xpack-dev-tools/arm
+ARM GAS  /tmp/ccbP1M9Y.s 			page 36
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 bmp581.c
+     /tmp/ccbP1M9Y.s:21     .text.writeRegisters:00000000 $t
+     /tmp/ccbP1M9Y.s:27     .text.writeRegisters:00000000 writeRegisters
+     /tmp/ccbP1M9Y.s:110    .text.writeRegisters:00000050 $d
+     /tmp/ccbP1M9Y.s:116    .text.readRegisters:00000000 $t
+     /tmp/ccbP1M9Y.s:122    .text.readRegisters:00000000 readRegisters
+     /tmp/ccbP1M9Y.s:213    .text.readRegisters:0000005c $d
+     /tmp/ccbP1M9Y.s:1533   .bss.bmp5_hal_result:00000000 bmp5_hal_result
+     /tmp/ccbP1M9Y.s:220    .text.usDelay:00000000 $t
+     /tmp/ccbP1M9Y.s:226    .text.usDelay:00000000 usDelay
+     /tmp/ccbP1M9Y.s:248    .text.init:00000000 $t
+     /tmp/ccbP1M9Y.s:254    .text.init:00000000 init
+     /tmp/ccbP1M9Y.s:312    .text.init:00000030 $d
+     /tmp/ccbP1M9Y.s:1547   .bss.osrOdrConfig:00000000 osrOdrConfig
+     /tmp/ccbP1M9Y.s:1540   .bss.fifo:00000000 fifo
+     /tmp/ccbP1M9Y.s:1554   .bss.sensor:00000000 sensor
+     /tmp/ccbP1M9Y.s:322    .text.setMode:00000000 $t
+     /tmp/ccbP1M9Y.s:328    .text.setMode:00000000 setMode
+     /tmp/ccbP1M9Y.s:351    .text.setMode:0000000c $d
+     /tmp/ccbP1M9Y.s:356    .text.getMode:00000000 $t
+     /tmp/ccbP1M9Y.s:362    .text.getMode:00000000 getMode
+     /tmp/ccbP1M9Y.s:385    .text.getMode:0000000c $d
+     /tmp/ccbP1M9Y.s:390    .text.enablePress:00000000 $t
+     /tmp/ccbP1M9Y.s:396    .text.enablePress:00000000 enablePress
+     /tmp/ccbP1M9Y.s:426    .text.enablePress:00000010 $d
+     /tmp/ccbP1M9Y.s:432    .text.begin:00000000 $t
+     /tmp/ccbP1M9Y.s:438    .text.begin:00000000 begin
+     /tmp/ccbP1M9Y.s:492    .text.beginSPI:00000000 $t
+     /tmp/ccbP1M9Y.s:498    .text.beginSPI:00000000 beginSPI
+     /tmp/ccbP1M9Y.s:524    .text.beginSPI:00000014 $d
+     /tmp/ccbP1M9Y.s:529    .text.getSensorData:00000000 $t
+     /tmp/ccbP1M9Y.s:535    .text.getSensorData:00000000 getSensorData
+     /tmp/ccbP1M9Y.s:559    .text.getSensorData:0000000c $d
+     /tmp/ccbP1M9Y.s:565    .text.kalman_filter:00000000 $t
+     /tmp/ccbP1M9Y.s:571    .text.kalman_filter:00000000 kalman_filter
+     /tmp/ccbP1M9Y.s:642    .text.kalman_filter:00000054 $d
+     /tmp/ccbP1M9Y.s:1527   .bss.kalman_old.5:00000000 kalman_old.5
+     /tmp/ccbP1M9Y.s:1521   .bss.P_k1_k1.4:00000000 P_k1_k1.4
+     /tmp/ccbP1M9Y.s:1515   .bss.P_k_k1.2:00000000 P_k_k1.2
+     /tmp/ccbP1M9Y.s:1509   .bss.Kg.0:00000000 Kg.0
+     /tmp/ccbP1M9Y.s:655    .text.calcAltitude:00000000 $t
+     /tmp/ccbP1M9Y.s:661    .text.calcAltitude:00000000 calcAltitude
+     /tmp/ccbP1M9Y.s:722    .text.calcAltitude:00000050 $d
+     /tmp/ccbP1M9Y.s:731    .text.setODRFrequency:00000000 $t
+     /tmp/ccbP1M9Y.s:737    .text.setODRFrequency:00000000 setODRFrequency
+     /tmp/ccbP1M9Y.s:782    .text.setODRFrequency:0000001c $d
+     /tmp/ccbP1M9Y.s:788    .text.getODRFrequency:00000000 $t
+     /tmp/ccbP1M9Y.s:794    .text.getODRFrequency:00000000 getODRFrequency
+     /tmp/ccbP1M9Y.s:817    .text.getODRFrequency:0000000c $d
+     /tmp/ccbP1M9Y.s:822    .text.setOSRMultipliers:00000000 $t
+     /tmp/ccbP1M9Y.s:828    .text.setOSRMultipliers:00000000 setOSRMultipliers
+     /tmp/ccbP1M9Y.s:886    .text.setOSRMultipliers:00000028 $d
+     /tmp/ccbP1M9Y.s:892    .text.getOSRMultipliers:00000000 $t
+     /tmp/ccbP1M9Y.s:898    .text.getOSRMultipliers:00000000 getOSRMultipliers
+     /tmp/ccbP1M9Y.s:926    .text.getOSRMultipliers:00000010 $d
+     /tmp/ccbP1M9Y.s:931    .text.getOSREffective:00000000 $t
+ARM GAS  /tmp/ccbP1M9Y.s 			page 37
+
+
+     /tmp/ccbP1M9Y.s:937    .text.getOSREffective:00000000 getOSREffective
+     /tmp/ccbP1M9Y.s:960    .text.getOSREffective:0000000c $d
+     /tmp/ccbP1M9Y.s:965    .text.setFilterConfig:00000000 $t
+     /tmp/ccbP1M9Y.s:971    .text.setFilterConfig:00000000 setFilterConfig
+     /tmp/ccbP1M9Y.s:994    .text.setFilterConfig:0000000c $d
+     /tmp/ccbP1M9Y.s:999    .text.setOORConfig:00000000 $t
+     /tmp/ccbP1M9Y.s:1005   .text.setOORConfig:00000000 setOORConfig
+     /tmp/ccbP1M9Y.s:1028   .text.setOORConfig:0000000c $d
+     /tmp/ccbP1M9Y.s:1033   .text.setFIFOConfig:00000000 $t
+     /tmp/ccbP1M9Y.s:1039   .text.setFIFOConfig:00000000 setFIFOConfig
+     /tmp/ccbP1M9Y.s:1128   .text.setFIFOConfig:0000004c $d
+     /tmp/ccbP1M9Y.s:1134   .text.getFIFOLength:00000000 $t
+     /tmp/ccbP1M9Y.s:1140   .text.getFIFOLength:00000000 getFIFOLength
+     /tmp/ccbP1M9Y.s:1225   .text.getFIFOLength:00000044 $d
+     /tmp/ccbP1M9Y.s:1231   .text.getFIFOData:00000000 $t
+     /tmp/ccbP1M9Y.s:1237   .text.getFIFOData:00000000 getFIFOData
+     /tmp/ccbP1M9Y.s:1338   .text.getFIFOData:00000048 $d
+     /tmp/ccbP1M9Y.s:1344   .text.flushFIFO:00000000 $t
+     /tmp/ccbP1M9Y.s:1350   .text.flushFIFO:00000000 flushFIFO
+     /tmp/ccbP1M9Y.s:1428   .text.readNVM:00000000 $t
+     /tmp/ccbP1M9Y.s:1434   .text.readNVM:00000000 readNVM
+     /tmp/ccbP1M9Y.s:1457   .text.readNVM:0000000c $d
+     /tmp/ccbP1M9Y.s:1462   .text.writeNVM:00000000 $t
+     /tmp/ccbP1M9Y.s:1468   .text.writeNVM:00000000 writeNVM
+     /tmp/ccbP1M9Y.s:1501   .text.writeNVM:00000018 $d
+     /tmp/ccbP1M9Y.s:1506   .bss.Kg.0:00000000 $d
+     /tmp/ccbP1M9Y.s:1512   .bss.P_k_k1.2:00000000 $d
+     /tmp/ccbP1M9Y.s:1518   .bss.P_k1_k1.4:00000000 $d
+     /tmp/ccbP1M9Y.s:1524   .bss.kalman_old.5:00000000 $d
+     /tmp/ccbP1M9Y.s:1534   .bss.bmp5_hal_result:00000000 $d
+     /tmp/ccbP1M9Y.s:1537   .bss.fifo:00000000 $d
+     /tmp/ccbP1M9Y.s:1544   .bss.osrOdrConfig:00000000 $d
+     /tmp/ccbP1M9Y.s:1551   .bss.sensor:00000000 $d
+
+UNDEFINED SYMBOLS
+HAL_GPIO_WritePin
+HAL_SPI_Transmit
+hspi1
+HAL_SPI_Receive
+HAL_Delay
+bmp5_soft_reset
+bmp5_init
+bmp5_set_power_mode
+bmp5_get_power_mode
+bmp5_set_osr_odr_press_config
+bmp5_get_sensor_data
+__aeabi_f2d
+__aeabi_d2f
+__aeabi_ddiv
+pow
+bmp5_get_osr_odr_eff
+bmp5_set_iir_config
+bmp5_set_oor_configuration
+bmp5_set_fifo_configuration
+bmp5_get_fifo_len
+bmp5_get_fifo_data
+bmp5_extract_fifo_data
+ARM GAS  /tmp/ccbP1M9Y.s 			page 38
+
+
+bmp5_nvm_read
+bmp5_nvm_write

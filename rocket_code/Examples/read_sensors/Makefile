@@ -41,7 +41,7 @@ GCC_PATH = /home/dat/.config/Code/User/globalStorage/litaitech.stm32-colir-one/@
 ######################################
 # C sources
 C_SOURCES =  \
-$(DRIVER_PATH)/Module/Src/NRF24L01.c \
+$(DRIVER_PATH)/Module/Src/nrf24.c \
 $(DRIVER_PATH)/Module/Src/bmp581.c \
 $(DRIVER_PATH)/Module/Src/bno055.c \
 $(DRIVER_PATH)/Module/Src/device.c \

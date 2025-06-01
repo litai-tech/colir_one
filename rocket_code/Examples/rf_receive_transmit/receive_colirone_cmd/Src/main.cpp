@@ -9,7 +9,7 @@ int main(void){
         printf("Error initializing colirone: %d\n", err);
         return -1;
     }
-    err = colirOne.rf.setRxAdress((uint8_t*)RxAddress);
+    colirOne.rf.setRxAdress((uint8_t*)RxAddress);
     colirOne.rf.setRxMode();
 	while(1){
         if(colirOne.rf.hasReceivedData()){

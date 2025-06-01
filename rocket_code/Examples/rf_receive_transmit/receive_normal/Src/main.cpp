@@ -10,12 +10,13 @@ int main(void){
         printf("Error initializing colirone: %d\n", err);
         return -1;
     }
-    err = colirOne.rf.setRxAdress((uint8_t*)RxAddress);
+    colirOne.rf.setRxAdress((uint8_t*)RxAddress);
     colirOne.rf.setRxMode();
+    uint8_t rcv_data[32] = {0}; // Buffer to hold received data
 	while(1){
         if(colirOne.rf.hasReceivedData()){
-            uint8_t* data = colirOne.rf.getReceivedData();
-            // printf("Received data: %s\n", data);
+            colirOne.rf.getReceivedData(rcv_data);
+            // printf("Received data: %s\n", (char*)rcv_data);
         }
 	}
 	return 0;

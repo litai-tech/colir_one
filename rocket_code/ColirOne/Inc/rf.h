@@ -10,6 +10,16 @@
 extern "C"{
 #endif
 
+typedef enum{
+    RF_ACCELERATION = 0,
+    RF_GYROSCOPE,
+    RF_ORIENTATION,
+    RF_QUATERNION,
+    RF_BAROMETER,
+    RF_GPS,
+    RF_VERTICAL_VELOCITY,
+} rf_packet_type_t;
+
 typedef struct __attribute__((packed)) {
 	struct {
 		uint8_t number;
@@ -40,7 +50,7 @@ typedef struct __attribute__((packed)) {
 } colirone_payload_sensor_t;
 
 typedef struct __attribute__((packed)) {
-    uint8_t index;      
+    rf_packet_type_t packet_type;      
     uint32_t timestamp; // 4 bytes for timestamp
     uint8_t data[32 - 1 - 4]; // 32 bytes total, minus 1 byte for index and 4 bytes for timestamp
 } sensor_packet_t;
@@ -48,17 +58,19 @@ typedef struct __attribute__((packed)) {
 class RF {
     public:
         RF(void);
-        colirone_err_t init(void);
-        colirone_err_t setTxAdress(uint8_t *address);
-        colirone_err_t setRxAdress(uint8_t *address);
-        colirone_err_t setTxRxAdress(uint8_t *txAddress, uint8_t *rxAddress);
-        colirone_err_t setTxMode(void);
-        colirone_err_t setRxMode(void);
-        colirone_err_t sendData(uint8_t *data, uint8_t size); //max 32 bytes
+        void init(void);
+        void setTxAdress(uint8_t *address);
+        void setRxAdress(uint8_t *address);
+        void setTxRxAdress(uint8_t *txAddress, uint8_t *rxAddress);
+        void setTxMode(void);
+        void setRxMode(void);
+        colirone_err_t transmitData(uint8_t *data, uint8_t size); //max 32 bytes
         bool hasReceivedData(void);
-        uint8_t* getReceivedData(void);
+        void getReceivedData(uint8_t* rcv_data);
         bool isTxMode(void);
         bool isRxMode(void);
+        void listen(void);
+        void stopListen(void);
 
         // Default packet for colir one
         void readColirOneCommand(void);

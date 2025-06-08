@@ -110,6 +110,7 @@ ${DRIVER_PATH}/ColirOne/Src/gps.cpp \
 ${DRIVER_PATH}/ColirOne/Src/imu.cpp \
 ${DRIVER_PATH}/ColirOne/Src/lighter.cpp \
 ${DRIVER_PATH}/ColirOne/Src/servo.cpp \
+${DRIVER_PATH}/ColirOne/Src/rf.cpp \
 Src/main.cpp 
 
 # ASM sources

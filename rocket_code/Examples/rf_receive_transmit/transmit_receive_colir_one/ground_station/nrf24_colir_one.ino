@@ -1,0 +1,236 @@
+#include <SPI.h>
+#include <nRF24L01.h>
+#include <RF24.h>
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include "InputDebounce.h"
+
+/* ----------------------------------------------------------------MACROS AND DEFINES---------------------------------------------------------------- */
+/**
+ * @brief Button definition
+ */
+#define BUTTON_1                            13
+#define BUTTON_2                            14
+#define BUTTON_DEBOUNCE_DELAY               80
+#define LONG_DURATION_PRESSED               5000
+
+/**
+ * @brief RF24 definition
+ */
+#define RF24_CE_PIN                         4
+#define RF24_CSN_PIN                        5
+
+/* ----------------------------------------------------------------MACROS AND DEFINES---------------------------------------------------------------- */
+
+/* ----------------------------------------------------------------CONST VARIABLES---------------------------------------------------------------- */
+const uint8_t RxAddress[]            =        {0xAA,0xDD,0xCC,0xBB,0xAA};
+const uint8_t TxAddress[]            =        {0xEE,0xDD,0xCC,0xBB,0xAA};
+/* ----------------------------------------------------------------CONST VARIABLES---------------------------------------------------------------- */
+/* ----------------------------------------------------------------OBJECT---------------------------------------------------------------- */
+typedef enum{
+    RF_ACCELERATION = 0,
+    RF_GYROSCOPE,
+    RF_ORIENTATION,
+    RF_QUATERNION,
+    RF_BAROMETER,
+    RF_GPS,
+    RF_VERTICAL_VELOCITY,
+} rf_packet_type_t;
+
+typedef struct __attribute__((packed)) {
+    float x;
+    float y;
+    float z;
+} XYZ_t;
+
+typedef struct __attribute__((packed)) {
+    float w;
+    float x;
+    float y;
+    float z;
+} Quaternion_t;
+
+typedef struct __attribute__((packed)) {
+    XYZ_t acceleration;
+    XYZ_t gyroscope;
+    XYZ_t orientation;
+    Quaternion_t quaternion;
+    struct {
+        float temperature;
+        float pressure;
+        float altitude;
+    } barometer;
+    struct {
+        double longitude;
+        double latitude;
+        int visible_satellites;
+    } gps;
+    float vertical_velocity; // m/s
+} colirone_payload_sensor_t;
+
+typedef struct __attribute__((packed)) {
+  uint8_t lighter_launch_number;
+	uint8_t close_shutes;
+	uint8_t open_shutes;
+	uint8_t start_logs;
+	uint8_t write_logs;
+	uint8_t reset_altitude;
+	uint8_t remove_logs;
+} colirone_payload_cmd_t;
+
+
+typedef struct __attribute__((packed)) {
+    uint8_t index;      
+    uint32_t timestamp;
+    uint8_t data[27]; // 32 - 1 - 4 = 27
+} sensor_packet_t;
+
+colirone_payload_sensor_t sensor_data;
+RF24 radio(RF24_CE_PIN, RF24_CSN_PIN); // CE, CSN
+InputDebounce openShutesButton;
+InputDebounce closeShutesButton;
+/* ----------------------------------------------------------------OBJECT---------------------------------------------------------------- */
+
+/* ----------------------------------------------------------------GLOBAL FUNCTION PROTOTYPES---------------------------------------------------------------- */
+void transmit_launch_cmd(void);
+void transmit_open_shutes_cmd(void);
+void transmit_close_shutes_cmd(void);
+
+/* ----------------------------------------------------------------GLOBAL FUNCTION PROTOTYPES---------------------------------------------------------------- */
+
+/* ----------------------------------------------------------------MAIN PROGRAM---------------------------------------------------------------- */
+void setup()
+{
+  Serial.begin(115200);
+  radio.begin();
+  radio.setAutoAck(false);
+  radio.setDataRate(RF24_250KBPS);
+  radio.setPALevel(RF24_PA_MAX);
+  radio.setRetries(5,5);
+  radio.disableCRC();
+  radio.openReadingPipe(0, RxAddress);
+  radio.openWritingPipe(TxAddress);
+  radio.startListening();
+    // Button init
+  openShutesButton.registerCallbacks(buttonPressedCallback, buttonReleasedCallback);
+  closeShutesButton.registerCallbacks(buttonPressedCallback, buttonReleasedCallback);
+  openShutesButton.setup(BUTTON_1, BUTTON_DEBOUNCE_DELAY, InputDebounce::PIM_INT_PULL_UP_RES);
+  closeShutesButton.setup(BUTTON_2, BUTTON_DEBOUNCE_DELAY, InputDebounce::PIM_INT_PULL_UP_RES);
+}
+
+void loop()
+{
+    sensor_packet_t packet;
+    unsigned long now = millis();
+    openShutesButton.process(now);
+    closeShutesButton.process(now);
+    if (radio.available()) {
+        radio.read(&packet, sizeof(packet));
+        switch(packet.index) {
+            case RF_ACCELERATION:
+                memcpy(&sensor_data.acceleration, packet.data, sizeof(XYZ_t));
+                Serial.print("Accel: ");
+                Serial.print(sensor_data.acceleration.x); Serial.print(", ");
+                Serial.print(sensor_data.acceleration.y); Serial.print(", ");
+                Serial.println(sensor_data.acceleration.z);
+                break;
+            case RF_GYROSCOPE:
+                memcpy(&sensor_data.gyroscope, packet.data, sizeof(XYZ_t));
+                Serial.print("Gyro: ");
+                Serial.print(sensor_data.gyroscope.x); Serial.print(", ");
+                Serial.print(sensor_data.gyroscope.y); Serial.print(", ");
+                Serial.println(sensor_data.gyroscope.z);
+                break;
+            case RF_ORIENTATION:
+                memcpy(&sensor_data.orientation, packet.data, sizeof(XYZ_t));
+                Serial.print("Orientation: ");
+                Serial.print(sensor_data.orientation.x); Serial.print(", ");
+                Serial.print(sensor_data.orientation.y); Serial.print(", ");
+                Serial.println(sensor_data.orientation.z);
+                break;
+            case RF_QUATERNION:
+                memcpy(&sensor_data.quaternion, packet.data, sizeof(Quaternion_t));
+                Serial.print("Quaternion: ");
+                Serial.print(sensor_data.quaternion.w); Serial.print(", ");
+                Serial.print(sensor_data.quaternion.x); Serial.print(", ");
+                Serial.print(sensor_data.quaternion.y); Serial.print(", ");
+                Serial.println(sensor_data.quaternion.z);
+                break;
+            case RF_BAROMETER:
+                memcpy(&sensor_data.barometer, packet.data, sizeof(sensor_data.barometer));
+                Serial.print("Barometer: ");
+                Serial.print(sensor_data.barometer.temperature); Serial.print(", ");
+                Serial.print(sensor_data.barometer.pressure); Serial.print(", ");
+                Serial.println(sensor_data.barometer.altitude);
+                break;
+            case RF_GPS:
+                memcpy(&sensor_data.gps, packet.data, sizeof(sensor_data.gps));
+                Serial.print("GPS: ");
+                Serial.print(sensor_data.gps.longitude, 6); Serial.print(", ");
+                Serial.print(sensor_data.gps.latitude, 6); Serial.print(", ");
+                Serial.println(sensor_data.gps.visible_satellites);
+                break;
+            case RF_VERTICAL_VELOCITY:
+                memcpy(&sensor_data.vertical_velocity, packet.data, sizeof(float));
+                Serial.print("Vertical velocity: ");
+                Serial.println(sensor_data.vertical_velocity);
+                break;
+            default:
+                break;
+        }
+    }
+    delay(1);
+}
+/* ----------------------------------------------------------------MAIN PROGRAM---------------------------------------------------------------- */
+
+void buttonPressedCallback(uint8_t pinIn)
+{
+}
+
+void buttonReleasedCallback(uint8_t pinIn)
+{
+  if(pinIn == BUTTON_1){
+      transmit_open_shutes_cmd();
+  }
+  else if(pinIn == BUTTON_2){
+      transmit_launch_cmd();
+  }
+}
+
+void transmit_launch_cmd(void){
+  colirone_payload_cmd_t colirone_payload_cmd = {0};
+  colirone_payload_cmd.lighter_launch_number = 1;
+  radio.stopListening();
+  int ret = radio.write((uint8_t*)&colirone_payload_cmd, sizeof(colirone_payload_cmd));
+  if(ret == 0){
+    Serial.println("transmit_launch_cmd success");
+  }
+  delay(50);
+  radio.startListening();
+}
+
+void transmit_open_shutes_cmd(void){
+  colirone_payload_cmd_t colirone_payload_cmd = {0};
+  colirone_payload_cmd.open_shutes = 1;
+  radio.stopListening();
+  int ret = radio.write((uint8_t*)&colirone_payload_cmd, sizeof(colirone_payload_cmd));
+  if(ret == 0){
+    Serial.println("transmit_launch_cmd success");
+  }
+  delay(50);
+  radio.startListening();  
+}
+
+void transmit_close_shutes_cmd(void){
+  colirone_payload_cmd_t colirone_payload_cmd = {0};
+  colirone_payload_cmd.close_shutes = 1;
+  radio.stopListening();
+  int ret = radio.write((uint8_t*)&colirone_payload_cmd, sizeof(colirone_payload_cmd));
+  if(ret == 0){
+    Serial.println("transmit_launch_cmd success");
+  }
+  delay(50);
+  radio.startListening();  
+}
+
+/* ----------------------------------------------------------------GLOBAL FUNCTIONS---------------------------------------------------------------- */

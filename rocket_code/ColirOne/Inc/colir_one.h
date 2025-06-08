@@ -14,6 +14,7 @@
 #include "barometer.h"
 #include "servo.h"
 #include "lighter.h"
+#include "rf.h"
 
 #ifdef __cplusplus
 
@@ -36,26 +37,6 @@ class Logger {
         void eraseLogs();
 };
 
-class RfState {
-    public: 
-        bool IsTxMode;
-        bool IsRxMode;
-        char* RxAddress;
-        char* TxAddress;
-};
-
-class RF {
-    public: 
-        void setTxAddress(char* txAddress);//max 5 bytes
-        void setRxAddress(char* rxAddress);//max 5 bytes
-        void setTxMode();
-        void setRxMode();
-        void sendData(char* data);//max 32 bytes
-        bool hasReceivedData();
-        char* getReceivedData();
-};
-
-
 class ColirOne{
     public:
         ColirOne();
@@ -66,8 +47,9 @@ class ColirOne{
         RF rf;
         Servo servo;
         Lighter lighter;
-        void init(void);
+        colirone_err_t init(void);
         void base(void);
+        uint32_t getTimeStamp(void);
     private:
         void setState(void);
 };

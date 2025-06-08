@@ -1,14 +1,15 @@
 # Example: Read Sensors
 
-This example demonstrates how to use the ColirOne class on STM32 to read and print sensor data from IMU, Barometer, and GPS modules. The output is sent via UART for easy monitoring and debugging.
+This example demonstrates how to use the ColirOne class to retrieve sensor data from your rocket, including IMU, Barometer, and GPS.
 
 ---
 
 ## Project Structure
-read_sensors/ 
+receive_normal/ 
+├── ground_station/ 
+│ └── nrf24_tx.ino # Arduino code for ground station transmitter 
 ├── Inc/ 
-│ ├── config.h 
-│ └── main.h 
+│ └── main.h # STM32 main header 
 ├── Src/ 
 │ └── main.cpp # STM32 main application 
 ├── Makefile # Build script for STM32 project 
@@ -16,6 +17,8 @@ read_sensors/
 ├── STM32F407VETX_FLASH.ld # Linker script 
 ├── openocd.cfg # OpenOCD config for flashing 
 └── startup_stm32f407xx.s # Startup assembly
+
+---
 
 # How to Build and Flash (STM32)
 
@@ -37,22 +40,14 @@ read_sensors/
 
 ---
 
-# How to Use
-1. Flash STM32 Rocket Code
-    - Build and flash the STM32 code as described above.
-2. Run and Observe
-    - Power the STM32 board.
-    - The board will periodically read sensor data (IMU, Barometer, GPS) and print the results via UART.
-    - Use a serial terminal (e.g., PuTTY, Tera Term) to view the output.
-
----
-
-# Example Output (UART)
-Acceleration: X: 0.12, Y: -0.34, Z: 9.81
-Gyroscope: X: 0.01, Y: 0.02, Z: 0.03
-Orientation: X: 45.00, Y: 0.00, Z: 90.00
-Quaternion: W: 1.00, X: 0.00, Y: 0.00, Z: 0.00
-Temperature: 25.00
-Pressure: 101325.00
-Altitude: 12.34
-GPS Longitude: 105.123456, Latitude: 21.123456, Visible Satellites: 7
+## How to Use
+1. Upload Arduino Ground Station Code
+Open ground_station/nrf24_tx_cmd.ino in the Arduino IDE.
+Connect your nRF24L01 module to the Arduino as specified in the code.
+Upload the sketch to your Arduino.
+2. Flash STM32 Rocket Code
+Build and flash the STM32 code as described above.
+3. Run and Observe
+Power both the Arduino ground station and the STM32 rocket board.
+The Arduino will periodically send packets.
+The STM32 will receive and print the parket via UART (e.g., using a serial terminal).

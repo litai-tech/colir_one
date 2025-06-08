@@ -1,9 +1,7 @@
 #include "main.h"
 #include "../../ColirOne/Inc/colir_one.h"
-// #include "../../Module/Inc/init.h"
 
 int main(void){
-  // stm32_init();
   ColirOne colirOne;
   colirOne.init();
 	while(1){

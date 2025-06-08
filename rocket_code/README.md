@@ -76,8 +76,8 @@ Gyroscope: X: 0.01, Y: 0.02, Z: 0.03
 Orientation: X: 45.00, Y: 0.00, Z: 90.00
 
 ## Features
-- IMU Support: Read acceleration, gyroscope, and orientation data.
-- GPS Support: Retrieve GPS coordinates and other location data.
-- Barometer Support: Measure atmospheric pressure and altitude.
-- Servo Control: Control servo motors for rocket stabilization.
-- Ignition System: Manage the ignition system for rocket launch.
+IMU Support: Read acceleration, gyroscope, and orientation data.
+GPS Support: Retrieve GPS coordinates and other location data.
+Barometer Support: Measure atmospheric pressure and altitude.
+Servo Control: Control servo motors for rocket stabilization.
+Ignition System: Manage the ignition system for rocket launch.

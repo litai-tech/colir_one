@@ -230,14 +230,14 @@ void setup() {
   closeShutesButton.setup(BUTTON_2, BUTTON_DEBOUNCE_DELAY, InputDebounce::PIM_INT_PULL_UP_RES);
 
   // oled init
-  // u8g2.setBusClock(1000000);
-  // u8g2.begin();
-  // u8g2.setFont(u8g2_font_6x12_t_symbols);
-  // u8g2.enableUTF8Print();
-  // u8g2.setFontMode(1);
-  // u8g2.clearBuffer();
-  // u8g2.drawBitmap(4, 12, 15, 39, logo);// cnt = wid / 8, h = height
-  // u8g2.sendBuffer();
+  u8g2.setBusClock(1000000);
+  u8g2.begin();
+  u8g2.setFont(u8g2_font_6x12_t_symbols);
+  u8g2.enableUTF8Print();
+  u8g2.setFontMode(1);
+  u8g2.clearBuffer();
+  u8g2.drawBitmap(4, 12, 15, 39, logo);// cnt = wid / 8, h = height
+  u8g2.sendBuffer();
 
   // radio config
   radio.setAutoAck(false);
@@ -249,37 +249,36 @@ void setup() {
   printf_begin();
   //radio.printDetails();
   radio.startListening();
-  Serial.println("Starting ...");
 }
 
 void loop() {
   unsigned long now = millis();
-  // if(now - lastPackageTime > 1000)
-  //   connected = false;
-  // unsigned int openShutesButtonState = openShutesButton.process(now);
-  // unsigned int closeShutesButtonState = closeShutesButton.process(now);
-  // if(connected){
-  //   strip.setPixelColor(0, 0, 255, 0);
-  //   strip.show();
-  //   if(!isConfirmScreen){
-  //     oledMainScreenDisplay(lastVerticalVelocity, lastAltitude);
-  //   }
-  //   // Serial.print("vertical: ");
-  //   // Serial.println(lastVerticalVelocity);
-  //   // Serial.print("alt: ");
-  //   // Serial.println(lastAltitude);
-  // }
-  // else{
-  //   strip.setPixelColor(0, 255, 0, 0);
-  //   strip.show();
-  // }
+  if(now - lastPackageTime > 1000)
+    connected = false;
+  unsigned int openShutesButtonState = openShutesButton.process(now);
+  unsigned int closeShutesButtonState = closeShutesButton.process(now);
+  if(connected){
+    strip.setPixelColor(0, 0, 255, 0);
+    strip.show();
+    if(!isConfirmScreen){
+      oledMainScreenDisplay(lastVerticalVelocity, lastAltitude);
+    }
+    // Serial.print("vertical: ");
+    // Serial.println(lastVerticalVelocity);
+    // Serial.print("alt: ");
+    // Serial.println(lastAltitude);
+  }
+  else{
+    strip.setPixelColor(0, 255, 0, 0);
+    strip.show();
+  }
 
-  // if (Serial.available() > 0) {
-  //   incomingCmd = Serial.readString();
+  if (Serial.available() > 0) {
+    incomingCmd = Serial.readString();
     
-  //   clearBuffer(dataToSend, sizeof(dataToSend));
-  //   parseCommand(incomingCmd, dataToSend);
-  // }
+    clearBuffer(dataToSend, sizeof(dataToSend));
+    parseCommand(incomingCmd, dataToSend);
+  }
   if (radio.available()) {
     lastPackageTime = now;
     connected = true;

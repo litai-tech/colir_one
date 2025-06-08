@@ -16,9 +16,9 @@ colirone_err_t ColirOne::init(void) {
     // Initialize all components
     stm32_init();
     colirone_err_t err = COLIRONE_OK;
-    // err |= imu.init();
-    // err |= barometer.init();
-    // gps.init();
+    err |= imu.init();
+    err |= barometer.init();
+    gps.init();
     rf.init();
     return err;
 }

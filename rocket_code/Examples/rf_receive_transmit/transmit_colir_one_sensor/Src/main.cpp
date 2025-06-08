@@ -10,7 +10,7 @@ int main(void){
         printf("Error initializing colirone: %d\n", err);
         return -1;
     }
-    err = colirOne.rf.setTxAdress((uint8_t*)TxAddress);
+    colirOne.rf.setTxAdress((uint8_t*)TxAddress);
     colirOne.rf.setTxMode();
     colirone_payload_sensor_t sensorData;
     float altitude = 0.0f;
@@ -18,7 +18,6 @@ int main(void){
     float verticalVelocity = 0.0f;
 
     uint32_t lastTimestamp = colirOne.getTimeStamp();
-    uint32_t lastRxMode = colirOne.getTimeStamp();
 	while(1){
         uint32_t timestamp = colirOne.getTimeStamp();
         XYZ_t accel = colirOne.imu.getAcceleration();
@@ -71,6 +70,6 @@ int main(void){
         }
         sensorData = {0};
         HAL_Delay(1000);
-	}
+	} 
 	return 0;
 }

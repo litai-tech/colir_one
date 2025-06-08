@@ -14,7 +14,7 @@ int main(void){
 	while(1){
         if(colirOne.rf.hasReceivedData()){
             colirOne.rf.readColirOneCommand();
-            uint8_t launch_num = colirOne.rf.getLighterLaunchNumber();
+            int launch_num = colirOne.rf.getLighterLaunchNumber();
             uint8_t is_open_shutes = colirOne.rf.getOpenShutes();
             uint8_t is_start_logs = colirOne.rf.getStartLogs();
             uint8_t is_write_logs = colirOne.rf.getWriteLogs();
@@ -27,6 +27,14 @@ int main(void){
             printf("Write Logs: %d\n", is_write_logs);
             printf("Reset Altitude: %d\n", is_reset_alt);
             printf("Remove Logs: %d\n", is_remove_logs);
+
+            // uint8_t rcv_data[32] = {0}; // Buffer to hold received data
+            // colirOne.rf.getReceivedData(rcv_data);
+            // printf("Received data: ");
+            // for(int i = 0; i < 32; i++) {
+            //     printf("%02X ", rcv_data[i]);
+            // }
+            // printf("\n");
         }
 	}
 	return 0;

@@ -1,7 +1,7 @@
 #include "main.h"
 #include "../../ColirOne/Inc/colir_one.h"
 
-const uint8_t TxAddress[] = {0xEE,0xDD,0xCC,0xBB,0xAA};
+const uint8_t TxAddress[] = {0xAA,0xDD,0xCC,0xBB,0xAA};
 
 int main(void){
   	ColirOne colirOne;
@@ -10,11 +10,11 @@ int main(void){
         printf("Error initializing colirone: %d\n", err);
         return -1;
     }
-    err = colirOne.rf.setTxAdress((uint8_t*)TxAddress);
+    colirOne.rf.setTxAdress((uint8_t*)TxAddress);
     colirOne.rf.setTxMode();
     char* transmit_data = "Hello World!";
 	while(1){
-        colirOne.rf.sendData((uint8_t*)transmit_data, strlen(transmit_data));
+        colirOne.rf.transmitData((uint8_t*)transmit_data, strlen(transmit_data) + 1);
         HAL_Delay(1000);
 	}
 	return 0;

@@ -21,9 +21,8 @@ typedef enum{
 } rf_packet_type_t;
 
 typedef struct __attribute__((packed)) {
-	struct {
-		uint8_t number;
-	} lighter_launch;
+    uint8_t lighter_launch_number;
+    uint8_t close_shutes;
 	uint8_t open_shutes;
 	uint8_t start_logs;
 	uint8_t write_logs;
@@ -50,7 +49,7 @@ typedef struct __attribute__((packed)) {
 } colirone_payload_sensor_t;
 
 typedef struct __attribute__((packed)) {
-    rf_packet_type_t packet_type;      
+    uint8_t packet_type;      
     uint32_t timestamp; // 4 bytes for timestamp
     uint8_t data[32 - 1 - 4]; // 32 bytes total, minus 1 byte for index and 4 bytes for timestamp
 } sensor_packet_t;
@@ -69,12 +68,11 @@ class RF {
         void getReceivedData(uint8_t* rcv_data);
         bool isTxMode(void);
         bool isRxMode(void);
-        void listen(void);
-        void stopListen(void);
 
         // Default packet for colir one
         void readColirOneCommand(void);
-        uint8_t getLighterLaunchNumber(void);
+        int getLighterLaunchNumber(void);
+        uint8_t getCloseShutes(void);
         uint8_t getOpenShutes(void);
         uint8_t getStartLogs(void);
         uint8_t getWriteLogs(void);

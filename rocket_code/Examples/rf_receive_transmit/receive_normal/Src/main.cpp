@@ -16,7 +16,7 @@ int main(void){
 	while(1){
         if(colirOne.rf.hasReceivedData()){
             colirOne.rf.getReceivedData(rcv_data);
-            // printf("Received data: %s\n", (char*)rcv_data);
+            printf("Received data: %s\n", (char*)rcv_data);
         }
 	}
 	return 0;

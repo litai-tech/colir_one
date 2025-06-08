@@ -71,27 +71,15 @@ void RF::setTxRxAdress(uint8_t *txAddress, uint8_t *rxAddress) {
 }
 
 void RF::setTxMode(void) {
-    ce_low();
     nrf24_stop_listen();
-    ce_high();
     txMode = true;
     rxMode = false;
 }
 
 void RF::setRxMode(void) {
-    ce_low();
     nrf24_listen();
-    ce_high();
     rxMode = true;
     txMode = false;
-}
-
-void RF::listen(void){
-    nrf24_listen();
-}
-
-void RF::stopListen(void){
-    nrf24_stop_listen();
 }
 
 colirone_err_t RF::transmitData(uint8_t *data, uint8_t size) {
@@ -108,12 +96,7 @@ bool RF::hasReceivedData(void) {
 }
 
 void RF::getReceivedData(uint8_t* rcv_data) {
-    uint8_t dataR[32];
-    nrf24_receive(dataR, MAX_PAYLOAD_SIZE);
-
-    char tmp[50];
-    sprintf(tmp, "Data received: %s\n", (char*)dataR);
-    uart1_transmit((uint8_t*)tmp, strlen(tmp), 1000);
+    nrf24_receive(rcv_data, MAX_PAYLOAD_SIZE);
 }
 
 bool RF::isTxMode(void) {
@@ -125,11 +108,16 @@ bool RF::isRxMode(void) {
 }
 
 void RF::readColirOneCommand(void) {
+    colirone_payload_cmd = {0};
     nrf24_receive((uint8_t*)&colirone_payload_cmd, MAX_PAYLOAD_SIZE);
 }
 
-uint8_t RF::getLighterLaunchNumber(void) {
-    return colirone_payload_cmd.lighter_launch.number;
+int RF::getLighterLaunchNumber(void) {
+    return colirone_payload_cmd.lighter_launch_number;
+}
+
+uint8_t RF::getCloseShutes(void) {
+    return colirone_payload_cmd.close_shutes;
 }
 
 uint8_t RF::getOpenShutes(void) {
@@ -157,47 +145,47 @@ colirone_err_t RF::transmitSensorData(colirone_payload_sensor_t *sensor, uint32_
     colirone_err_t status = COLIRONE_OK;
     sensor_packet_t packet = {};
     packet.timestamp = timestamp;
-    packet.packet_type = RF_ACCELERATION;
+    packet.packet_type = (uint8_t)RF_ACCELERATION;
     memcpy(packet.data, &sensor->acceleration, sizeof(sensor->acceleration));
     status = nrf24_transmit((uint8_t*)&packet, sizeof(packet));
     COLIRONE_CHECK_ERROR(status);
-    HAL_Delay(15);
+    HAL_Delay(10);
 
-    packet.packet_type = RF_GYROSCOPE;
+    packet.packet_type = (uint8_t)RF_GYROSCOPE;
     memcpy(packet.data, &sensor->gyroscope, sizeof(sensor->gyroscope));
     status = nrf24_transmit((uint8_t*)&packet, sizeof(packet));
     COLIRONE_CHECK_ERROR(status);
-    HAL_Delay(15);
+    HAL_Delay(10);
 
-    packet.packet_type = RF_ORIENTATION;
+    packet.packet_type = (uint8_t)RF_ORIENTATION;
     memcpy(packet.data, &sensor->orientation, sizeof(sensor->orientation));
     status = nrf24_transmit((uint8_t*)&packet, sizeof(packet));
     COLIRONE_CHECK_ERROR(status);
-    HAL_Delay(15);
+    HAL_Delay(10);
 
-    packet.packet_type = RF_QUATERNION;
+    packet.packet_type = (uint8_t)RF_QUATERNION;
     memcpy(packet.data, &sensor->quaternion, sizeof(sensor->quaternion));
     status = nrf24_transmit((uint8_t*)&packet, sizeof(packet));
     COLIRONE_CHECK_ERROR(status);
-    HAL_Delay(15);
+    HAL_Delay(10);
 
-    packet.packet_type = RF_BAROMETER;
+    packet.packet_type = (uint8_t)RF_BAROMETER;
     memcpy(packet.data, &sensor->barometer, sizeof(sensor->barometer));
     status = nrf24_transmit((uint8_t*)&packet, sizeof(packet));
     COLIRONE_CHECK_ERROR(status);
-    HAL_Delay(15);
+    HAL_Delay(10);
 
-    packet.packet_type = RF_GPS;
+    packet.packet_type = (uint8_t)RF_GPS;
     memcpy(packet.data, &sensor->gps, sizeof(sensor->gps));
     status = nrf24_transmit((uint8_t*)&packet, sizeof(packet));
     COLIRONE_CHECK_ERROR(status);
-    HAL_Delay(15);
+    HAL_Delay(10);
 
-    packet.packet_type = RF_VERTICAL_VELOCITY;
+    packet.packet_type = (uint8_t)RF_VERTICAL_VELOCITY;
     packet.data[0] = (uint8_t)(sensor->vertical_velocity);
     status = nrf24_transmit((uint8_t*)&packet, sizeof(packet));
     COLIRONE_CHECK_ERROR(status);
-    HAL_Delay(15);
+    HAL_Delay(10);
 
     return COLIRONE_OK;
 }

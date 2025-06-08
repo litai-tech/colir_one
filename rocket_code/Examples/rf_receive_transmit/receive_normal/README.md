@@ -1,15 +1,53 @@
-## Example: Read Sensors
-Here is an example of how to use the ColirOne class to retrieve sensor data, including IMU, Barometer, and GPS.
+# Example: Read Sensors
 
-## How to modify and build new code
-change this line in Makefile:
+This example demonstrates how to use the ColirOne class to retrieve sensor data from your rocket, including IMU, Barometer, and GPS.
 
-DRIVER_PATH = /home/dat/Documents/colir_one/rocket_code
-OPENOCD_PATH = /home/dat/.config/Code/User/globalStorage/litaitech.stm32-colir-one/@xpack-dev-tools/openocd/0.12.0-4.1/.content/bin/openocd
-GCC_PATH = /home/dat/.config/Code/User/globalStorage/litaitech.stm32-colir-one/@xpack-dev-tools/arm-none-eabi-gcc/13.3.1-1.1.1/.content/bin
+---
 
-With DRIVER_PATH being the path to the folder containing the rocket_code directory, OPENOCD_PATH the path to OpenOCD, and GCC_PATH the path to GCC. If you are using the STM32 Colir One VSCode plugin, there is no need to modify these paths, as everything will be automatically updated based on the environment paths.
+## Project Structure
+receive_normal/ 
+├── ground_station/ 
+│ └── nrf24_tx.ino # Arduino code for ground station transmitter 
+├── Inc/ 
+│ └── main.h # STM32 main header 
+├── Src/ 
+│ └── main.cpp # STM32 main application 
+├── Makefile # Build script for STM32 project 
+├── README.md # This file 
+├── STM32F407VETX_FLASH.ld # Linker script 
+├── openocd.cfg # OpenOCD config for flashing 
+└── startup_stm32f407xx.s # Startup assembly
 
-Using cmd: `make` to build code
-Using cmd: `make flash` to flash this code to your rocket after build success.
-Using cmd: `make clean` to clean build folder
+---
+
+# How to Build and Flash (STM32)
+
+1. **Configure Paths (if needed):**
+   - Edit the following lines in the `Makefile` if your toolchain is in a different location:
+     ```
+     DRIVER_PATH = /home/dat/Documents/colir_one/rocket_code
+     OPENOCD_PATH = <path-to-openocd>
+     GCC_PATH = <path-to-arm-none-eabi-gcc>
+     ```
+   - If you use the STM32 Colir One VSCode plugin, these paths are set automatically.
+
+2. **Build the project:**
+   ```sh
+   make
+
+3. Flash the firmware to your STM32: make flash
+4. Clean the build folder: make clean
+
+---
+
+## How to Use
+1. Upload Arduino Ground Station Code
+Open ground_station/nrf24_tx_cmd.ino in the Arduino IDE.
+Connect your nRF24L01 module to the Arduino as specified in the code.
+Upload the sketch to your Arduino.
+2. Flash STM32 Rocket Code
+Build and flash the STM32 code as described above.
+3. Run and Observe
+Power both the Arduino ground station and the STM32 rocket board.
+The Arduino will periodically send packets.
+The STM32 will receive and print the parket via UART (e.g., using a serial terminal).

@@ -49,9 +49,10 @@ typedef struct __attribute__((packed)) {
 } colirone_payload_sensor_t;
 
 typedef struct __attribute__((packed)) {
+    uint8_t type; //type 0 for sensor data
     uint8_t packet_type;      
     uint32_t timestamp; // 4 bytes for timestamp
-    uint8_t data[32 - 1 - 4]; // 32 bytes total, minus 1 byte for index and 4 bytes for timestamp
+    uint8_t data[32 - 1 - 5]; // 32 bytes total, minus 1 byte for index and 4 bytes for timestamp 1 byte for type
 } sensor_packet_t;
 
 class RF {

@@ -4,6 +4,11 @@
 const uint8_t RxAddress[] = {0xEE,0xDD,0xCC,0xBB,0xAA};
 const uint8_t TxAddress[] = {0xAA,0xDD,0xCC,0xBB,0xAA};
 
+typedef struct __attribute__((packed)) {
+    uint8_t type; // type != 0 for custom data
+    uint8_t is_rocket_rx;
+} colirone_common_packet_t;
+
 int main(void){
   	ColirOne colirOne;
   	colirone_err_t err = colirOne.init();
@@ -23,6 +28,8 @@ int main(void){
     }
 
     colirone_payload_sensor_t sensorData;
+    colirone_common_packet_t commonPacket;
+    commonPacket.type = 1;
     float altitude = 0.0f;
     float lastAltitude = 0.0f;
     float verticalVelocity = 0.0f;
@@ -84,6 +91,8 @@ int main(void){
             sensorData = {0}; // Reset sensor data after transmission
             if(timestamp - lastRxMode > 100){
                 printf("Switching to RX mode\n");
+                commonPacket.is_rocket_rx = 1;
+                colirOne.rf.transmitData((uint8_t*)&commonPacket, sizeof(commonPacket));
                 colirOne.rf.setRxMode();
                 lastRxMode = colirOne.getTimeStamp();
             }
@@ -105,6 +114,8 @@ int main(void){
             else if(timestamp - lastRxMode > 500){
                 printf("Switching to TX mode\n");
                 colirOne.rf.setTxMode();
+                commonPacket.is_rocket_rx = 0;
+                colirOne.rf.transmitData((uint8_t*)&commonPacket, sizeof(commonPacket));
                 lastRxMode = colirOne.getTimeStamp();
             }
         }

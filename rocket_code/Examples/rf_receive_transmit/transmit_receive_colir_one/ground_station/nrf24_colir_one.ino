@@ -20,6 +20,8 @@
 #define RF24_CE_PIN                         4
 #define RF24_CSN_PIN                        5
 
+#define QUEUE_SIZE                          10
+
 /* ----------------------------------------------------------------MACROS AND DEFINES---------------------------------------------------------------- */
 
 /* ----------------------------------------------------------------CONST VARIABLES---------------------------------------------------------------- */
@@ -80,12 +82,19 @@ typedef struct __attribute__((packed)) {
 
 
 typedef struct __attribute__((packed)) {
+    uint8_t type;
     uint8_t index;      
     uint32_t timestamp;
-    uint8_t data[27]; // 32 - 1 - 4 = 27
+    uint8_t data[26]; // 32 - 1 - 5 = 26
 } sensor_packet_t;
 
+typedef struct __attribute__((packed)) {
+    uint8_t type;
+    uint8_t is_rocket_rx;
+} colirone_common_packet_t;
+
 colirone_payload_sensor_t sensor_data;
+colirone_common_packet_t common_packet;
 RF24 radio(RF24_CE_PIN, RF24_CSN_PIN); // CE, CSN
 InputDebounce openShutesButton;
 InputDebounce closeShutesButton;
@@ -97,6 +106,12 @@ void transmit_open_shutes_cmd(void);
 void transmit_close_shutes_cmd(void);
 
 /* ----------------------------------------------------------------GLOBAL FUNCTION PROTOTYPES---------------------------------------------------------------- */
+
+/* ----------------------------------------------------------------GLOBAL VARIABLES---------------------------------------------------------------- */
+colirone_payload_cmd_t colirone_payload_cmd_queue[QUEUE_SIZE];
+int queueHead = 0;
+int queueTail = 0;
+/* ----------------------------------------------------------------GLOBAL VARIABLES---------------------------------------------------------------- */
 
 /* ----------------------------------------------------------------MAIN PROGRAM---------------------------------------------------------------- */
 void setup()
@@ -120,67 +135,90 @@ void setup()
 
 void loop()
 {
-    sensor_packet_t packet;
+    uint8_t buffer[32];
     unsigned long now = millis();
     openShutesButton.process(now);
     closeShutesButton.process(now);
+    
     if (radio.available()) {
-        radio.read(&packet, sizeof(packet));
-        switch(packet.index) {
-            case RF_ACCELERATION:
-                memcpy(&sensor_data.acceleration, packet.data, sizeof(XYZ_t));
-                Serial.print("Accel: ");
-                Serial.print(sensor_data.acceleration.x); Serial.print(", ");
-                Serial.print(sensor_data.acceleration.y); Serial.print(", ");
-                Serial.println(sensor_data.acceleration.z);
+        radio.read(buffer, sizeof(buffer));
+      
+        uint8_t packet_type = buffer[0];
+        switch (packet_type) {
+            case 1: {
+                colirone_common_packet_t common_packet;
+                memcpy(&common_packet, buffer, sizeof(colirone_common_packet_t));
+                Serial.print("Received a common packet: ");
+                Serial.print("Type: "); Serial.println(common_packet.type);
+                Serial.print("Is Rocket RX: "); Serial.println(common_packet.is_rocket_rx);
+                if(common_packet.is_rocket_rx) process_cmd();
                 break;
-            case RF_GYROSCOPE:
-                memcpy(&sensor_data.gyroscope, packet.data, sizeof(XYZ_t));
-                Serial.print("Gyro: ");
-                Serial.print(sensor_data.gyroscope.x); Serial.print(", ");
-                Serial.print(sensor_data.gyroscope.y); Serial.print(", ");
-                Serial.println(sensor_data.gyroscope.z);
+            }
+            case 0: { //sensor packet
+                sensor_packet_t sensor_packet;
+                memcpy(&sensor_packet, buffer, sizeof(sensor_packet_t));
+                switch(sensor_packet.index) {
+                    case RF_ACCELERATION:
+                        memcpy(&sensor_data.acceleration, sensor_packet.data, sizeof(XYZ_t));
+                        Serial.print("Accel: ");
+                        Serial.print(sensor_data.acceleration.x); Serial.print(", ");
+                        Serial.print(sensor_data.acceleration.y); Serial.print(", ");
+                        Serial.println(sensor_data.acceleration.z);
+                        break;
+                    case RF_GYROSCOPE:
+                        memcpy(&sensor_data.gyroscope, sensor_packet.data, sizeof(XYZ_t));
+                        Serial.print("Gyro: ");
+                        Serial.print(sensor_data.gyroscope.x); Serial.print(", ");
+                        Serial.print(sensor_data.gyroscope.y); Serial.print(", ");
+                        Serial.println(sensor_data.gyroscope.z);
+                        break;
+                    case RF_ORIENTATION:
+                        memcpy(&sensor_data.orientation, sensor_packet.data, sizeof(XYZ_t));
+                        Serial.print("Orientation: ");
+                        Serial.print(sensor_data.orientation.x); Serial.print(", ");
+                        Serial.print(sensor_data.orientation.y); Serial.print(", ");
+                        Serial.println(sensor_data.orientation.z);
+                        break;
+                    case RF_QUATERNION:
+                        memcpy(&sensor_data.quaternion, sensor_packet.data, sizeof(Quaternion_t));
+                        Serial.print("Quaternion: ");
+                        Serial.print(sensor_data.quaternion.w); Serial.print(", ");
+                        Serial.print(sensor_data.quaternion.x); Serial.print(", ");
+                        Serial.print(sensor_data.quaternion.y); Serial.print(", ");
+                        Serial.println(sensor_data.quaternion.z);
+                        break;
+                    case RF_BAROMETER:
+                        memcpy(&sensor_data.barometer, sensor_packet.data, sizeof(sensor_data.barometer));
+                        Serial.print("Barometer: ");
+                        Serial.print(sensor_data.barometer.temperature); Serial.print(", ");
+                        Serial.print(sensor_data.barometer.pressure); Serial.print(", ");
+                        Serial.println(sensor_data.barometer.altitude);
+                        break;
+                    case RF_GPS:
+                        memcpy(&sensor_data.gps, sensor_packet.data, sizeof(sensor_data.gps));
+                        Serial.print("GPS: ");
+                        Serial.print(sensor_data.gps.longitude, 6); Serial.print(", ");
+                        Serial.print(sensor_data.gps.latitude, 6); Serial.print(", ");
+                        Serial.println(sensor_data.gps.visible_satellites);
+                        break;
+                    case RF_VERTICAL_VELOCITY:
+                        memcpy(&sensor_data.vertical_velocity, sensor_packet.data, sizeof(float));
+                        Serial.print("Vertical velocity: ");
+                        Serial.println(sensor_data.vertical_velocity);
+                        break;
+                    default:
+                        break;
+                }
                 break;
-            case RF_ORIENTATION:
-                memcpy(&sensor_data.orientation, packet.data, sizeof(XYZ_t));
-                Serial.print("Orientation: ");
-                Serial.print(sensor_data.orientation.x); Serial.print(", ");
-                Serial.print(sensor_data.orientation.y); Serial.print(", ");
-                Serial.println(sensor_data.orientation.z);
-                break;
-            case RF_QUATERNION:
-                memcpy(&sensor_data.quaternion, packet.data, sizeof(Quaternion_t));
-                Serial.print("Quaternion: ");
-                Serial.print(sensor_data.quaternion.w); Serial.print(", ");
-                Serial.print(sensor_data.quaternion.x); Serial.print(", ");
-                Serial.print(sensor_data.quaternion.y); Serial.print(", ");
-                Serial.println(sensor_data.quaternion.z);
-                break;
-            case RF_BAROMETER:
-                memcpy(&sensor_data.barometer, packet.data, sizeof(sensor_data.barometer));
-                Serial.print("Barometer: ");
-                Serial.print(sensor_data.barometer.temperature); Serial.print(", ");
-                Serial.print(sensor_data.barometer.pressure); Serial.print(", ");
-                Serial.println(sensor_data.barometer.altitude);
-                break;
-            case RF_GPS:
-                memcpy(&sensor_data.gps, packet.data, sizeof(sensor_data.gps));
-                Serial.print("GPS: ");
-                Serial.print(sensor_data.gps.longitude, 6); Serial.print(", ");
-                Serial.print(sensor_data.gps.latitude, 6); Serial.print(", ");
-                Serial.println(sensor_data.gps.visible_satellites);
-                break;
-            case RF_VERTICAL_VELOCITY:
-                memcpy(&sensor_data.vertical_velocity, packet.data, sizeof(float));
-                Serial.print("Vertical velocity: ");
-                Serial.println(sensor_data.vertical_velocity);
-                break;
+            }
             default:
+                Serial.println("Unknown packet type received.");
                 break;
         }
     }
     delay(1);
 }
+
 /* ----------------------------------------------------------------MAIN PROGRAM---------------------------------------------------------------- */
 
 void buttonPressedCallback(uint8_t pinIn)
@@ -190,40 +228,35 @@ void buttonPressedCallback(uint8_t pinIn)
 void buttonReleasedCallback(uint8_t pinIn)
 {
   if(pinIn == BUTTON_1){
-      transmit_open_shutes_cmd();
+      colirone_payload_cmd_t colirone_payload_cmd = {0};
+      colirone_payload_cmd.lighter_launch_number = 1;
+      enqueue_cmd(colirone_payload_cmd);
   }
   else if(pinIn == BUTTON_2){
-      transmit_launch_cmd();
+      colirone_payload_cmd_t colirone_payload_cmd = {0};
+      colirone_payload_cmd.open_shutes = 1;
+      enqueue_cmd(colirone_payload_cmd);
   }
 }
 
-void transmit_launch_cmd(void){
-  colirone_payload_cmd_t colirone_payload_cmd = {0};
-  colirone_payload_cmd.lighter_launch_number = 1;
-  radio.stopListening();
-  int ret = radio.write((uint8_t*)&colirone_payload_cmd, sizeof(colirone_payload_cmd));
-  if(ret == 0){
-    Serial.println("transmit_launch_cmd success");
-  }
-  delay(50);
-  radio.startListening();
+void enqueue_cmd(colirone_payload_cmd_t command) {
+    if ((queueTail + 1) % QUEUE_SIZE != queueHead) {
+        colirone_payload_cmd_queue[queueTail] = command;
+        queueTail = (queueTail + 1) % QUEUE_SIZE;
+    } else {
+        Serial.println("queue is full!");
+    }
 }
 
-void transmit_open_shutes_cmd(void){
-  colirone_payload_cmd_t colirone_payload_cmd = {0};
-  colirone_payload_cmd.open_shutes = 1;
-  radio.stopListening();
-  int ret = radio.write((uint8_t*)&colirone_payload_cmd, sizeof(colirone_payload_cmd));
-  if(ret == 0){
-    Serial.println("transmit_launch_cmd success");
-  }
-  delay(50);
-  radio.startListening();  
+void process_cmd() {
+    if (queueHead != queueTail) {
+        colirone_payload_cmd_t colirone_payload_cmd = colirone_payload_cmd_queue[queueHead]; 
+        queueHead = (queueHead + 1) % QUEUE_SIZE;
+        transmit_cmd(colirone_payload_cmd);
+    }
 }
 
-void transmit_close_shutes_cmd(void){
-  colirone_payload_cmd_t colirone_payload_cmd = {0};
-  colirone_payload_cmd.close_shutes = 1;
+void transmit_cmd(colirone_payload_cmd_t colirone_payload_cmd){
   radio.stopListening();
   int ret = radio.write((uint8_t*)&colirone_payload_cmd, sizeof(colirone_payload_cmd));
   if(ret == 0){

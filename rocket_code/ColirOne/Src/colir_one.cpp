@@ -20,6 +20,7 @@ colirone_err_t ColirOne::init(void) {
     err |= barometer.init();
     gps.init();
     rf.init();
+    logger.init();
     return err;
 }
 

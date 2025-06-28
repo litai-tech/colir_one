@@ -1,86 +1,83 @@
-/**
- ******************************************************************************
- * @file           : w25qxx.h
- * @brief          : Minimal W25Qxx Library Header
- ******************************************************************************
- * @attention
- *
- * Copyright (c) 2022, 2023 Lars Boegild Thomsen <lbthomsen@gmail.com>
- * All rights reserved.
- *
- * This software is licensed under terms that can be found in the LICENSE file
- * in the root directory of this software component.
- * If no LICENSE file comes with this software, it is provided AS-IS.
- *
- ******************************************************************************
- */
-
-#ifndef W25QXX_H_
-#define W25QXX_H_
-
-#ifdef DEBUGxxx
-#define W25_DBG(...) printf(__VA_ARGS__);\
-                     printf("\n")
-#else
-#define W25_DBG(...)
-#endif
-
-#define W25QXX_MANUFACTURER_GIGADEVICE 0xC8
-#define W25QXX_MANUFACTURER_WINBOND 0xEF
-
-#define W25QXX_DUMMY_BYTE         0xA5
-#define W25QXX_GET_ID             0x9F
-#define W25QXX_READ_DATA          0x03
-#define W25QXX_WRITE_ENABLE       0x06
-#define W25QXX_PAGE_PROGRAM       0x02
-#define W25QXX_SECTOR_ERASE	      0x20
-#define W25QXX_CHIP_ERASE         0xc7
-#define W25QXX_READ_REGISTER_1    0x05
-
-typedef struct {
-#ifdef W25QXX_QSPI
-    QSPI_HandleTypeDef *qspiHandle;
-#else
-    SPI_HandleTypeDef *spiHandle;
-    GPIO_TypeDef *cs_port;
-    uint16_t cs_pin;
-#endif
-    uint8_t manufacturer_id;
-    uint16_t device_id;
-    uint32_t block_size;
-    uint32_t block_count;
-    uint32_t sector_size;
-    uint32_t sectors_in_block;
-    uint32_t page_size;
-    uint32_t pages_in_sector;
-} W25QXX_HandleTypeDef;
-
-typedef enum {
-    W25QXX_Ok,     // 0
-    W25QXX_Err,    // 1
-    W25QXX_Timeout // 2
-} W25QXX_result_t;
+#ifndef _W25QXX_H
+#define _W25QXX_H
 
 #ifdef __cplusplus
-extern "C" {
+ extern "C" {
 #endif
 
-#ifdef W25QXX_QSPI
-W25QXX_result_t w25qxx_init(W25QXX_HandleTypeDef *w25qxx, QSPI_HandleTypeDef *qhspi);
-#else
-W25QXX_result_t w25qxx_init(W25QXX_HandleTypeDef *w25qxx, SPI_HandleTypeDef *hspi, GPIO_TypeDef *cs_port, uint16_t cs_pin);
-#endif
-W25QXX_result_t w25qxx_read(W25QXX_HandleTypeDef *w25qxx, uint32_t address, uint8_t *buf, uint32_t len);
-W25QXX_result_t w25qxx_write(W25QXX_HandleTypeDef *w25qxx, uint32_t address, uint8_t *buf, uint32_t len);
-W25QXX_result_t w25qxx_erase(W25QXX_HandleTypeDef *w25qxx, uint32_t address, uint32_t len);
-W25QXX_result_t w25qxx_chip_erase(W25QXX_HandleTypeDef *w25qxx);
+#include <stdbool.h>
+#include "stdio.h"
+#include "stdint.h"
+#include "stm32f4xx_hal.h"
+// #include "spi.h"
 
+typedef enum
+{
+	W25Q10=1,
+	W25Q20,
+	W25Q40,
+	W25Q80,
+	W25Q16,
+	W25Q32,
+	W25Q64,
+	W25Q128,
+	W25Q256,
+	W25Q512,
+	
+}W25QXX_ID_t;
+
+typedef struct
+{
+	W25QXX_ID_t	ID;
+	uint8_t		UniqID[8];
+	uint16_t	PageSize;
+	uint32_t	PageCount;
+	uint32_t	SectorSize;
+	uint32_t	SectorCount;
+	uint32_t	BlockSize;
+	uint32_t	BlockCount;
+	uint32_t	CapacityInKiloByte;
+	uint8_t		StatusRegister1;
+	uint8_t		StatusRegister2;
+	uint8_t		StatusRegister3;	
+	uint8_t		Lock;
+	
+}w25qxx_t;
+
+extern w25qxx_t	w25qxx;
+//############################################################################
+// in Page,Sector and block read/write functions, can put 0 to read maximum bytes 
+//############################################################################
+bool		W25qxx_Init(void);
+
+void		W25qxx_EraseChip(void);
+void 		W25qxx_EraseSector(uint32_t SectorAddr);
+void 		W25qxx_EraseBlock(uint32_t BlockAddr);
+
+uint32_t	W25qxx_PageToSector(uint32_t PageAddress);
+uint32_t	W25qxx_PageToBlock(uint32_t PageAddress);
+uint32_t	W25qxx_SectorToBlock(uint32_t SectorAddress);
+uint32_t	W25qxx_SectorToPage(uint32_t SectorAddress);
+uint32_t	W25qxx_BlockToPage(uint32_t BlockAddress);
+
+bool 		W25qxx_IsEmptyPage(uint32_t Page_Address, uint32_t OffsetInByte, uint32_t NumByteToCheck_up_to_PageSize);
+bool 		W25qxx_IsEmptySector(uint32_t Sector_Address, uint32_t OffsetInByte, uint32_t NumByteToCheck_up_to_SectorSize);
+bool 		W25qxx_IsEmptyBlock(uint32_t Block_Address, uint32_t OffsetInByte, uint32_t NumByteToCheck_up_to_BlockSize);
+
+void 		W25qxx_WriteByte(uint8_t pBuffer, uint32_t Bytes_Address);
+void 		W25qxx_WritePage(uint8_t *pBuffer, uint32_t Page_Address, uint32_t OffsetInByte, uint32_t NumByteToWrite_up_to_PageSize);
+void 		W25qxx_WriteSector(uint8_t *pBuffer, uint32_t Sector_Address, uint32_t OffsetInByte, uint32_t NumByteToWrite_up_to_SectorSize);
+void 		W25qxx_WriteBlock(uint8_t* pBuffer, uint32_t Block_Address, uint32_t OffsetInByte, uint32_t NumByteToWrite_up_to_BlockSize);
+
+void 		W25qxx_ReadByte(uint8_t *pBuffer, uint32_t Bytes_Address);
+void 		W25qxx_ReadBytes(uint8_t *pBuffer, uint32_t ReadAddr, uint32_t NumByteToRead);
+void 		W25qxx_ReadPage(uint8_t *pBuffer, uint32_t Page_Address,uint32_t OffsetInByte, uint32_t NumByteToRead_up_to_PageSize);
+void 		W25qxx_ReadSector(uint8_t *pBuffer, uint32_t Sector_Address,uint32_t OffsetInByte, uint32_t NumByteToRead_up_to_SectorSize);
+void 		W25qxx_ReadBlock(uint8_t* pBuffer, uint32_t Block_Address, uint32_t OffsetInByte, uint32_t NumByteToRead_up_to_BlockSize);
+//############################################################################
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* W25QXX_H_ */
+#endif
 
-/*
- * vim: ts=4 et nowrap
- */

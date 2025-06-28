@@ -44,7 +44,6 @@ C_SOURCES =  \
 $(DRIVER_PATH)/Module/Src/nrf24.c \
 $(DRIVER_PATH)/Module/Src/bmp581.c \
 $(DRIVER_PATH)/Module/Src/bno055.c \
-$(DRIVER_PATH)/Module/Src/device.c \
 $(DRIVER_PATH)/Module/Src/fifo.c \
 $(DRIVER_PATH)/Module/Src/log.c \
 $(DRIVER_PATH)/Module/Src/nmea_parse.c \
@@ -110,6 +109,8 @@ ${DRIVER_PATH}/ColirOne/Src/gps.cpp \
 ${DRIVER_PATH}/ColirOne/Src/imu.cpp \
 ${DRIVER_PATH}/ColirOne/Src/lighter.cpp \
 ${DRIVER_PATH}/ColirOne/Src/servo.cpp \
+${DRIVER_PATH}/ColirOne/Src/rf.cpp \
+${DRIVER_PATH}/ColirOne/Src/logger.cpp \
 Src/main.cpp 
 
 # ASM sources

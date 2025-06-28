@@ -144,6 +144,7 @@ uint8_t RF::getRemoveLogs(void) {
 colirone_err_t RF::transmitSensorData(colirone_payload_sensor_t *sensor, uint32_t timestamp) {
     colirone_err_t status = COLIRONE_OK;
     sensor_packet_t packet = {};
+    packet.type = 0; // Type 0 for sensor data
     packet.timestamp = timestamp;
     packet.packet_type = (uint8_t)RF_ACCELERATION;
     memcpy(packet.data, &sensor->acceleration, sizeof(sensor->acceleration));

@@ -9,7 +9,6 @@
 #include <stdarg.h>
 #include "log.h"
 #include "util.h"
-#include "device.h"
 
 #if DEBUG_LEVEL > 0
 static uint32_t LOGMASK = TAG_FILENO;

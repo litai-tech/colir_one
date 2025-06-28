@@ -15,6 +15,7 @@
 #include "servo.h"
 #include "lighter.h"
 #include "rf.h"
+#include "logger.h"
 
 #ifdef __cplusplus
 
@@ -23,19 +24,6 @@
 #ifdef __cplusplus
 extern "C"{
 #endif
-
-class LoggerState {
-    public: 
-        bool WritingToLogsEnabled;
-        uint8_t StoredLogsSessions;
-};
-
-class Logger {
-    public: 
-        void logData(char* data);//max 32 bytes
-        bool writeLogsToSD();//return true if write to SD succeeded
-        void eraseLogs();
-};
 
 class ColirOne{
     public:

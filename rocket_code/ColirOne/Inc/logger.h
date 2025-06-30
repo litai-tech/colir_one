@@ -30,12 +30,16 @@ class Logger {
         void storeCommandLog(colirone_payload_cmd_t *commandData);
         void readLogs(void);
         void eraseAllLogs(void);
-        uint32_t getNextFreeAddress(void) const;
+        void writeLogsToSDCard(void);
+        void startLogging(void);
+        void stopLogging(void);
         uint32_t getUsedSpace(void) const;
         uint32_t getFreeSpace(void) const;
         bool hasEnoughSpace(uint32_t dataSize) const;
     private:
+        uint32_t getNextFreeAddress(void) const;
         uint32_t nextFreeAddress;
+        bool loggingEnabled;
         uint32_t findLastFreeAddress(void);
         char* generateDefaultSystemLog(char* logBuffer, uint32_t timestamp);
         bool isPageEmpty(uint32_t pageNumber);

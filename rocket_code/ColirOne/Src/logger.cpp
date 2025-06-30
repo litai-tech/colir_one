@@ -4,6 +4,7 @@
 #define FLASH_PAGE_SIZE 256
 
 Logger::Logger(void) : nextFreeAddress(0) {
+    loggingEnabled = false;
 }
 
 colirone_err_t Logger::init(void) {
@@ -65,6 +66,7 @@ colirone_err_t Logger::eraseSectorIfNeeded(uint32_t address) {
 }
 
 void Logger::storeLog(uint8_t *data, uint32_t size) {
+    if(loggingEnabled == false) return;
     uint32_t totalCapacity = w25qxx.PageCount * FLASH_PAGE_SIZE;
     uint32_t currentAddr = nextFreeAddress;
     
@@ -95,7 +97,6 @@ void Logger::storeLog(uint8_t *data, uint32_t size) {
         remain -= writeBytes;
     }
     
-    // Cập nhật địa chỉ trống tiếp theo
     nextFreeAddress = currentAddr;
 }
 
@@ -150,15 +151,16 @@ bool Logger::hasEnoughSpace(uint32_t dataSize) const {
 void Logger::storeSensorLog(colirone_payload_sensor_t *sensorData) {
     char logBuffer[512];
     sprintf(logBuffer, 
-            "Acceleration: (%.2f, %.2f, %.2f), Gyroscope: (%.2f, %.2f, %.2f), Orientation: (%.2f, %.2f, %.2f), Quaternion: (%.2f, %.2f, %.2f), Temperature: %.2f, Pressure: %.2f, Altitude: %.2f, GPS: (%.6f, %.6f, %d), Vertical Velocity: %.2f",
+            "Acceleration: (%.2f, %.2f, %.2f), Gyroscope: (%.2f, %.2f, %.2f), Orientation: (%.2f, %.2f, %.2f), Quaternion: (%.2f ,%.2f, %.2f, %.2f), Temperature: %.2f, Pressure: %.2f, Altitude: %.2f, GPS: (%.6f, %.6f, %d), Vertical Velocity: %.2f\n",
             sensorData->acceleration.x, sensorData->acceleration.y, sensorData->acceleration.z,
             sensorData->gyroscope.x, sensorData->gyroscope.y, sensorData->gyroscope.z,
             sensorData->orientation.x, sensorData->orientation.y, sensorData->orientation.z,
+            sensorData->quaternion.w, sensorData->quaternion.x, sensorData->quaternion.y, sensorData->quaternion.z,
             sensorData->barometer.temperature,
             sensorData->barometer.pressure,
             sensorData->barometer.altitude,
-            sensorData->gps.latitude, sensorData->gps.longitude, sensorData->gps.visible_satellites,
-            sensorData->vertical_velocity);
+            sensorData->gps.latitude, sensorData->gps.longitude, sensorData->gps.visibleSatellites,
+            sensorData->verticalVelocity);
     
     char* logDefault = generateDefaultSystemLog(logBuffer, HAL_GetTick());
     storeLog((uint8_t*)logDefault, strlen(logDefault));
@@ -167,14 +169,14 @@ void Logger::storeSensorLog(colirone_payload_sensor_t *sensorData) {
 
 void Logger::storeCommandLog(colirone_payload_cmd_t *commandData) {
     char logBuffer[256];
-    sprintf(logBuffer, "Lighter Launch Number: %d, Close Shutes: %d, Open Shutes: %d, Start Logs: %d, Write Logs: %d, Reset Altitude: %d, Remove Logs: %d",
-            commandData->lighter_launch_number,
-            commandData->close_shutes,
-            commandData->open_shutes,
-            commandData->start_logs,
-            commandData->write_logs,
-            commandData->reset_altitude,
-            commandData->remove_logs);
+    sprintf(logBuffer, "Lighter Launch Number: %d, Close Shutes: %d, Open Shutes: %d, Start Logs: %d, Write Logs: %d, Reset Altitude: %d, Remove Logs: %d\n",
+            commandData->lighterLaunchNumber,
+            commandData->closeShutes,
+            commandData->openShutes,
+            commandData->startLogs,
+            commandData->writeLogs,
+            commandData->resetAltitude,
+            commandData->removeLogs);
     
     char* logDefault = generateDefaultSystemLog(logBuffer, HAL_GetTick());
     storeLog((uint8_t*)logDefault, strlen(logDefault));
@@ -183,14 +185,22 @@ void Logger::storeCommandLog(colirone_payload_cmd_t *commandData) {
 
 char* Logger::generateDefaultSystemLog(char* logBuffer, uint32_t timestamp) {
     char* logDefault = (char*)malloc(576 * sizeof(char));
-    sprintf(logDefault, "I (%u): %s ", timestamp, logBuffer);
+    sprintf(logDefault, "I (%lu): %s ", timestamp, logBuffer);
     return logDefault;
 }
 
 bool Logger::checkEnableWriteLogs(void) {
-    if(w25qxx.Lock == 0) {
-        return true; // Write logs is enabled
-    } else {
-        return false; // Write logs is disabled
-    }
+    return loggingEnabled;
+}
+
+void Logger::writeLogsToSDCard(void) {
+    printf("writeLogsToSDCard\n");
+}
+
+void Logger::startLogging(void) {
+    loggingEnabled = true;
+}
+
+void Logger::stopLogging(void) {
+    loggingEnabled = false;
 }

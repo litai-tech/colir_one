@@ -21,13 +21,13 @@ typedef enum{
 } rf_packet_type_t;
 
 typedef struct __attribute__((packed)) {
-    uint8_t lighter_launch_number;
-    uint8_t close_shutes;
-	uint8_t open_shutes;
-	uint8_t start_logs;
-	uint8_t write_logs;
-	uint8_t reset_altitude;
-	uint8_t remove_logs;
+    uint8_t lighterLaunchNumber;
+    uint8_t closeShutes;
+	uint8_t openShutes;
+	uint8_t startLogs;
+	uint8_t writeLogs;
+	uint8_t resetAltitude;
+	uint8_t removeLogs;
 } colirone_payload_cmd_t;
 
 typedef struct __attribute__((packed)) {
@@ -43,9 +43,9 @@ typedef struct __attribute__((packed)) {
     struct {
         double longitude;
         double latitude;
-        int visible_satellites;
+        int visibleSatellites;
     } gps;
-    float vertical_velocity; // m/s
+    float verticalVelocity; // m/s
 } colirone_payload_sensor_t;
 
 typedef struct __attribute__((packed)) {

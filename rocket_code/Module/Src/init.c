@@ -54,6 +54,9 @@ void stm32_init(void){
     MX_USART2_UART_Init();
     MX_USB_DEVICE_Init();
     MX_USART1_UART_Init();
+
+    HAL_SPI_Init(&hspi1);
+    HAL_SPI_Init(&hspi3);
 }
 
 /**

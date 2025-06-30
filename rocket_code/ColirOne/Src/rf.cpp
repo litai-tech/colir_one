@@ -113,31 +113,31 @@ void RF::readColirOneCommand(void) {
 }
 
 int RF::getLighterLaunchNumber(void) {
-    return colirone_payload_cmd.lighter_launch_number;
+    return colirone_payload_cmd.lighterLaunchNumber;
 }
 
 uint8_t RF::getCloseShutes(void) {
-    return colirone_payload_cmd.close_shutes;
+    return colirone_payload_cmd.closeShutes;
 }
 
 uint8_t RF::getOpenShutes(void) {
-    return colirone_payload_cmd.open_shutes;
+    return colirone_payload_cmd.openShutes;
 }
 
 uint8_t RF::getStartLogs(void) {
-    return colirone_payload_cmd.start_logs;
+    return colirone_payload_cmd.startLogs;
 }
 
 uint8_t RF::getWriteLogs(void) {
-    return colirone_payload_cmd.write_logs;
+    return colirone_payload_cmd.writeLogs;
 }
 
 uint8_t RF::getResetAltitude(void) {
-    return colirone_payload_cmd.reset_altitude;
+    return colirone_payload_cmd.resetAltitude;
 }
 
 uint8_t RF::getRemoveLogs(void) {
-    return colirone_payload_cmd.remove_logs;
+    return colirone_payload_cmd.removeLogs;
 }
 
 
@@ -183,7 +183,7 @@ colirone_err_t RF::transmitSensorData(colirone_payload_sensor_t *sensor, uint32_
     HAL_Delay(10);
 
     packet.packet_type = (uint8_t)RF_VERTICAL_VELOCITY;
-    packet.data[0] = (uint8_t)(sensor->vertical_velocity);
+    packet.data[0] = (uint8_t)(sensor->verticalVelocity);
     status = nrf24_transmit((uint8_t*)&packet, sizeof(packet));
     COLIRONE_CHECK_ERROR(status);
     HAL_Delay(10);

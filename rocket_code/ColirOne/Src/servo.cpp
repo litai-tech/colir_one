@@ -24,10 +24,10 @@ uint8_t Servo::init(void){
 }
 
 uint8_t Servo::setServoAngle(uint8_t servoNumber, float servoAngle){
-    if(servoNumber > 8) return COLIRONE_ERROR;
+    if(servoNumber > 8 || servoNumber <= 0) return COLIRONE_ERROR;
     if(servoAngle < 0) servoAngle = 0;
     if(servoAngle > 180) servoAngle = 180;
 
-    COLIRONE_CHECK_ERROR(PCA9685_SetServoAngle(servoNumber, (float)servoAngle));
+    COLIRONE_CHECK_ERROR(PCA9685_SetServoAngle(servoNumber - 1, (float)servoAngle));
     return COLIRONE_OK;
 }

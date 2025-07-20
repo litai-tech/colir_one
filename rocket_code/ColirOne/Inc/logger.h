@@ -28,22 +28,29 @@ class Logger {
         void storeLog(uint8_t *data, uint32_t size);
         void storeSensorLog(colirone_payload_sensor_t *sensorData);
         void storeCommandLog(colirone_payload_cmd_t *commandData);
-        void readLogs(void);
+        void readAllLogs(void);
         void eraseAllLogs(void);
         void writeLogsToSDCard(void);
-        void startLogging(void);
-        void stopLogging(void);
         uint32_t getUsedSpace(void) const;
         uint32_t getFreeSpace(void) const;
-        bool hasEnoughSpace(uint32_t dataSize) const;
+        void readLatestLogs(void);
+        void readLatestLogs(uint32_t numPages);
+        void startLogging(void);
+        void stopLogging(void);
     private:
-        uint32_t getNextFreeAddress(void) const;
         uint32_t nextFreeAddress;
+        uint32_t startLogAddress;
         bool loggingEnabled;
+        colirone_storage_info_t info;
+        uint32_t getNextFreeAddress(void) const;
         uint32_t findLastFreeAddress(void);
         char* generateDefaultSystemLog(char* logBuffer, uint32_t timestamp);
         bool isPageEmpty(uint32_t pageNumber);
-        colirone_err_t eraseSectorIfNeeded(uint32_t address);
+        colirone_err_t eraseSectorIfNeeded(uint32_t address, uint32_t writeSize, uint32_t offsetInPage);
+        void loadConfig(void);
+        void writeConfig(void);
+        void findStartLogAddress(void);
+        void printLog(uint32_t startPage, uint32_t endPage, uint32_t lastOffset);
 };
 
 #endif

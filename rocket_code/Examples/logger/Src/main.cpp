@@ -37,25 +37,36 @@ int main(void){
   printf("Block Size: %ld bytes\n", storageInfo.blockSize);
   printf("Block Count: %ld\n", storageInfo.blockCount);
   printf("Capacity: %ld KB\n", storageInfo.capacityInKiloByte);
-  printf("Used Space: %ld bytes\n", colirOne.logger.getUsedSpace());
-  printf("Free Space: %ld bytes\n", colirOne.logger.getFreeSpace());
-  printf("Has enough space for 100 bytes: %s\n", colirOne.logger.hasEnoughSpace(100) ? "Yes" : "No");
+  printf("Used Space: %lu bytes\n", colirOne.logger.getUsedSpace());
+  printf("Free Space: %lu bytes\n", colirOne.logger.getFreeSpace());
 
   printf("Erase all logs...\n");
   colirOne.logger.eraseAllLogs();
-  printf("Used Space after erase: %ld bytes\n", colirOne.logger.getUsedSpace());
-  printf("Free Space after erase: %ld bytes\n", colirOne.logger.getFreeSpace());
-  printf("Checking if write logs is enabled: %s\n", colirOne.logger.checkEnableWriteLogs() ? "Yes" : "No");
+  printf("Used Space after erase: %lu bytes\n", colirOne.logger.getUsedSpace());
+  printf("Free Space after erase: %lu bytes\n", colirOne.logger.getFreeSpace());
 
   colirOne.logger.startLogging();
   printf("Storing logs...\n");
   colirOne.logger.storeLog((uint8_t*)"Hello, ColirOne!\n", 17);
   colirOne.logger.storeSensorLog(&sensorData);
   colirOne.logger.storeCommandLog(&commandData);
-  printf("Read logs after storing:\n");
-  colirOne.logger.readLogs();
-  printf("Used Space after storing logs: %ld bytes\n", colirOne.logger.getUsedSpace());
-  printf("Free Space after storing logs: %ld bytes\n", colirOne.logger.getFreeSpace());
+
+  for(int i = 0; i < 100; i++) {
+    char logBuffer[64];
+    sprintf(logBuffer, "Log entry %d\n", i + 1);
+    colirOne.logger.storeLog((uint8_t*)logBuffer, strlen(logBuffer));
+  }
+
+  printf("Read logs after storing:\n\n");
+  colirOne.logger.readAllLogs();
+  // Read 1KB last logs (4 pages)
+  printf("Reading latest logs:\n\n");
+  colirOne.logger.readLatestLogs();
+
+  printf("Read latest 2 pages of logs:\n\n");
+  colirOne.logger.readLatestLogs(2);
+  printf("Used Space after storing logs: %lu bytes\n", colirOne.logger.getUsedSpace());
+  printf("Free Space after storing logs: %lu bytes\n", colirOne.logger.getFreeSpace());
 	while(1){}
 	return 0;
 }

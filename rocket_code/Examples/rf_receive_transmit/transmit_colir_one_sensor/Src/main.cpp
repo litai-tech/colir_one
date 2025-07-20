@@ -59,10 +59,10 @@ int main(void){
         sensorData.barometer.temperature = temp;
         sensorData.barometer.pressure = pressure;
         sensorData.barometer.altitude = altitude;
-        sensorData.vertical_velocity = verticalVelocity;
+        sensorData.verticalVelocity = verticalVelocity;
         sensorData.gps.longitude = longitude;
         sensorData.gps.latitude = latitude;
-        sensorData.gps.visible_satellites = visibleSatellites;
+        sensorData.gps.visibleSatellites = visibleSatellites;
 
         colirone_err_t err =  colirOne.rf.transmitSensorData(&sensorData, timestamp);
         if(err != COLIRONE_OK){

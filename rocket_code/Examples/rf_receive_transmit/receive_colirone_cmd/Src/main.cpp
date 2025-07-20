@@ -14,19 +14,19 @@ int main(void){
 	while(1){
         if(colirOne.rf.hasReceivedData()){
             colirOne.rf.readColirOneCommand();
-            int launch_num = colirOne.rf.getLighterLaunchNumber();
-            uint8_t is_open_shutes = colirOne.rf.getOpenShutes();
-            uint8_t is_start_logs = colirOne.rf.getStartLogs();
-            uint8_t is_write_logs = colirOne.rf.getWriteLogs();
-            uint8_t is_reset_alt = colirOne.rf.getResetAltitude();
-            uint8_t is_remove_logs =  colirOne.rf.getRemoveLogs();
+            int launchNumVal = colirOne.rf.getLighterLaunchNumber();
+            uint8_t openShutesVal = colirOne.rf.getOpenShutes();
+            uint8_t startLogsVal = colirOne.rf.getStartLogs();
+            uint8_t writeLogsVal = colirOne.rf.getWriteLogs();
+            uint8_t resetAltVal = colirOne.rf.getResetAltitude();
+            uint8_t removeLogsVal =  colirOne.rf.getRemoveLogs();
     
-            printf("Lighter Launch Number: %d\n", launch_num);
-            printf("Open Shutes: %d\n", is_open_shutes);
-            printf("Start Logs: %d\n", is_start_logs);
-            printf("Write Logs: %d\n", is_write_logs);
-            printf("Reset Altitude: %d\n", is_reset_alt);
-            printf("Remove Logs: %d\n", is_remove_logs);
+            printf("Lighter Launch Number: %d\n", launchNumVal);
+            printf("Open Shutes: %d\n", openShutesVal);
+            printf("Start Logs: %d\n", startLogsVal);
+            printf("Write Logs: %d\n", writeLogsVal);
+            printf("Reset Altitude: %d\n", resetAltVal);
+            printf("Remove Logs: %d\n", removeLogsVal);
 
             // uint8_t rcv_data[32] = {0}; // Buffer to hold received data
             // colirOne.rf.getReceivedData(rcv_data);

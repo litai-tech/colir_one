@@ -65,19 +65,19 @@ typedef struct __attribute__((packed)) {
     struct {
         double longitude;
         double latitude;
-        int visible_satellites;
+        int visibleSatellites;
     } gps;
-    float vertical_velocity; // m/s
+    float verticalVelocity; // m/s
 } colirone_payload_sensor_t;
 
 typedef struct __attribute__((packed)) {
-  uint8_t lighter_launch_number;
-	uint8_t close_shutes;
-	uint8_t open_shutes;
-	uint8_t start_logs;
-	uint8_t write_logs;
-	uint8_t reset_altitude;
-	uint8_t remove_logs;
+  uint8_t lighterLaunchNumber;
+	uint8_t closeShutes;
+	uint8_t openShutes;
+	uint8_t startLogs;
+	uint8_t writeLogs;
+	uint8_t resetAltitude;
+	uint8_t removeLogs;
 } colirone_payload_cmd_t;
 
 
@@ -199,12 +199,12 @@ void loop()
                         Serial.print("GPS: ");
                         Serial.print(sensor_data.gps.longitude, 6); Serial.print(", ");
                         Serial.print(sensor_data.gps.latitude, 6); Serial.print(", ");
-                        Serial.println(sensor_data.gps.visible_satellites);
+                        Serial.println(sensor_data.gps.visibleSatellites);
                         break;
                     case RF_VERTICAL_VELOCITY:
-                        memcpy(&sensor_data.vertical_velocity, sensor_packet.data, sizeof(float));
+                        memcpy(&sensor_data.verticalVelocity, sensor_packet.data, sizeof(float));
                         Serial.print("Vertical velocity: ");
-                        Serial.println(sensor_data.vertical_velocity);
+                        Serial.println(sensor_data.verticalVelocity);
                         break;
                     default:
                         break;
@@ -229,12 +229,12 @@ void buttonReleasedCallback(uint8_t pinIn)
 {
   if(pinIn == BUTTON_1){
       colirone_payload_cmd_t colirone_payload_cmd = {0};
-      colirone_payload_cmd.lighter_launch_number = 1;
+      colirone_payload_cmd.lighterLaunchNumber = 1;
       enqueue_cmd(colirone_payload_cmd);
   }
   else if(pinIn == BUTTON_2){
       colirone_payload_cmd_t colirone_payload_cmd = {0};
-      colirone_payload_cmd.open_shutes = 1;
+      colirone_payload_cmd.openShutes = 1;
       enqueue_cmd(colirone_payload_cmd);
   }
 }

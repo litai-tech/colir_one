@@ -1,8 +1,8 @@
 #include "main.h"
 #include "../../ColirOne/Inc/colir_one.h"
 
-const uint8_t RxAddress[] = {0xEE,0xDD,0xCC,0xBB,0xAA};
 const uint8_t TxAddress[] = {0xAA,0xDD,0xCC,0xBB,0xAA};
+const uint8_t RxAddress[] = {0xAA,0xDD,0xCC,0xBB,0xBB};
 
 typedef struct __attribute__((packed)) {
     uint8_t type; // type != 0 for custom data
@@ -10,25 +10,38 @@ typedef struct __attribute__((packed)) {
 } colirone_common_packet_t;
 
 int main(void){
-  	ColirOne colirOne;
-  	colirone_err_t err = colirOne.init();
-    if(err != COLIRONE_OK){
-        printf("Error initializing colirone: %d\n", err);
-        return -1;
-    }
-    colirOne.rf.setTxRxAdress((uint8_t*)TxAddress, (uint8_t*)RxAddress);
-    colirOne.rf.setTxMode();
+  ColirOne colirOne;
+  colirone_err_t ret =  colirOne.init();
+  if(ret != COLIRONE_OK) {
+    printf("Initialization failed with error code: %d\n", ret);
+    return -1;
+  }
+  // get storage info
+  printf("Storage Info:\n");
+  colirone_storage_info_t storageInfo = colirOne.logger.getStorageInfo();
+  printf("capacityInKiloByte: %ld KB\n", storageInfo.capacityInKiloByte);
+  printf("Used Space: %ld bytes\n", colirOne.logger.getUsedSpace());
+  printf("Free Space: %ld bytes\n", colirOne.logger.getFreeSpace());
 
-    colirone_payload_sensor_t sensorData;
-    colirone_common_packet_t commonPacket;
-    commonPacket.type = 1;
-    float altitude = 0.0f;
-    float lastAltitude = 0.0f;
-    float verticalVelocity = 0.0f;
+  if(colirOne.logger.getUsedSpace() > 0){
+    // write log to SD card
+    colirOne.logger.writeLogsToSDCard();
+  }
 
-    uint32_t lastTimestamp = colirOne.getTimeStamp();
-    uint32_t lastRxMode = colirOne.getTimeStamp();
+  // Set up RF communication
+  colirOne.rf.setTxRxAdress((uint8_t*)TxAddress, (uint8_t*)RxAddress);
+  colirOne.rf.setTxMode();
 
+  colirone_payload_sensor_t sensorData;
+  colirone_common_packet_t commonPacket;
+  colirone_payload_cmd_t colironePayloadCmd;
+  commonPacket.type = 1;
+  float altitude = 0.0f;
+  float lastAltitude = 0.0f;
+  float verticalVelocity = 0.0f;
+
+  uint32_t lastTimestamp = colirOne.getTimeStamp();
+  uint32_t lastRxMode = colirOne.getTimeStamp();
 	while(1){
         uint32_t timestamp = colirOne.getTimeStamp();
         XYZ_t accel = colirOne.imu.getAcceleration();
@@ -62,7 +75,9 @@ int main(void){
         double latitude = colirOne.gps.getLatitude();
         int visibleSatellites = colirOne.gps.getVisibleSatellites();
         printf("GPS Longitude: %.6f, Latitude: %.6f, Visible Satellites: %d\n", longitude, latitude, visibleSatellites);
-
+        if(colirOne.logger.checkEnableWriteLogs()){
+          colirOne.logger.storeSensorLog(&sensorData);
+        }
         if(!colirOne.rf.isRxMode()){
             sensorData.acceleration = accel;
             sensorData.gyroscope = gyro;
@@ -92,16 +107,48 @@ int main(void){
         else{
             if(colirOne.rf.hasReceivedData()){
                 colirOne.rf.readColirOneCommand();
-                uint8_t launchNumber = colirOne.rf.getLighterLaunchNumber();
-                uint8_t openShutes = colirOne.rf.getOpenShutes();
-                uint8_t closeShutes = colirOne.rf.getCloseShutes();
-                uint8_t startLogs = colirOne.rf.getStartLogs();
-                uint8_t writeLogs = colirOne.rf.getWriteLogs();
-                uint8_t resetAltitude = colirOne.rf.getResetAltitude();
-                uint8_t removeLogs = colirOne.rf.getRemoveLogs();
-
+                colironePayloadCmd.lighterLaunchNumber = colirOne.rf.getLighterLaunchNumber();
+                colironePayloadCmd.openShutes = colirOne.rf.getOpenShutes();
+                colironePayloadCmd.closeShutes = colirOne.rf.getCloseShutes();
+                colironePayloadCmd.startLogs = colirOne.rf.getStartLogs();
+                colironePayloadCmd.writeLogs = colirOne.rf.getWriteLogs();
+                colironePayloadCmd.resetAltitude = colirOne.rf.getResetAltitude();
+                colironePayloadCmd.removeLogs = colirOne.rf.getRemoveLogs();
                 printf("Received Command: Launch Number: %d, Open Shutes: %d, Close Shutes: %d, Start Logs: %d, Write Logs: %d, Reset Altitude: %d, Remove Logs: %d\n",
-                       launchNumber, openShutes, closeShutes, startLogs, writeLogs, resetAltitude, removeLogs);
+                       colironePayloadCmd.lighterLaunchNumber, 
+                       colironePayloadCmd.openShutes, 
+                       colironePayloadCmd.closeShutes, 
+                       colironePayloadCmd.startLogs, 
+                       colironePayloadCmd.writeLogs, 
+                       colironePayloadCmd.resetAltitude, 
+                       colironePayloadCmd.removeLogs);
+                if(colirOne.logger.checkEnableWriteLogs()){
+                    colirOne.logger.storeCommandLog(&colironePayloadCmd);
+                }
+                colirOne.logger.storeCommandLog(&colironePayloadCmd);
+                if(colironePayloadCmd.openShutes){
+                  colirOne.servo.setServoAngle(8, 40);
+                }
+                else if(colironePayloadCmd.closeShutes){
+                  colirOne.servo.setServoAngle(8, 80);
+                }
+                else if(colironePayloadCmd.lighterLaunchNumber > 0){
+                  colirOne.lighter.fireLighter(colironePayloadCmd.lighterLaunchNumber);
+                }
+                else if(colironePayloadCmd.startLogs){
+                  colirOne.logger.startLogging();
+                }
+                else if(colironePayloadCmd.writeLogs){
+                  colirOne.logger.writeLogsToSDCard();
+                }
+                else if(colironePayloadCmd.resetAltitude){
+                    altitude = 0.0f;
+                    lastAltitude = 0.0f;
+                    verticalVelocity = 0.0f;
+                }
+                else if(colironePayloadCmd.removeLogs){
+                    colirOne.logger.eraseAllLogs();
+                }
             }
             else if(timestamp - lastRxMode > 500){
                 printf("Switching to TX mode\n");
@@ -111,8 +158,7 @@ int main(void){
                 lastRxMode = colirOne.getTimeStamp();
             }
         }
-        
-        // HAL_Delay(200);
-	}
+            
+  }
 	return 0;
 }

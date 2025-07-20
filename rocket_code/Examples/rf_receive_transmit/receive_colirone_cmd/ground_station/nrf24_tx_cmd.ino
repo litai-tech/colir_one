@@ -6,12 +6,12 @@
 RF24 radio(4, 5);  // CE, CSN
 uint8_t TxAddress[] = {0xAA,0xDD,0xCC,0xBB,0xAA};
 typedef struct __attribute__((packed)) {
-    uint8_t lighter_launch_number;
-    uint8_t open_shutes;
-    uint8_t start_logs;
-    uint8_t write_logs;
-    uint8_t reset_altitude;
-    uint8_t remove_logs;
+    uint8_t lighterLaunchNumber;
+    uint8_t openShutes;
+    uint8_t startLogs;
+    uint8_t writeLogs;
+    uint8_t resetAltitude;
+    uint8_t removeLogs;
 } colirone_payload_cmd_t;
 
 void setup()
@@ -33,12 +33,12 @@ void loop()
 {
     // Create an instance of payload_t and populate it with data
     colirone_payload_cmd_t colirone_payload_cmd;
-    colirone_payload_cmd.lighter_launch_number= 4; 
-    colirone_payload_cmd.open_shutes = 1;           
-    colirone_payload_cmd.start_logs = 0;             
-    colirone_payload_cmd.write_logs = 0;             
-    colirone_payload_cmd.reset_altitude = 1;         
-    colirone_payload_cmd.remove_logs = 0;             
+    colirone_payload_cmd.lighterLaunchNumber= 4; 
+    colirone_payload_cmd.openShutes = 1;           
+    colirone_payload_cmd.startLogs = 0;             
+    colirone_payload_cmd.writeLogs = 0;             
+    colirone_payload_cmd.resetAltitude = 1;         
+    colirone_payload_cmd.removeLogs = 0;             
 
     // Send the colirone_payload_cmd
     radio.write((uint8_t*)&colirone_payload_cmd, sizeof(colirone_payload_cmd));

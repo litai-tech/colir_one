@@ -16,6 +16,7 @@
 #include "lighter.h"
 #include "rf.h"
 #include "logger.h"
+#include "sdcard.h"
 
 #ifdef __cplusplus
 
@@ -35,6 +36,7 @@ class ColirOne{
         RF rf;
         Servo servo;
         Lighter lighter;
+        SDCard sdcard;
         colirone_err_t init(void);
         void base(void);
         uint32_t getTimeStamp(void);

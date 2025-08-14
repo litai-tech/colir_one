@@ -1,6 +1,9 @@
 #include "logger.h"
 #include "../../Module/Inc/w25qxx.h"
 
+const char* DEFAULT_LOG_FOLDER_NAME         = "ColirOne_logs";
+const char* DEFAULT_LOG_FILE_NAME           = "colirone_logs.txt";
+
 #define FLASH_PAGE_SIZE         256
 #define START_LOG_PAGE          16
 #define START_LOG_ADDRESS       (START_LOG_PAGE * FLASH_PAGE_SIZE)
@@ -15,6 +18,7 @@
 #define NULL_DATA               0xFF
 typedef struct {
     uint8_t wrapAround;
+    uint32_t logFileIndex;
 } colirone_config_t;
 
 static colirone_config_t colironeConfig = {0};
@@ -22,6 +26,7 @@ static colirone_config_t colironeConfig = {0};
 Logger::Logger(void) {
     loggingEnabled = false;
     nextFreeAddress = START_LOG_ADDRESS;
+    isLogFileExists = false;
 }
 
 void Logger::loadConfig(void){
@@ -32,6 +37,10 @@ void Logger::loadConfig(void){
         colironeConfig.wrapAround = 0; // Default to no wrap around
         writeConfig();
     }
+    if(colironeConfig.logFileIndex == NULL_DATA) {
+        colironeConfig.logFileIndex = 0; // Default to first log file
+        writeConfig();
+    }
 }
 
 void Logger::writeConfig(void) {
@@ -40,6 +49,20 @@ void Logger::writeConfig(void) {
     while(w25qxx.Lock);
     W25qxx_WritePage((uint8_t*)&colironeConfig, START_CONFIG_PAGE, 0, configSize);
     while(w25qxx.Lock);
+}
+
+void Logger::getLogFileIndex(uint32_t* logFileIndex) {
+    *logFileIndex = colironeConfig.logFileIndex;
+}
+
+void Logger::updateLogFileIndex(void){
+    colironeConfig.logFileIndex++;
+    writeConfig();
+}
+
+void Logger::resetLogFileIndex(void) {
+    colironeConfig.logFileIndex = 0;
+    writeConfig();
 }
 
 uint32_t Logger::findLastFreeAddress(void) {
@@ -146,7 +169,7 @@ void Logger::storeLog(uint8_t *data, uint32_t size) {
         if(colironeConfig.wrapAround){
             eraseSectorIfNeeded(currentAddr, writeBytes, offsetInPage);
         }
-        printf("write %d bytes to page %d, offset %d\n", writeBytes, pageAddr, offsetInPage);
+        printf("write %ld bytes to page %ld, offset %ld\n", writeBytes, pageAddr, offsetInPage);
         W25qxx_WritePage(&data[data_offset], pageAddr, offsetInPage, writeBytes);
         while(w25qxx.Lock);
 
@@ -180,7 +203,7 @@ void Logger::readAllLogs(void) {
     findStartLogAddress();
     uint32_t startPage = startLogAddress / FLASH_PAGE_SIZE;
     if(colironeConfig.wrapAround) {
-        printf("\nReading logs from page %d to page %d (wrap-around mode)\n", startPage, END_LOG_PAGE);
+        printf("\nReading logs from page %ld to page %d (wrap-around mode)\n", startPage, END_LOG_PAGE);
         for(uint32_t page = startPage ; page < info.pageCount; page++) {
             uint8_t buffer[FLASH_PAGE_SIZE];
             W25qxx_ReadPage(buffer, page, 0, FLASH_PAGE_SIZE);
@@ -191,7 +214,7 @@ void Logger::readAllLogs(void) {
     }
     uint32_t lastPage = lastAddr / FLASH_PAGE_SIZE;
     uint32_t lastOffset = lastAddr % FLASH_PAGE_SIZE;
-    printf("\nReading logs from page %d to page %d (last offset: %d)\n", startPage, lastPage, lastOffset);
+    printf("\nReading logs from page %ld to page %ld (last offset: %ld)\n", startPage, lastPage, lastOffset);
     printLog(START_LOG_PAGE, lastPage, lastOffset);
 }
 
@@ -211,7 +234,7 @@ void Logger::readLatestLogs(uint32_t numPages) {
         if(lastPage - START_LOG_PAGE < numPages){
             int32_t readRevesePage = numPages - (lastPage - START_LOG_PAGE);
             int32_t startPage = END_LOG_PAGE - readRevesePage + 1;
-            printf("Reading logs from page %d to page %d\n", startPage, END_LOG_PAGE);
+            printf("Reading logs from page %ld to page %d\n", startPage, END_LOG_PAGE);
             for(uint32_t page = startPage; page <= END_LOG_PAGE; page++) {
                 uint8_t buffer[FLASH_PAGE_SIZE];
                 W25qxx_ReadPage(buffer, page, 0, FLASH_PAGE_SIZE);
@@ -220,14 +243,14 @@ void Logger::readLatestLogs(uint32_t numPages) {
                 }
             }
             if(numPages - readRevesePage > 0){
-                printf("Continuing from page %d to page %d (last offset: %d)\n", START_LOG_PAGE, lastPage, lastOffset);
+                printf("Continuing from page %d to page %ld (last offset: %ld)\n", START_LOG_PAGE, lastPage, lastOffset);
                 int32_t startPage = START_LOG_PAGE;
                 printLog(startPage, lastPage, lastOffset);
             }        
         }
         else{
             uint32_t startPage = (lastPage <= numPages) ? START_LOG_PAGE : lastPage - numPages + 1;
-            printf("\nReading logs from page %d to page %d (last offset: %d)\n", startPage, lastPage, lastOffset);
+            printf("\nReading logs from page %ld to page %ld (last offset: %ld)\n", startPage, lastPage, lastOffset);
             printLog(startPage, lastPage, lastOffset);
         }
     }
@@ -303,10 +326,6 @@ bool Logger::checkEnableWriteLogs(void) {
     return loggingEnabled;
 }
 
-void Logger::writeLogsToSDCard(void) {
-    printf("writeLogsToSDCard\n");
-}
-
 void Logger::startLogging(void) {
     loggingEnabled = true;
 }
@@ -314,3 +333,193 @@ void Logger::startLogging(void) {
 void Logger::stopLogging(void) {
     loggingEnabled = false;
 }
+
+colirone_err_t Logger::writeLogToSDCard(const char* logFilePath, uint32_t startPage, uint32_t endPage, uint32_t lastOffset) {
+    if(!sdcard.getMountStatus()) {
+        printf("SD Card not mounted!\r\n");
+        return COLIRONE_ERROR;
+    }
+    COLIRONE_CHECK_ERROR(sdcard.openFile(logFilePath));
+    for(uint32_t page = startPage; page <= endPage; page++) {
+        uint8_t buffer[FLASH_PAGE_SIZE];
+        W25qxx_ReadPage(buffer, page, 0, FLASH_PAGE_SIZE);
+        if(page < endPage) {
+            COLIRONE_CHECK_ERROR(sdcard.appendToFile(logFilePath, (char*)buffer, FLASH_PAGE_SIZE));
+        } else {
+            COLIRONE_CHECK_ERROR(sdcard.appendToFile(logFilePath, (char*)buffer, lastOffset));
+        }
+    }
+    COLIRONE_CHECK_ERROR(sdcard.closeFile());
+    return COLIRONE_OK;
+}
+
+colirone_err_t Logger::initLogFile(const char* logFolderName, const char* logFileName) {
+    COLIRONE_CHECK_ERROR(sdcard.mount());
+    if(sdcard.checkExistsFolder(logFolderName) != COLIRONE_OK) {
+        printf("Log folder does not exist, creating...\r\n");
+        COLIRONE_CHECK_ERROR(sdcard.createFolder(logFolderName));
+    }
+    char* logFilePath = (char*)malloc(strlen(logFolderName) + strlen(logFileName) + 2);
+    sprintf(logFilePath, "%s/%s", logFolderName, logFileName);
+    if(sdcard.checkExistsFile(logFilePath) != COLIRONE_OK) {
+        printf("Log file does not exist, creating new one...\r\n");
+        COLIRONE_CHECK_ERROR(sdcard.createFile(logFilePath));
+    }
+    free(logFilePath);
+    return COLIRONE_OK;
+}
+
+colirone_err_t Logger::initLogFile(const char* logFileName) {
+    return initLogFile(DEFAULT_LOG_FOLDER_NAME, logFileName);
+}
+
+colirone_err_t Logger::initLogFile(void) {
+    return initLogFile(DEFAULT_LOG_FOLDER_NAME, DEFAULT_LOG_FILE_NAME);
+}
+
+colirone_err_t Logger::writeAllLogsFile(const char* logFolderName, const char* logFileName) {
+    char* logFilePath = (char*)malloc(strlen(logFolderName) + strlen(logFileName) + 2);
+    sprintf(logFilePath, "%s/%s", logFolderName, logFileName);
+    if(!sdcard.getMountStatus()) {
+        printf("SD Card not mounted!\r\n");
+        return COLIRONE_ERROR;
+    }
+    uint32_t lastAddr = nextFreeAddress;
+    findStartLogAddress();
+    uint32_t startPage = startLogAddress / FLASH_PAGE_SIZE;
+    if(colironeConfig.wrapAround) {
+        for(uint32_t page = startPage ; page < info.pageCount; page++) {
+            uint8_t buffer[FLASH_PAGE_SIZE];
+            W25qxx_ReadPage(buffer, page, 0, FLASH_PAGE_SIZE);
+            COLIRONE_CHECK_ERROR(sdcard.appendToFile(logFilePath, (char*)buffer, FLASH_PAGE_SIZE));
+        }
+    }
+    uint32_t lastPage = lastAddr / FLASH_PAGE_SIZE;
+    uint32_t lastOffset = lastAddr % FLASH_PAGE_SIZE;
+    COLIRONE_CHECK_ERROR(writeLogToSDCard(logFilePath, startPage, lastPage, lastOffset));
+    free(logFilePath);
+    printf("All logs written to file: %s\r\n", logFileName);
+    return COLIRONE_OK;
+}
+
+colirone_err_t Logger::writeAllLogsFile(const char* logFileName) {
+    return writeAllLogsFile(DEFAULT_LOG_FOLDER_NAME, logFileName);
+}
+
+colirone_err_t Logger::writeAllLogsFile(void) {
+    return writeAllLogsFile(DEFAULT_LOG_FOLDER_NAME, DEFAULT_LOG_FILE_NAME);
+}
+
+colirone_err_t Logger::writeLastestLogsFile(const char* logFolderName, const char* logFileName, uint32_t numPages){
+    char* logFilePath = (char*)malloc(strlen(logFolderName) + strlen(logFileName) + 2);
+    sprintf(logFilePath, "%s/%s", logFolderName, logFileName);
+    if(!sdcard.getMountStatus()) {
+        printf("SD Card not mounted!\r\n");
+        free(logFilePath);
+        return COLIRONE_ERROR;
+    }
+    uint32_t lastAddr = nextFreeAddress;
+    uint32_t lastOffset = lastAddr % FLASH_PAGE_SIZE;
+    uint32_t lastPage = lastAddr / FLASH_PAGE_SIZE;
+    if(!colironeConfig.wrapAround){
+        uint32_t startPage = (lastPage <= numPages) ? START_LOG_PAGE : lastPage - numPages + 1;
+        COLIRONE_CHECK_ERROR(writeLogToSDCard(logFilePath, startPage, lastPage, lastOffset));
+    }
+    else{
+        if(lastPage - START_LOG_PAGE < numPages){
+            int32_t readRevesePage = numPages - (lastPage - START_LOG_PAGE);
+            int32_t startPage = END_LOG_PAGE - readRevesePage + 1;
+            for(uint32_t page = startPage; page <= END_LOG_PAGE; page++) {
+                uint8_t buffer[FLASH_PAGE_SIZE];
+                W25qxx_ReadPage(buffer, page, 0, FLASH_PAGE_SIZE);
+                COLIRONE_CHECK_ERROR(sdcard.openFile(logFilePath));
+                COLIRONE_CHECK_ERROR(sdcard.appendToFile(logFilePath, (char*)buffer, FLASH_PAGE_SIZE));
+                COLIRONE_CHECK_ERROR(sdcard.closeFile());
+            }
+            if(numPages - readRevesePage > 0){
+                printf("Continuing from page %d to page %ld (last offset: %ld)\n", START_LOG_PAGE, lastPage, lastOffset);
+                int32_t startPage = START_LOG_PAGE;
+                COLIRONE_CHECK_ERROR(writeLogToSDCard(logFilePath, startPage, lastPage, lastOffset));
+            }
+        }
+        else{
+            uint32_t startPage = (lastPage <= numPages) ? START_LOG_PAGE : lastPage - numPages + 1;
+            printf("\nReading logs from page %ld to page %ld (last offset: %ld)\n", startPage, lastPage, lastOffset);
+            COLIRONE_CHECK_ERROR(writeLogToSDCard(logFilePath, startPage, lastPage, lastOffset));
+        }
+    }
+    free(logFilePath);
+    return COLIRONE_OK;
+}
+
+colirone_err_t Logger::writeLastestLogsFile(const char* logFileName, uint32_t numPages) {
+    return writeLastestLogsFile(DEFAULT_LOG_FOLDER_NAME, logFileName, numPages);
+}
+
+colirone_err_t Logger::writeLastestLogsFile(uint32_t numPages) {
+    return writeLastestLogsFile(DEFAULT_LOG_FOLDER_NAME, DEFAULT_LOG_FILE_NAME, numPages);
+}
+
+colirone_err_t Logger::writeLastestLogsFile(void) {
+    return writeLastestLogsFile(DEFAULT_LOG_FOLDER_NAME, DEFAULT_LOG_FILE_NAME, 4); // Default to 4 pages (1KB)
+}
+
+colirone_err_t Logger::deleteLogsFile(const char* logFolderName, const char* logFileName) {
+    char* logFilePath = (char*)malloc(strlen(logFolderName) + strlen(logFileName) + 2);
+    sprintf(logFilePath, "%s/%s", logFolderName, logFileName);
+    if(!sdcard.getMountStatus()) {
+        printf("SD Card not mounted!\r\n");
+        return COLIRONE_ERROR;
+    }
+    colirone_err_t err = sdcard.deleteFile(logFilePath);
+    if(err != COLIRONE_OK) {
+        printf("Failed to delete log file %s, Error Code: (%i)\r\n", logFilePath, err);
+        free(logFilePath);
+        return err;
+    }
+    printf("Log file %s deleted successfully.\r\n", logFilePath);
+    free(logFilePath);
+    return COLIRONE_OK;
+}
+
+colirone_err_t Logger::deleteLogsFile(const char* logFileName) {
+    return deleteLogsFile(DEFAULT_LOG_FOLDER_NAME, logFileName);
+}
+
+colirone_err_t Logger::deleteLogsFile(void) {
+    return deleteLogsFile(DEFAULT_LOG_FOLDER_NAME, DEFAULT_LOG_FILE_NAME);
+}
+
+uint32_t Logger::getLogFileSize(const char* logFolderName, const char* logFileName) {
+    char* logFilePath = (char*)malloc(strlen(logFolderName) + strlen(logFileName) + 2);
+    sprintf(logFilePath, "%s/%s", logFolderName, logFileName);
+    if(!sdcard.getMountStatus()) {
+        printf("SD Card not mounted!\r\n");
+        free(logFilePath);
+        return 0;
+    }
+    uint32_t fileSize = sdcard.getFileSize(logFilePath);
+    free(logFilePath);
+    return fileSize;
+}
+
+uint32_t Logger::getLogFileSize(const char* logFileName) {
+    return getLogFileSize(DEFAULT_LOG_FOLDER_NAME, logFileName);
+}
+
+uint32_t Logger::getLogFileSize(void) {
+    return getLogFileSize(DEFAULT_LOG_FOLDER_NAME, DEFAULT_LOG_FILE_NAME);
+}
+
+uint32_t Logger::getLogFolderSize(const char* logFolderName) {
+    if(!sdcard.getMountStatus()) {
+        printf("SD Card not mounted!\r\n");
+        return 0;
+    }
+    uint32_t folderSize = sdcard.getFolderSize(logFolderName);
+    return folderSize;
+}
+
+uint32_t Logger::getLogFolderSize(void) {
+    return getLogFolderSize(DEFAULT_LOG_FOLDER_NAME);
+}  

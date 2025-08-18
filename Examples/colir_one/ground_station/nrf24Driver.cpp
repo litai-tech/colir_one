@@ -9,7 +9,7 @@ static colirone_payload_cmd_t colirone_payload_cmd_queue[NRF24_QUEUE_SIZE];
 static int queueHead = 0;
 static int queueTail = 0;
 
-void nrf24Init(void){
+void nrf24Init(const uint8_t* RxAddress, const uint8_t* TxAddress){
   radio.begin();
   radio.setAutoAck(false);
   radio.setDataRate(RF24_250KBPS);

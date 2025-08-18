@@ -7,3 +7,12 @@ rocket_code/.project
 rocket_code/.mxproject
 rocket_code/build
 rocket_code/Debug
+rocket_code/Examples/colir_one/build
+rocket_code/Examples/logger/build
+rocket_code/Examples/read_sensors/build
+rocket_code/Examples/rf_receive_transmit/receive_colirone_cmd/build
+rocket_code/Examples/rf_receive_transmit/receive_normal/build
+rocket_code/Examples/rf_receive_transmit/transmit_colir_one_sensor/build
+rocket_code/Examples/rf_receive_transmit/transmit_normal/build
+rocket_code/Examples/rf_receive_transmit/transmit_receive_colir_one/build
+.vscode

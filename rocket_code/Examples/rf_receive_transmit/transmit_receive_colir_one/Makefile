@@ -111,6 +111,7 @@ ${DRIVER_PATH}/ColirOne/Src/lighter.cpp \
 ${DRIVER_PATH}/ColirOne/Src/servo.cpp \
 ${DRIVER_PATH}/ColirOne/Src/rf.cpp \
 ${DRIVER_PATH}/ColirOne/Src/logger.cpp \
+${DRIVER_PATH}/ColirOne/Src/sdcard.cpp \
 Src/main.cpp 
 
 # ASM sources

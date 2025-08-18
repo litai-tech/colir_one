@@ -1,7 +1,7 @@
 #include "logger.h"
 #include "../../Module/Inc/w25qxx.h"
 
-const char* DEFAULT_LOG_FOLDER_NAME         = "ColirOne_logs";
+const char* DEFAULT_LOG_FOLDER_NAME         = "DEFAULT_COLIR_ONE_LOGS";
 const char* DEFAULT_LOG_FILE_NAME           = "colirone_logs.txt";
 
 #define FLASH_PAGE_SIZE         256
@@ -57,6 +57,10 @@ void Logger::getLogFileIndex(uint32_t* logFileIndex) {
 
 void Logger::updateLogFileIndex(void){
     colironeConfig.logFileIndex++;
+    // Check for overflow - reset to 0 if maximum value reached
+    if(colironeConfig.logFileIndex == UINT32_MAX) {
+        colironeConfig.logFileIndex = 0;
+    }
     writeConfig();
 }
 
@@ -203,7 +207,7 @@ void Logger::readAllLogs(void) {
     findStartLogAddress();
     uint32_t startPage = startLogAddress / FLASH_PAGE_SIZE;
     if(colironeConfig.wrapAround) {
-        printf("\nReading logs from page %ld to page %d (wrap-around mode)\n", startPage, END_LOG_PAGE);
+        printf("Reading logs from page %ld to page %d (wrap-around mode)\n", startPage, END_LOG_PAGE);
         for(uint32_t page = startPage ; page < info.pageCount; page++) {
             uint8_t buffer[FLASH_PAGE_SIZE];
             W25qxx_ReadPage(buffer, page, 0, FLASH_PAGE_SIZE);
@@ -214,7 +218,7 @@ void Logger::readAllLogs(void) {
     }
     uint32_t lastPage = lastAddr / FLASH_PAGE_SIZE;
     uint32_t lastOffset = lastAddr % FLASH_PAGE_SIZE;
-    printf("\nReading logs from page %ld to page %ld (last offset: %ld)\n", startPage, lastPage, lastOffset);
+    printf("Reading logs from page %d to page %ld (last offset: %ld)\n", START_LOG_PAGE, lastPage, lastOffset);
     printLog(START_LOG_PAGE, lastPage, lastOffset);
 }
 
@@ -260,7 +264,8 @@ void Logger::eraseAllLogs(void) {
     W25qxx_EraseChip();
     printf("Waiting for erase to complete...\r\n");
     while(w25qxx.Lock);
-    loadConfig();
+    colironeConfig.wrapAround = 0;
+    writeConfig();
     nextFreeAddress = START_LOG_ADDRESS;
     printf("All logs erased.\r\n");
 }
@@ -334,17 +339,26 @@ void Logger::stopLogging(void) {
     loggingEnabled = false;
 }
 
+// Function to write logs to SD card
+
 colirone_err_t Logger::writeLogToSDCard(const char* logFilePath, uint32_t startPage, uint32_t endPage, uint32_t lastOffset) {
     if(!sdcard.getMountStatus()) {
         printf("SD Card not mounted!\r\n");
         return COLIRONE_ERROR;
     }
     COLIRONE_CHECK_ERROR(sdcard.openFile(logFilePath));
+    uint32_t pageSize = FLASH_PAGE_SIZE;
     for(uint32_t page = startPage; page <= endPage; page++) {
         uint8_t buffer[FLASH_PAGE_SIZE];
         W25qxx_ReadPage(buffer, page, 0, FLASH_PAGE_SIZE);
         if(page < endPage) {
-            COLIRONE_CHECK_ERROR(sdcard.appendToFile(logFilePath, (char*)buffer, FLASH_PAGE_SIZE));
+            for(uint32_t i = 0; i < FLASH_PAGE_SIZE; i++) {
+                if(buffer[i] == NULL_DATA) {
+                    pageSize = i;
+                    break;
+                }    
+            }
+            COLIRONE_CHECK_ERROR(sdcard.appendToFile(logFilePath, (char*)buffer, pageSize));
         } else {
             COLIRONE_CHECK_ERROR(sdcard.appendToFile(logFilePath, (char*)buffer, lastOffset));
         }
@@ -388,15 +402,26 @@ colirone_err_t Logger::writeAllLogsFile(const char* logFolderName, const char* l
     findStartLogAddress();
     uint32_t startPage = startLogAddress / FLASH_PAGE_SIZE;
     if(colironeConfig.wrapAround) {
+        printf("Writing logs from page %ld to page %d (wrap-around mode)\n", startPage, END_LOG_PAGE);
+        COLIRONE_CHECK_ERROR(sdcard.openFile(logFilePath));
+        uint32_t pageSize = FLASH_PAGE_SIZE;
         for(uint32_t page = startPage ; page < info.pageCount; page++) {
             uint8_t buffer[FLASH_PAGE_SIZE];
             W25qxx_ReadPage(buffer, page, 0, FLASH_PAGE_SIZE);
-            COLIRONE_CHECK_ERROR(sdcard.appendToFile(logFilePath, (char*)buffer, FLASH_PAGE_SIZE));
+            for(uint32_t i = 0; i < FLASH_PAGE_SIZE; i++) {
+                if(buffer[i] == NULL_DATA) {
+                    pageSize = i;
+                    break;
+                }    
+            }
+            COLIRONE_CHECK_ERROR(sdcard.appendToFile(logFilePath, (char*)buffer, pageSize));
         }
+        COLIRONE_CHECK_ERROR(sdcard.closeFile());
     }
     uint32_t lastPage = lastAddr / FLASH_PAGE_SIZE;
     uint32_t lastOffset = lastAddr % FLASH_PAGE_SIZE;
-    COLIRONE_CHECK_ERROR(writeLogToSDCard(logFilePath, startPage, lastPage, lastOffset));
+    printf("Writing logs from page %d to page %ld (last offset: %ld)\n", START_LOG_PAGE, lastPage, lastOffset);
+    COLIRONE_CHECK_ERROR(writeLogToSDCard(logFilePath, START_LOG_PAGE, lastPage, lastOffset));
     free(logFilePath);
     printf("All logs written to file: %s\r\n", logFileName);
     return COLIRONE_OK;
@@ -429,22 +454,27 @@ colirone_err_t Logger::writeLastestLogsFile(const char* logFolderName, const cha
         if(lastPage - START_LOG_PAGE < numPages){
             int32_t readRevesePage = numPages - (lastPage - START_LOG_PAGE);
             int32_t startPage = END_LOG_PAGE - readRevesePage + 1;
+            COLIRONE_CHECK_ERROR(sdcard.openFile(logFilePath));
+            uint32_t pageSize = FLASH_PAGE_SIZE;
             for(uint32_t page = startPage; page <= END_LOG_PAGE; page++) {
                 uint8_t buffer[FLASH_PAGE_SIZE];
                 W25qxx_ReadPage(buffer, page, 0, FLASH_PAGE_SIZE);
-                COLIRONE_CHECK_ERROR(sdcard.openFile(logFilePath));
-                COLIRONE_CHECK_ERROR(sdcard.appendToFile(logFilePath, (char*)buffer, FLASH_PAGE_SIZE));
-                COLIRONE_CHECK_ERROR(sdcard.closeFile());
+                for(uint32_t i = 0; i < FLASH_PAGE_SIZE; i++) {
+                    if(buffer[i] == NULL_DATA) {
+                        pageSize = i;
+                        break;
+                    }
+                }
+                COLIRONE_CHECK_ERROR(sdcard.appendToFile(logFilePath, (char*)buffer, pageSize));
             }
+            COLIRONE_CHECK_ERROR(sdcard.closeFile());
             if(numPages - readRevesePage > 0){
-                printf("Continuing from page %d to page %ld (last offset: %ld)\n", START_LOG_PAGE, lastPage, lastOffset);
                 int32_t startPage = START_LOG_PAGE;
                 COLIRONE_CHECK_ERROR(writeLogToSDCard(logFilePath, startPage, lastPage, lastOffset));
             }
         }
         else{
             uint32_t startPage = (lastPage <= numPages) ? START_LOG_PAGE : lastPage - numPages + 1;
-            printf("\nReading logs from page %ld to page %ld (last offset: %ld)\n", startPage, lastPage, lastOffset);
             COLIRONE_CHECK_ERROR(writeLogToSDCard(logFilePath, startPage, lastPage, lastOffset));
         }
     }

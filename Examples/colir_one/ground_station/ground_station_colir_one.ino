@@ -5,14 +5,25 @@
 #include "ws2812bDriver.h"
 #include "basic.h"
 
+unsigned long lastDataReceived = 0;
+const unsigned long CONNECTION_TIMEOUT = 20000;
+bool isConnected = true;
+
+/**
+ * @brief RF24 TX,RX Address
+ */
+const uint8_t RxAddress[]            =        {0xAA,0xDD,0xCC,0xBB,0xAA};
+const uint8_t TxAddress[]            =        {0xEE,0xDD,0xCC,0xBB,0xAA};
+
 void setup()
 {
   Serial.begin(115200);
   ws2812bInit();
-  nrf24Init();
+  nrf24Init(RxAddress, TxAddress);
   buttonInit();
   oledInit();
   ws2812bStartFade(WS2812B_RED);
+  lastDataReceived = millis(); // Initialize connection timer
   delay(1000);
 }
 
@@ -25,6 +36,8 @@ void loop()
     if (nrf24Available()) {
         ws2812bSetColor(WS2812B_GREEN);
         nrf24Read(buffer, sizeof(buffer));
+        lastDataReceived = now;
+        isConnected = true;
       
         uint8_t packet_type = buffer[0];
         switch (packet_type) {
@@ -101,15 +114,30 @@ void loop()
                 Serial.println("Unknown packet type received.");
                 break;
         }
-        if(getCurrentScreen() != CONFIRM_SCREEN){
-          oledMainScreenDisplay(getVerticalVelocity(), getAltitude());
+        
+        // Display main screen when connected and not in confirm screen
+        if(getCurrentScreen() != CONFIRM_SCREEN) {
+            oledMainScreenDisplay(getVerticalVelocity(), getAltitude());
         }
     }
-    else{
-      ws2812bFadeUpdate();
-      connectingScreenDisplayBounce();
+    else {
+        if (now - lastDataReceived > CONNECTION_TIMEOUT) {
+            if (isConnected) {
+                Serial.println("Connection lost - switching to connecting screen");
+                isConnected = false;
+            }
+            
+            ws2812bFadeUpdate();
+            if(getCurrentScreen() != CONFIRM_SCREEN) {
+                connectingScreenDisplayBounce();
+            }
+        }
+        else {
+            if(getCurrentScreen() != CONFIRM_SCREEN) {
+                oledMainScreenDisplay(getVerticalVelocity(), getAltitude());
+            }
+        }
     }
+    
     delay(1);
 }
-
-/* ----------------------------------------------------------------MAIN PROGRAM---------------------------------------------------------------- */

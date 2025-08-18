@@ -7,13 +7,8 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-/**
- * @brief RF24 TX,RX Address
- */
-const uint8_t RxAddress[]            =        {0xAA,0xDD,0xCC,0xBB,0xAA};
-const uint8_t TxAddress[]            =        {0xEE,0xDD,0xCC,0xBB,0xAA};
 
-void nrf24Init(void);
+void nrf24Init(const uint8_t* RxAddress, const uint8_t* TxAddress);
 bool nrf24Available(void);
 void nrf24Read(uint8_t* buffer, size_t len);
 

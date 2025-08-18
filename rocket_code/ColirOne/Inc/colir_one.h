@@ -38,7 +38,7 @@ class ColirOne{
         Lighter lighter;
         SDCard sdcard;
         colirone_err_t init(void);
-        void base(void);
+        void processCommand(colirone_payload_cmd_t* cmd);
         uint32_t getTimeStamp(void);
     private:
         void setState(void);

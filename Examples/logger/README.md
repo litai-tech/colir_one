@@ -37,7 +37,7 @@ This example showcases the following Logger functionalities:
 1. **Configure Paths (if needed):**
    - Edit the following lines in the `Makefile` if your toolchain is in a different location:
      ```
-     DRIVER_PATH = /home/dat/Documents/colir_one/rocket_code
+     DRIVER_PATH = /home/dat/Documents/colir_one
      OPENOCD_PATH = <path-to-openocd>
      GCC_PATH = <path-to-arm-none-eabi-gcc>
      ```

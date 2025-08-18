@@ -1,8 +1,8 @@
 #include "main.h"
 #include "../../ColirOne/Inc/colir_one.h"
 
+const uint8_t RxAddress[] = {0xEE,0xDD,0xCC,0xBB,0xAA};
 const uint8_t TxAddress[] = {0xAA,0xDD,0xCC,0xBB,0xAA};
-const uint8_t RxAddress[] = {0xAA,0xDD,0xCC,0xBB,0xBB};
 
 const char* LOG_FOLDER_NAME = "COLIR-ONE_LOGS";
 
@@ -18,9 +18,12 @@ int main(void){
     printf("Initialization failed with error code: %d\n", ret);
     return -1;
   }
+  else{
+    printf("ColirOne initialized successfully.\n");
+  }
   colirone_payload_sensor_t sensorData;
   colirone_common_packet_t commonPacket;
-  colirone_payload_cmd_t colironePayloadCmd;
+  colirone_payload_cmd_t colironePayloadCmd = {};
   commonPacket.type = 1;
   float altitude = 0.0f;
   float lastAltitude = 0.0f;
@@ -33,12 +36,15 @@ int main(void){
   // get storage info
   printf("Storage Info:\n");
   colirone_storage_info_t storageInfo = colirOne.logger.getStorageInfo();
-  printf("capacityInKiloByte: %ld KB\n", storageInfo.capacityInKiloByte);
   printf("Used Space: %ld bytes\n", colirOne.logger.getUsedSpace());
   printf("Free Space: %ld bytes\n", colirOne.logger.getFreeSpace());
 
   // Erase all logs if needed
   // colirOne.logger.eraseAllLogs();
+  // Erase log file index if needed
+  // colirOne.logger.resetLogFileIndex(); // Reset log file index to 0
+  // printf("Used Space after erase: %ld bytes\n", colirOne.logger.getUsedSpace());
+  // printf("Free Space after erase: %ld bytes\n", colirOne.logger.getFreeSpace());
 
   // max: 4.294.967.295 files
   char newLogFileName[32];
@@ -53,7 +59,7 @@ int main(void){
   // Set up RF communication
   colirOne.rf.setTxRxAdress((uint8_t*)TxAddress, (uint8_t*)RxAddress);
   colirOne.rf.setTxMode();
-  colirOne.logger.startLogging(); // start logging by default
+  // colirOne.logger.startLogging(); // start logging by default
 	while(1){
         uint32_t timestamp = colirOne.getTimeStamp();
         XYZ_t accel = colirOne.imu.getAcceleration();
@@ -103,79 +109,85 @@ int main(void){
         if(colirOne.logger.checkEnableWriteLogs()){
           colirOne.logger.storeSensorLog(&sensorData);
         }
-        // if(!colirOne.rf.isRxMode()){
-        //     colirone_err_t err =  colirOne.rf.transmitSensorData(&sensorData, timestamp);
-        //     if(err != COLIRONE_OK){
-        //         printf("Error transmitting sensor data: %d\n", err);
-        //     }
-        //     sensorData = {0}; // Reset sensor data after transmission
-        //     if(timestamp - lastRxMode > 100){
-        //         printf("Switching to RX mode\n");
-        //         commonPacket.is_rocket_rx = 1;
-        //         colirOne.rf.transmitData((uint8_t*)&commonPacket, sizeof(commonPacket));
-        //         colirOne.rf.setRxMode();
-        //         lastRxMode = colirOne.getTimeStamp();
-        //     }
-        // }
-        // else{
-        //     if(colirOne.rf.hasReceivedData()){
-        //         colirOne.rf.readColirOneCommand();
-        //         colironePayloadCmd.lighterLaunchNumber = colirOne.rf.getLighterLaunchNumber();
-        //         colironePayloadCmd.openShutes = colirOne.rf.getOpenShutes();
-        //         colironePayloadCmd.closeShutes = colirOne.rf.getCloseShutes();
-        //         colironePayloadCmd.startLogs = colirOne.rf.getStartLogs();
-        //         colironePayloadCmd.writeLogs = colirOne.rf.getWriteLogs();
-        //         colironePayloadCmd.resetAltitude = colirOne.rf.getResetAltitude();
-        //         colironePayloadCmd.removeLogs = colirOne.rf.getRemoveLogs();
-        //         printf("Received Command: Launch Number: %d, Open Shutes: %d, Close Shutes: %d, Start Logs: %d, Write Logs: %d, Reset Altitude: %d, Remove Logs: %d\n",
-        //                colironePayloadCmd.lighterLaunchNumber, 
-        //                colironePayloadCmd.openShutes, 
-        //                colironePayloadCmd.closeShutes, 
-        //                colironePayloadCmd.startLogs, 
-        //                colironePayloadCmd.writeLogs, 
-        //                colironePayloadCmd.resetAltitude, 
-        //                colironePayloadCmd.removeLogs);
-        //         if(colirOne.logger.checkEnableWriteLogs()){
-        //             colirOne.logger.storeCommandLog(&colironePayloadCmd);
-        //         }
-        //         if(colironePayloadCmd.openShutes){
-        //           colirOne.servo.setServoAngle(7, 40);
-        //         }
-        //         else if(colironePayloadCmd.closeShutes){
-        //           colirOne.servo.setServoAngle(7, 80);
-        //         }
-        //         else if(colironePayloadCmd.lighterLaunchNumber > 0){
-        //           colirOne.lighter.fireLighter(colironePayloadCmd.lighterLaunchNumber);
-        //         }
-        //         else if(colironePayloadCmd.startLogs){
-        //           colirOne.logger.startLogging();
-        //         }
-        //         else if(colironePayloadCmd.writeLogs){
-        //           colirOne.logger.updateLogFileIndex();
-        //           colirOne.logger.getLogFileIndex(&logFileIndex);
-        //           snprintf(newLogFileName, sizeof(newLogFileName), "log_%ld.txt", logFileIndex);
-        //           colirOne.logger.initLogFile(LOG_FOLDER_NAME, newLogFileName);
-        //           if(colirOne.logger.getUsedSpace() > 0){
-        //             colirOne.logger.writeAllLogsFile(LOG_FOLDER_NAME, newLogFileName);
-        //           }
-        //         }
-        //         else if(colironePayloadCmd.resetAltitude){
-        //             altitude = 0.0f;
-        //             lastAltitude = 0.0f;
-        //             verticalVelocity = 0.0f;
-        //         }
-        //         else if(colironePayloadCmd.removeLogs){
-        //             colirOne.logger.eraseAllLogs();
-        //         }
-        //     }
-        //     else if(timestamp - lastRxMode > 100){
-        //         printf("Switching to TX mode\n");
-        //         colirOne.rf.setTxMode();
-        //         commonPacket.is_rocket_rx = 0;
-        //         colirOne.rf.transmitData((uint8_t*)&commonPacket, sizeof(commonPacket));
-        //         lastRxMode = colirOne.getTimeStamp();
-        //     }
-        // }
+        if(!colirOne.rf.isRxMode()){
+            colirone_err_t err =  colirOne.rf.transmitSensorData(&sensorData, timestamp);
+            if(err != COLIRONE_OK){
+                printf("Error transmitting sensor data: %d\n", err);
+            }
+            sensorData = {0}; // Reset sensor data after transmission
+            if(timestamp - lastRxMode > 200){
+                printf("Switching to RX mode\n");
+                commonPacket.is_rocket_rx = 1;
+                colirOne.rf.transmitData((uint8_t*)&commonPacket, sizeof(commonPacket));
+                colirOne.rf.setRxMode();
+                lastRxMode = colirOne.getTimeStamp();
+            }
+        }
+        else{
+            if(colirOne.rf.hasReceivedData()){
+                colirOne.rf.readColirOneCommand();
+                colironePayloadCmd.lighterLaunchNumber = colirOne.rf.getLighterLaunchNumber();
+                colironePayloadCmd.openShutes = colirOne.rf.getOpenShutes();
+                colironePayloadCmd.closeShutes = colirOne.rf.getCloseShutes();
+                colironePayloadCmd.startLogs = colirOne.rf.getStartLogs();
+                colironePayloadCmd.writeLogs = colirOne.rf.getWriteLogs();
+                colironePayloadCmd.resetAltitude = colirOne.rf.getResetAltitude();
+                colironePayloadCmd.removeLogs = colirOne.rf.getRemoveLogs();
+                printf("Received Command: Launch Number: %d, Open Shutes: %d, Close Shutes: %d, Start Logs: %d, Write Logs: %d, Reset Altitude: %d, Remove Logs: %d\n",
+                       colironePayloadCmd.lighterLaunchNumber, 
+                       colironePayloadCmd.openShutes, 
+                       colironePayloadCmd.closeShutes, 
+                       colironePayloadCmd.startLogs, 
+                       colironePayloadCmd.writeLogs, 
+                       colironePayloadCmd.resetAltitude, 
+                       colironePayloadCmd.removeLogs);
+                if(colirOne.logger.checkEnableWriteLogs()){
+                    colirOne.logger.storeCommandLog(&colironePayloadCmd);
+                }
+                // process commands
+                if(colironePayloadCmd.openShutes){
+                  // colirOne.servo.setServoAngle(7, 40);
+                  printf("Opening shutes\n");
+                  colirOne.logger.eraseAllLogs();
+                  colironePayloadCmd.openShutes = 0;
+                }
+                else if(colironePayloadCmd.closeShutes){
+                  // colirOne.servo.setServoAngle(7, 80);
+                  printf("Closing shutes\n");
+                  colironePayloadCmd.closeShutes = 0;
+                }
+                else if(colironePayloadCmd.lighterLaunchNumber > 0){
+                  colirOne.lighter.fireLighter(colironePayloadCmd.lighterLaunchNumber);
+                }
+                else if(colironePayloadCmd.startLogs){
+                  colirOne.logger.startLogging();
+                }
+                else if(colironePayloadCmd.writeLogs){
+                  colirOne.logger.updateLogFileIndex();
+                  colirOne.logger.getLogFileIndex(&logFileIndex);
+                  snprintf(newLogFileName, sizeof(newLogFileName), "log_%ld.txt", logFileIndex);
+                  colirOne.logger.initLogFile(LOG_FOLDER_NAME, newLogFileName);
+                  if(colirOne.logger.getUsedSpace() > 0){
+                    colirOne.logger.writeAllLogsFile(LOG_FOLDER_NAME, newLogFileName);
+                  }
+                }
+                else if(colironePayloadCmd.resetAltitude){
+                    altitude = 0.0f;
+                    lastAltitude = 0.0f;
+                    verticalVelocity = 0.0f;
+                }
+                else if(colironePayloadCmd.removeLogs){
+                    colirOne.logger.eraseAllLogs();
+                }
+            }
+            else if(timestamp - lastRxMode > 100){
+                printf("Switching to TX mode\n");
+                colirOne.rf.setTxMode();
+                commonPacket.is_rocket_rx = 0;
+                colirOne.rf.transmitData((uint8_t*)&commonPacket, sizeof(commonPacket));
+                lastRxMode = colirOne.getTimeStamp();
+            }
+        }
   }
 	return 0;
 }

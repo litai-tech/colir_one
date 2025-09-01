@@ -28,41 +28,33 @@ int main(void){
 
     uint32_t lastTimestamp = colirOne.getTimeStamp();
     uint32_t lastRxMode = colirOne.getTimeStamp();
+    uint32_t lastTxMode = colirOne.getTimeStamp();
+    uint32_t txPacketCount = 0;
+    uint32_t maxTxPackets = 5;
 
 	while(1){
         uint32_t timestamp = colirOne.getTimeStamp();
         XYZ_t accel = colirOne.imu.getAcceleration();
-        printf("Acceleration: X: %.2f, Y: %.2f, Z: %.2f\n", accel.x, accel.y, accel.z);
         XYZ_t gyro = colirOne.imu.getGyroscope();
-        printf("Gyroscope: X: %.2f, Y: %.2f, Z: %.2f\n", gyro.x, gyro.y, gyro.z);
         XYZ_t orientation = colirOne.imu.getOrientation();
-        printf("Orientation: X: %.2f, Y: %.2f, Z: %.2f\n", orientation.x, orientation.y, orientation.z);
         Quaternion_t quaternion = colirOne.imu.getQuaternion();
-        printf("Quaternion: W: %.2f, X: %.2f, Y: %.2f, Z: %.2f\n", quaternion.w, quaternion.x, quaternion.y, quaternion.z);
-
         float temp = colirOne.barometer.getTemperature();
-        printf("Temperature: %.2f\n", temp);
         float pressure = colirOne.barometer.getPressure();
-        printf("Pressure: %.2f\n", pressure);
 
         if(pressure > 10000){
             altitude = colirOne.barometer.calculateSeaLevelAltitude(pressure);
-            printf("Altitude: %.2f\n", altitude);
             float deltaTime = (timestamp - lastTimestamp) / 1000.0f; // Convert to seconds
             if(deltaTime > 0){
                 verticalVelocity = (altitude - lastAltitude) / deltaTime; // m/s
             }
             lastAltitude = altitude;
             lastTimestamp = timestamp;
-            printf("Vertical Velocity: %.2f m/s\n", verticalVelocity);
         }
 
         colirOne.gps.run();
         double longitude = colirOne.gps.getLongitude();
         double latitude = colirOne.gps.getLatitude();
         int visibleSatellites = colirOne.gps.getVisibleSatellites();
-        printf("GPS Longitude: %.6f, Latitude: %.6f, Visible Satellites: %d\n", longitude, latitude, visibleSatellites);
-
         if(!colirOne.rf.isRxMode()){
             sensorData.acceleration = accel;
             sensorData.gyroscope = gyro;
@@ -80,16 +72,42 @@ int main(void){
             if(err != COLIRONE_OK){
                 printf("Error transmitting sensor data: %d\n", err);
             }
-            sensorData = {0}; // Reset sensor data after transmission
-            if(timestamp - lastRxMode > 100){
-                printf("Switching to RX mode\n");
+            txPacketCount++;
+            
+            printf("TX[%lu] ====== SENSOR DATA ======\n", txPacketCount);
+            printf("  Accel: X:%.2f Y:%.2f Z:%.2f m/s²\n", 
+                   sensorData.acceleration.x, sensorData.acceleration.y, sensorData.acceleration.z);
+            printf("  Gyro:  X:%.2f Y:%.2f Z:%.2f °/s\n", 
+                   sensorData.gyroscope.x, sensorData.gyroscope.y, sensorData.gyroscope.z);
+            printf("  Orient: X:%.1f Y:%.1f Z:%.1f °\n", 
+                   sensorData.orientation.x, sensorData.orientation.y, sensorData.orientation.z);
+            printf("  Quat: W:%.3f X:%.3f Y:%.3f Z:%.3f\n", 
+                   sensorData.quaternion.w, sensorData.quaternion.x, 
+                   sensorData.quaternion.y, sensorData.quaternion.z);
+            printf("  Baro: Temp:%.1f°C Press:%.1fPa Alt:%.2fm\n", 
+                   sensorData.barometer.temperature, sensorData.barometer.pressure, 
+                   sensorData.barometer.altitude);
+            printf("  VelZ: %.2f m/s\n", sensorData.verticalVelocity);
+            printf("  GPS: Lat:%.6f Lon:%.6f Sats:%d\n", 
+                   sensorData.gps.latitude, sensorData.gps.longitude, 
+                   sensorData.gps.visibleSatellites);
+            printf("  Timestamp: %lu ms\n", timestamp);
+            printf("=============================\n");
+            
+            sensorData = {0};
+            
+            if((timestamp - lastTxMode > 50) || (txPacketCount >= maxTxPackets)){
+                printf("Switching to RX mode (packets sent: %lu)\n", txPacketCount);
                 commonPacket.is_rocket_rx = 1;
                 colirOne.rf.transmitData((uint8_t*)&commonPacket, sizeof(commonPacket));
                 colirOne.rf.setRxMode();
                 lastRxMode = colirOne.getTimeStamp();
+                txPacketCount = 0;
+                HAL_Delay(2);
             }
         }
         else{
+            // Quick check for received data - non-blocking
             if(colirOne.rf.hasReceivedData()){
                 colirOne.rf.readColirOneCommand();
                 uint8_t launchNumber = colirOne.rf.getLighterLaunchNumber();
@@ -100,19 +118,25 @@ int main(void){
                 uint8_t resetAltitude = colirOne.rf.getResetAltitude();
                 uint8_t removeLogs = colirOne.rf.getRemoveLogs();
 
-                printf("Received Command: Launch Number: %d, Open Shutes: %d, Close Shutes: %d, Start Logs: %d, Write Logs: %d, Reset Altitude: %d, Remove Logs: %d\n",
+                printf("RX: CMD received - Launch:%d Open:%d Close:%d StartLog:%d WriteLog:%d ResetAlt:%d RemoveLog:%d\n",
                        launchNumber, openShutes, closeShutes, startLogs, writeLogs, resetAltitude, removeLogs);
-            }
-            else if(timestamp - lastRxMode > 500){
-                printf("Switching to TX mode\n");
+                printf("Command received, switching to TX mode immediately\n");
                 colirOne.rf.setTxMode();
+                HAL_Delay(2);
                 commonPacket.is_rocket_rx = 0;
                 colirOne.rf.transmitData((uint8_t*)&commonPacket, sizeof(commonPacket));
-                lastRxMode = colirOne.getTimeStamp();
+                lastTxMode = colirOne.getTimeStamp();
+            }
+            else if(timestamp - lastRxMode > 200){ 
+                printf("RX timeout, switching to TX mode\n");
+                colirOne.rf.setTxMode();
+                HAL_Delay(2);
+                commonPacket.is_rocket_rx = 0;
+                colirOne.rf.transmitData((uint8_t*)&commonPacket, sizeof(commonPacket));
+                lastTxMode = colirOne.getTimeStamp();
             }
         }
-        
-        // HAL_Delay(200);
+        HAL_Delay(1); 
 	}
 	return 0;
 }

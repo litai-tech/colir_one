@@ -7,7 +7,8 @@
 
 unsigned long lastDataReceived = 0;
 const unsigned long CONNECTION_TIMEOUT = 20000;
-bool isConnected = true;
+bool isConnected = false;
+bool hasEverConnected = false; 
 
 /**
  * @brief RF24 TX,RX Address
@@ -23,7 +24,6 @@ void setup()
   buttonInit();
   oledInit();
   ws2812bStartFade(WS2812B_RED);
-  lastDataReceived = millis(); // Initialize connection timer
   delay(1000);
 }
 
@@ -36,8 +36,14 @@ void loop()
     if (nrf24Available()) {
         ws2812bSetColor(WS2812B_GREEN);
         nrf24Read(buffer, sizeof(buffer));
+
+        if (!isConnected) {
+            Serial.println("Connection established!");
+            isConnected = true;
+            hasEverConnected = true;
+        }
+        
         lastDataReceived = now;
-        isConnected = true;
       
         uint8_t packet_type = buffer[0];
         switch (packet_type) {
@@ -115,26 +121,33 @@ void loop()
                 break;
         }
         
-        // Display main screen when connected and not in confirm screen
         if(getCurrentScreen() != CONFIRM_SCREEN) {
             oledMainScreenDisplay(getVerticalVelocity(), getAltitude());
         }
     }
     else {
-        if (now - lastDataReceived > CONNECTION_TIMEOUT) {
-            if (isConnected) {
-                Serial.println("Connection lost - switching to connecting screen");
-                isConnected = false;
-            }
-            
+        if (!hasEverConnected) {
             ws2812bFadeUpdate();
             if(getCurrentScreen() != CONFIRM_SCREEN) {
                 connectingScreenDisplayBounce();
             }
         }
         else {
-            if(getCurrentScreen() != CONFIRM_SCREEN) {
-                oledMainScreenDisplay(getVerticalVelocity(), getAltitude());
+            if (now - lastDataReceived > CONNECTION_TIMEOUT) {
+                if (isConnected) {
+                    Serial.println("Connection lost - switching to connecting screen");
+                    isConnected = false;
+                    ws2812bStartFade(WS2812B_RED);
+                }
+                ws2812bFadeUpdate();
+                if(getCurrentScreen() != CONFIRM_SCREEN) {
+                    connectingScreenDisplayBounce();
+                }
+            }
+            else {
+                if(getCurrentScreen() != CONFIRM_SCREEN) {
+                    oledMainScreenDisplay(getVerticalVelocity(), getAltitude());
+                }
             }
         }
     }

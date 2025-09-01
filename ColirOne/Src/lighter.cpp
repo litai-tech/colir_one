@@ -11,6 +11,7 @@
 Lighter::Lighter() {
 }
 
+//Assuming lighterNumber is 1-8
 void Lighter::fireLighter(uint8_t lighterNumber) {
     uint16_t pinNumber = 0 | (1<<(6+lighterNumber - 1)); // Assuming lighterNumber is 1-8, and pins are PE6 to PE13
 	HAL_GPIO_WritePin(GPIOE, pinNumber, GPIO_PIN_SET);

@@ -28,16 +28,23 @@ colirone_err_t ColirOne::init(void) {
         return err;
     }
     printf("Barometer initialized.\n");
-    gps.init();
-    printf("GPS initialized.\n");
-    rf.init();
-    printf("RF initialized.\n");
     err |= logger.init();
     if(err != COLIRONE_OK) {
         printf("W25Qxx initialization failed\n");
         return err;
     }
     printf("W25Qxx initialized.\n");
+    gps.init();
+    printf("GPS initialized.\n");
+    rf.init();
+    printf("RF initialized.\n");
+    err |= servo.init();
+    if(err != COLIRONE_OK) {
+        printf("PCA9685 initialization failed\n");
+        return err;
+    }
+    printf("Servo initialized.\n");
+    servo.setServoAngle(8, 80); // close shutes 
     return err;
 }
 

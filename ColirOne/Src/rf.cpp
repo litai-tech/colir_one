@@ -12,13 +12,6 @@ RF::RF(void) {
 }
 
 void RF::init(void) {
-  csn_high();
-  ce_high();
-
-  HAL_Delay(5);
-
-  ce_low();
-
   nrf24_init();
 
   nrf24_auto_ack_all(no_auto_ack);
@@ -43,31 +36,23 @@ void RF::init(void) {
 
   nrf24_auto_retr_delay(4);
   nrf24_auto_retr_limit(10);
-
-  ce_high();
 }
 
 void RF::setTxAdress(uint8_t *address) {
     memcpy(txAddress, address, 5);
-    ce_low();
     nrf24_open_tx_pipe(txAddress);
-    ce_high();
 }
 
 void RF::setRxAdress(uint8_t *address) {
     memcpy(rxAddress, address, 5);
-    ce_low();
     nrf24_open_rx_pipe(0, rxAddress);
-    ce_high();
 }
 
 void RF::setTxRxAdress(uint8_t *txAddress, uint8_t *rxAddress) {
     memcpy(this->txAddress, txAddress, 5);
     memcpy(this->rxAddress, rxAddress, 5);
-    ce_low();
     nrf24_open_tx_pipe(this->txAddress);
     nrf24_open_rx_pipe(0, this->rxAddress);
-    ce_high();
 }
 
 void RF::setTxMode(void) {
